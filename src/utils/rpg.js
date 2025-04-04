@@ -3,21 +3,21 @@ export const roles = [
     id: 1,
     name: '文档喵~',
     description: '这里是我的主要活动场地',
-    image: new URL('../assets/characters/swordsman.png', import.meta.url).href,
+    image: new URL('../assets/characters/swordsman.webp', import.meta.url).href,
     route: 'https://docs.wenturc.com/'
   },
   {
     id: 2,
     name: '聊天喵~',
     description: '聊聊天呗~ 嗯？你说不太健谈？我也一样。',
-    image: new URL('../assets/characters/mage.png', import.meta.url).href,
+    image: new URL('../assets/characters/mage.webp', import.meta.url).href,
     route: 'https://chat.wenturc.com/'
   },
   {
     id: 3,
     name: '笔记喵~',
     description: '发个帖子呗~ 你说你很内向？没关系的哦。',
-    image: new URL('../assets/characters/rogue.png', import.meta.url).href,
+    image: new URL('../assets/characters/rogue.webp', import.meta.url).href,
     route: 'https://note.wenturc.com/'
   }
 ]
