@@ -1,0 +1,24 @@
+:root {
+    /* RoleCard 相关全局变量 */
+    --card-width: 280px;
+    --card-height: 340px;
+    --card-padding: 20px;
+    --border-radius: 30px; /* 加大圆角 */
+    --transition-speed: 0.35s;
+    --shadow-default: 0 6px 16px rgba(130, 60, 170, 0.25);
+    --shadow-hover: 0 14px 30px rgba(130, 60, 170, 0.4);
+    --hover-transform: translateY(-8px) scale(1.02);
+    --border-gradient: linear-gradient(135deg, #8e44ad, #9b59b6, #8e44ad);
+    --primary-color: #8e44ad;  /* 紫色主题 */
+    --secondary-color: #9b59b6; /* 更浅的紫色 */
+    --font-family: "Poppins", "Segoe UI", sans-serif;
+    --sparkle-color: rgba(255, 255, 255, 0.8);
+    
+    /* 其他全局颜色变量（如果需要） */
+    --accent-color: #6a1b9a;
+    --background-color: #f5f5f5;
+    --text-color: #333333;
+    --text-on-primary: #ffffff;
+    --gradient-primary: linear-gradient(45deg, #8e44ad, #9b59b6);
+    --gradient-secondary: linear-gradient(45deg, #9b59b6, #8e44ad);
+}
