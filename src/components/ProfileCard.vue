@@ -57,8 +57,15 @@ export default {
   computed: {
     backgroundStyle() {
       return this.backgroundLoaded
-        ? { background: `url(${this.backgroundUrl}) no-repeat center center`, backgroundSize: 'cover' }
-        : { background: 'linear-gradient(45deg, #dcbff8, #d1ecf9)', backgroundSize: '200% 200%', animation: 'gradientShift 3s ease infinite' };
+        ? { 
+            background: `url(${this.backgroundUrl}) no-repeat center center`, 
+            backgroundSize: 'cover' 
+          }
+        : { 
+            background: 'linear-gradient(45deg, #dcbff8, #d1ecf9)', 
+            backgroundSize: '200% 200%', 
+            animation: 'gradientShift 3s ease infinite' 
+          };
     }
   },
   methods: {
