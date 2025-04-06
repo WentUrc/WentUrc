@@ -3,29 +3,14 @@
     <h1>选个卡片叭~</h1>
     <div class="roles">
       <div class="roles-grid">
-        <div 
+        <RoleCard 
           v-for="role in roles" 
           :key="role.id" 
-          class="role-card" 
-          @click="selectRole(role)"
-        >
-          <picture>
-            <source v-if="role.imageWebp" :srcset="role.imageWebp" type="image/webp">
-            <source :srcset="role.image || role.imageJpeg" type="image/jpeg">
-            <source :srcset="role.image || role.imageJpeg" type="image/png">
-            <source :srcset="role.image || role.imageJpeg" type="image/svg+xml">
-            <img 
-              :src="role.image || role.imageJpeg" 
-              :alt="`${role.name}头像`" 
-              class="role-image"
-              @load="handleImageLoad"
-              @error="handleImageError"
-              loading="lazy"
-            />
-          </picture>
-          <h2>{{ role.name }}</h2>
-          <p>{{ role.description }}</p>
-        </div>
+          :role="role"
+          @select="selectRole"
+          @image-load="handleImageLoad"
+          @image-error="handleImageError"
+        />
       </div>
     </div>
   </div>
@@ -35,10 +20,11 @@
 import { roles } from '../utils/rpg'
 import { gsap } from 'gsap'
 import ProfileCard from './ProfileCard.vue'
+import RoleCard from './RoleCard.vue'
 
 export default {
   name: 'RoleSelection',
-  components: { ProfileCard },
+  components: { ProfileCard, RoleCard },
   data() {
     return {
       roles: [...roles]
@@ -126,10 +112,22 @@ export default {
   z-index: 0;
 }
 
+/* 新增渐变色上边框 */
+.role-selection::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(to right, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc);
+  z-index: 1;
+}
+
 /* 确保前景内容在伪元素之上 */
 .role-selection > * {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .role-selection h1 {
@@ -153,76 +151,10 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 24px;
   justify-content: center;
+  grid-auto-rows: 1fr;
 }
 
-.role-card {
-  width: 280px;
-  height: 300px;
-  max-width: 100%;
-  background: white;
-  border: 2px solid transparent;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.4s ease, box-shadow 0.4s ease, border 0.4s ease;
-  margin: 0 auto;
-}
-
-.role-card:hover {
-  transform: translateY(-8px) scale(1.05);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
-  border: 2px solid #8e44ad;
-}
-
-.role-image {
-  width: 100%;
-  height: 200px;
-  border-radius: 12px;
-  object-fit: cover;
-  box-shadow: 0 0 10px rgba(142, 68, 173, 0.2);
-  background: linear-gradient(45deg, #f0f0f0 25%, #ffffff 50%, #f0f0f0 75%) no-repeat center/200% 200%;
-  opacity: 0;
-  transition: opacity 0.5s;
-}
-
-.role-image.loaded {
-  opacity: 1;
-}
-
-.broken-image {
-  filter: grayscale(100%);
-  position: relative;
-}
-.broken-image::after {
-  content: "图片加载失败";
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #ff4757;
-  font-size: 0.8em;
-}
-
-.role-card h2 {
-  font-size: 1.4rem;
-  color: #5e60ce;
-  margin: 10px 0 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.role-card p {
-  font-size: 0.95rem;
-  color: #555;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
+/* 媒体查询 */
 @media (max-width: 768px) {
   .roles-grid {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
