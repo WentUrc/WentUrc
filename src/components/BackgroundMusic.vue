@@ -150,6 +150,12 @@ export default {
   }
 }
 
+@media (max-width:768px) {
+  .background-music{
+    display: none;
+  }
+}
+
 .card-title {
   font-size: 1.2rem;
   font-weight: bold;
