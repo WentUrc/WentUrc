@@ -222,7 +222,7 @@ export default {
   background: #5e67ce;
   color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 30px;
   cursor: pointer;
   transition: transform 0.3s, background 0.3s;
 }
