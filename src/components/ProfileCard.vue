@@ -1,5 +1,14 @@
 <template>
-  <div class="profile-container" :style="backgroundStyle">
+  <div class="profile-container" :class="{ 'image-loaded': backgroundLoaded }">
+    <!-- 添加背景图层，实现平滑过渡 -->
+    <div class="background-layer gradient-bg"></div>
+    <div class="background-layer image-bg" :style="imageBackground"></div>
+    
+    <!-- 加载状态指示器 -->
+    <div class="loading-indicator" v-if="!backgroundLoaded && !backgroundError">
+      <div class="loading-spinner"></div>
+    </div>
+    
     <div class="profile-card">
       <img :src="avatar" :alt="`用户 ${name} 的头像`" class="avatar" />
       <h2 class="name">{{ name }}</h2>
@@ -51,29 +60,31 @@ export default {
         }
       ],
       backgroundLoaded: false,
+      backgroundError: false,
       backgroundUrl: 'https://api.wenturc.com/' // 替换成实际背景图URL
     };
   },
   computed: {
-    backgroundStyle() {
-      return this.backgroundLoaded
-        ? { 
-            background: `url(${this.backgroundUrl}) no-repeat center center`, 
-            backgroundSize: 'cover' 
-          }
-        : { 
-            background: 'linear-gradient(45deg, #dcbff8, #d1ecf9)', 
-            backgroundSize: '200% 200%', 
-            animation: 'gradientShift 3s ease infinite' 
-          };
+    imageBackground() {
+      return {
+        backgroundImage: `url(${this.backgroundUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center center'
+      };
     }
   },
   methods: {
     handleBackgroundLoad() {
-      this.backgroundLoaded = true;
+      // 添加短暂延迟使过渡更平滑
+      setTimeout(() => {
+        this.backgroundLoaded = true;
+        this.backgroundError = false;
+      }, 300);
     },
     handleBackgroundError() {
       this.backgroundLoaded = false;
+      this.backgroundError = true;
+      console.error('背景图片加载失败');
     },
     scrollToBottom() {
       window.scrollTo({
@@ -100,46 +111,117 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  transition: background 0.3s ease-in-out;
   overflow: hidden;
 }
 
+/* 背景层，用于平滑过渡 */
+.background-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 1.2s ease-in-out;
+}
+
+.gradient-bg {
+  background: linear-gradient(45deg, #dcbff8, #d1ecf9);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+  opacity: 1;
+  z-index: 0;
+}
+
+.image-bg {
+  opacity: 0;
+  z-index: 0;
+}
+
+/* 当图片加载完成时的状态 */
+.image-loaded .gradient-bg {
+  opacity: 0;
+}
+
+.image-loaded .image-bg {
+  opacity: 1;
+}
+
+/* 遮罩层 */
 .profile-container::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3); /* 这里可以调整蒙版颜色和透明度 */
+  background: rgba(0, 0, 0, 0.3);
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
+}
+
+/* 加载指示器 */
+.loading-indicator {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {transform: rotate(360deg);}
 }
 
 /* 个人资料卡片 */
 .profile-card {
   position: relative;
   z-index: 1; /* 确保卡片在蒙版之上 */
-  background: rgba(255, 255, 255, 0.9); /* 半透明背景便于阅读 */
   padding: 30px;
   border-radius: 16px;
   width: 30%;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
   text-align: center;
   max-width: 400px;
-  transition: border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* 添加平滑过渡 */
+  opacity: 0.9;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  border: 4px solid transparent;
+  background: 
+    linear-gradient(white, white) padding-box,
+    linear-gradient(to right, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc) border-box;
+  background-size: auto, 300% 100%;
+  animation: moveGradient 8s ease infinite;
 }
 
 .profile-card:hover {
-  border: 5px solid #5e60ce; /* hover 时显示边框 */
   transform: translateY(-8px) scale(1.05);
   box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+  animation: moveGradient 3s ease infinite; /* 悬停时加快动画速度 */
 }
+
 /* 头像 */
 .avatar {
   width: 120px;
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #5e60ce;
   margin-bottom: 20px;
+  z-index: 2;
+  
+  /* 头像也使用渐变边框 */
+  border: 4px solid transparent;
+  
+  /* 与卡片相同的技术 */
+  background: 
+    white padding-box,
+    linear-gradient(to right, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc) border-box;
+  
+  background-size: auto, 300% 100%;
+  animation: moveGradient 8s ease infinite;
 }
 
 /* 用户名 */
@@ -164,6 +246,7 @@ export default {
   margin: 0 10px;
   transition: color 0.3s;
 }
+
 .social-links a:hover {
   color: #6930c3;
 }
@@ -178,6 +261,7 @@ export default {
   color: #7d7fff;
   animation: bounce 2s infinite;
   cursor: pointer;
+  z-index: 4;
 }
 
 @keyframes bounce {
@@ -203,6 +287,13 @@ export default {
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* 渐变边框动画 */
+@keyframes moveGradient {
+  0% { background-position: 0% 0%, 0% 50%; }
+  50% { background-position: 0% 0%, 100% 50%; }
+  100% { background-position: 0% 0%, 0% 50%; }
 }
 
 /* 小屏幕响应 */
