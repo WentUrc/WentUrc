@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import { roles } from '../utils/rpg'
+import { roles } from '../../utils/rpg'
 import { gsap } from 'gsap'
-import ProfileCard from './ProfileCard.vue'
-import RoleCard from './RoleCard.vue'
+import ProfileCard from '../body/ProfileCard.vue'
+import RoleCard from '../body/RoleCard.vue'
 
 export default {
   name: 'RoleSelection',
@@ -88,11 +88,11 @@ export default {
   position: relative; /* 为伪元素定位 */
   padding: 40px 20px;
   text-align: center;
-  background: linear-gradient(135deg, #e3ecf9, #fce3ec);
+  background: var(--card-bg, rgba(255, 255, 255, 0.8));
   min-height: 50vh;
-  min-height: 670px;
+  min-height: 750px;
   font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
-  color: #333;
+  color: var(--text-color, #333);
   overflow: hidden;
 }
 
@@ -105,7 +105,7 @@ export default {
   transform: translate(-50%, -50%) rotate(-15deg);
   font-size: 20rem; /* 根据需要调整大小 */
   font-weight: bold;
-  background: linear-gradient(135deg, #5e60ce, #6930c3);
+  background: var(--primary-gradient, linear-gradient(135deg, #5e60ce, #6930c3));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   opacity: 0.1; /* 调低透明度，避免抢占前景内容 */
@@ -120,7 +120,7 @@ export default {
   left: 0;
   right: 0;
   height: 5px;
-  background: linear-gradient(to right, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc);
+  background: linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
   z-index: 1;
 }
 
@@ -133,7 +133,7 @@ export default {
 .role-selection h1 {
   font-size: 2.5rem;
   margin-bottom: 30px;
-  background: linear-gradient(90deg, #5e60ce, #6930c3);
+  background: var(--primary-gradient, linear-gradient(90deg, #5e60ce, #6930c3));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: bold;

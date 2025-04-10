@@ -89,7 +89,7 @@
 
 <script>
 // 直接导入播放列表数据
-import playlistData from '../assets/data/playlist.json';
+import playlistData from '../../assets/data/playlist.json';
 
 export default {
   name: 'BackgroundMusic',
@@ -98,12 +98,12 @@ export default {
       isPlaying: false,
       isMuted: false,
       volume: 50,
-      playlist: [], // 将在created中初始化
-      playlistInfo: [], // 歌曲信息
+      playlist: [], 
+      playlistInfo: [],
       currentTrackIndex: 0,
-      isHovered: false, // 记录悬停状态
-      randomMode: false, // 控制随机播放
-      isCollapsed: true, // 默认折叠
+      isHovered: false, 
+      randomMode: false,
+      isCollapsed: true, 
       currentTime: 0,
       duration: 0,
       progress: 0,
@@ -266,27 +266,21 @@ export default {
       }
     },
     handleTrackEnded() {
-      // 播放结束时自动播放下一首
       this.nextTrack();
     },
-    // 新增方法：根据索引生成可视化器柱状高度
     getVisualizerHeight(index) {
-      // 播放时返回随机高度
       if (this.isPlaying) {
         return Math.floor(Math.random() * 30) + 5;
       } 
-      // 不播放时返回静态高度，根据索引不同返回不同高度，形成波浪形
       else {
         const heights = [8, 12, 10, 15, 9, 13, 7, 16, 10, 14, 8, 11];
         return heights[index % heights.length];
       }
     },
-    // 原方法保留兼容
     getRandomHeight() {
       return this.getVisualizerHeight(0);
     },
     updateVisualizer() {
-      // 更新可视化效果数据
       if (this.isPlaying) {
         this.visualizerData = Array(12).fill().map(() => Math.floor(Math.random() * 30) + 5);
       }
@@ -297,24 +291,22 @@ export default {
 
 <style scoped>
 .background-music {
-  position: fixed;
-  top: 50%;
-  left: 20px;
-  width: 250px;
+  position: relative;
+  width: 100%;
   transform-origin: top center;
   background: 
-    linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)) padding-box,
-    linear-gradient(to right, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc) border-box;
+    linear-gradient(var(--card-bg, rgba(255, 255, 255, 0.8)), var(--card-bg, rgba(255, 255, 255, 0.8))) padding-box,
+    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
   padding: 15px;
   border: 4px solid transparent;
-  z-index: 9999;
   border-radius: 16px;
   overflow: hidden;
-  transform: translateX(-250px);
-  transition: transform 0.4s ease, height 0.4s ease, background 0.4s ease, box-shadow 0.4s ease, opacity 0.4s ease;
-  opacity: 0.6;
-  /* 展开状态高度 */
+  transform: none;
+  transition: height 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+  opacity: 1;
   height: 320px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
 }
 
 .background-music:hover {
@@ -322,15 +314,14 @@ export default {
   border: 4px solid transparent;
   border-radius: 16px;
   background:
-    linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)) padding-box,
-    linear-gradient(to right, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc) border-box;
-  box-shadow: 0 8px 20px rgba(91,81,200,0.25);
+    linear-gradient(var(--card-bg-hover, rgba(255, 255, 255, 0.95)), var(--card-bg-hover, rgba(255, 255, 255, 0.95))) padding-box,
+    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
+  box-shadow: 0 8px 20px var(--card-shadow, rgba(91, 81, 200, 0.25));
   opacity: 1;
 }
 
-/* 折叠状态下高度变小 */
 .background-music.collapsed {
-  height: 120px; /* 减小高度 */
+  height: 150px;
 }
 
 .content {
@@ -352,14 +343,14 @@ export default {
 .card-title {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #5e60ce;
+  color: var(--icon-primary, #5e60ce);
   text-align: left;
 }
 
 .collapse-btn {
   background: transparent;
-  border: 1px solid #5e60ce;
-  color: #5e60ce;
+  border: 1px solid var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #5e60ce);
   border-radius: 50%;
   width: 24px;
   height: 24px;
@@ -371,8 +362,8 @@ export default {
 }
 
 .collapse-btn:hover {
-  background: #5e60ce;
-  color: #fff;
+  background: var(--icon-primary, #5e60ce);
+  color: white;
 }
 
 /* 展开内容区域 */
@@ -412,7 +403,7 @@ export default {
 
 .now-playing-bar {
   width: 3px;
-  background: #5e60ce;
+  background: var(--icon-primary, #5e60ce);
   animation: sound-wave 0.5s infinite alternate;
   transform-origin: bottom;
 }
@@ -423,13 +414,13 @@ export default {
 .now-playing-bar:nth-child(4) { height: 100%; animation-delay: 0.3s; }
 
 .not-playing {
-  color: #5e60ce;
+  color: var(--icon-primary, #5e60ce);
   font-size: 14px;
 }
 
 .track-name {
   font-size: 14px;
-  color: #333;
+  color: var(--text-color, #333);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -446,7 +437,7 @@ export default {
 .progress-bar {
   width: 100%;
   height: 5px;
-  background: #ddd;
+  background: var(--divider-color, #ddd);
   border-radius: 3px;
   overflow: visible;
   cursor: pointer;
@@ -456,7 +447,7 @@ export default {
 
 .progress {
   height: 100%;
-  background: linear-gradient(to right, #5e60ce, #6930c3);
+  background: var(--primary-gradient, linear-gradient(to right, #5e60ce, #6930c3));
   border-radius: 3px;
 }
 
@@ -466,10 +457,10 @@ export default {
   top: 50%;
   width: 12px;
   height: 12px;
-  background: #5e60ce;
+  background: var(--icon-primary, #5e60ce);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   z-index: 2;
 }
 
@@ -491,26 +482,26 @@ export default {
 /* 播放模式图标 */
 .play-mode-icon {
   font-size: 12px;
-  color: #666;
+  color: var(--text-color, #666);
   transition: color 0.2s ease;
 }
 
 /* 播放模式文本 */
 .play-mode-text {
   font-size: 12px;
-  color: #666;
+  color: var(--text-color, #666);
   transition: color 0.2s ease;
 }
 
 /* 播放模式悬停效果 */
 .play-mode:hover .play-mode-icon,
 .play-mode:hover .play-mode-text {
-  color: #5e60ce;
+  color: var(--icon-primary, #5e60ce);
 }
 
 .time {
   font-size: 12px;
-  color: #666;
+  color: var(--text-color, #666);
   text-align: right;
 }
 
@@ -525,14 +516,14 @@ export default {
 
 .volume-icon {
   cursor: pointer;
-  color: #5e60ce;
+  color: var(--icon-primary, #5e60ce);
 }
 
 .volume-control input[type="range"] {
   -webkit-appearance: none;
   flex-grow: 1;
   height: 5px;
-  background: #ddd;
+  background: var(--divider-color, #ddd);
   border-radius: 3px;
   outline: none;
   cursor: pointer;
@@ -542,7 +533,7 @@ export default {
   -webkit-appearance: none;
   width: 16px;
   height: 16px;
-  background: #5e60ce;
+  background: var(--icon-primary, #5e60ce);
   border-radius: 50%;
 }
 
@@ -567,8 +558,8 @@ export default {
   justify-content: space-between;
 }
 
-.control-btn, .play-btn {
-  background: #f0f0f0;
+.control-btn {
+  background: var(--button-hover, #f0f0f0);
   border: none;
   border-radius: 50%;
   width: 36px;
@@ -578,19 +569,26 @@ export default {
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: #5e60ce;
+  color: var(--icon-primary, #5e60ce);
 }
 
 .play-btn {
   width: 48px;
   height: 48px;
-  background: #5e60ce;
+  background: var(--icon-primary, #5e60ce);
   color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .control-btn:hover, .play-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 10px rgba(94, 96, 206, 0.3);
+  box-shadow: 0 0 10px var(--card-shadow, rgba(94, 96, 206, 0.3));
 }
 
 /* 可视化效果 - 移到底部 */
@@ -606,16 +604,15 @@ export default {
 
 .visualizer-bar {
   flex: 1;
-  background: linear-gradient(to top, #5e60ce, #d1ecf9);
+  background: var(--primary-gradient, linear-gradient(to top, #5e60ce, #d1ecf9));
   border-radius: 2px;
   min-height: 2px;
   transform-origin: bottom;
-  transition: height 0.5s ease; /* 未播放时的平滑过渡 */
+  transition: height 0.5s ease; 
 }
 
-/* 只有播放时才应用动画 */
 .visualizer-bar.animated {
-  transition: height 0.1s ease; /* 播放时更快的过渡 */
+  transition: height 0.1s ease; 
   animation: sound-wave 0.5s infinite alternate;
 }
 
@@ -626,7 +623,7 @@ export default {
 
 @media (max-width: 1024px) {
   .background-music {
-    opacity: 0.5;
+    opacity: 1;
   }
   .background-music:hover {
     opacity: 1;
@@ -639,9 +636,9 @@ export default {
   }
 }
 
-@media (max-width:768px) {
+@media (max-width: 768px) {
   .background-music {
-    display: none;
+    display: block; 
   }
 }
 </style>
