@@ -85,8 +85,8 @@ export default {
 }
 
 .role-card:focus .card-inner {
-  box-shadow: 0 12px 25px rgba(94, 96, 206, 0.25);
-  border: 2px solid #5e60ce;
+  box-shadow: 0 12px 25px var(--card-shadow, rgba(94, 96, 206, 0.25));
+  border: 2px solid var(--icon-primary, #5e60ce);
   transform: translateY(-8px);
 }
 
@@ -95,10 +95,10 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 20px;
-  background: linear-gradient(145deg, #ffffff, #f8f9ff);
+  background: var(--card-bg, white);
   border: 2px solid transparent;
   border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08), 0 4px 8px rgba(94, 96, 206, 0.05);
+  box-shadow: 0 8px 20px var(--card-shadow, rgba(0,0,0,0.08)), 0 4px 8px rgba(94, 96, 206, 0.05);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   overflow: hidden;
@@ -107,8 +107,8 @@ export default {
 
 .role-card:hover .card-inner {
   transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 15px 30px rgba(94, 96, 206, 0.2), 0 8px 15px rgba(94, 96, 206, 0.15);
-  border-color: #5e60ce;
+  box-shadow: 0 15px 30px var(--card-shadow, rgba(94, 96, 206, 0.2)), 0 8px 15px var(--card-shadow, rgba(94, 96, 206, 0.15));
+  border-color: var(--icon-primary, #5e60ce);
 }
 
 .role-content {
@@ -124,7 +124,7 @@ export default {
   overflow: hidden;
   border-radius: 12px;
   height: 220px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px var(--card-shadow, rgba(0,0,0,0.1));
 }
 
 .role-image {
@@ -148,7 +148,7 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 12px;
-  background: #f2f3fa;
+  background: var(--button-hover, #f2f3fa);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -188,7 +188,7 @@ export default {
 
 .role-content h2 {
   font-size: 1.5rem;
-  color: #5e60ce;
+  color: var(--icon-primary, #5e60ce);
   margin: 5px 0;
   font-weight: 600;
   white-space: nowrap;
@@ -198,12 +198,12 @@ export default {
 }
 
 .role-card:hover .role-content h2 {
-  color: #4b48c9;
+  color: var(--icon-accent, #4b48c9);
 }
 
 .role-content p {
   font-size: 1rem;
-  color: #555;
+  color: var(--text-color, #555);
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -217,7 +217,7 @@ export default {
   align-items: center;
   justify-content: flex-start;
   font-size: 0.85rem;
-  color: #888;
+  color: var(--text-color, #888);
   margin-top: auto;
   opacity: 0;
   transform: translateY(10px);
@@ -232,7 +232,7 @@ export default {
 .indicator-dot {
   width: 6px;
   height: 6px;
-  background-color: #5e60ce;
+  background-color: var(--icon-primary, #5e60ce);
   border-radius: 50%;
   margin-right: 6px;
 }

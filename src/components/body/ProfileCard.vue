@@ -1,14 +1,15 @@
 <template>
   <div class="profile-container" :class="{ 'image-loaded': backgroundLoaded }">
+    <!-- GitHub 风格的进度条加载指示器 -->
+    <div class="github-progress-container" v-if="!backgroundLoaded && !backgroundError">
+      <div class="github-progress-bar" :style="{width: loadingProgress + '%'}"></div>
+    </div>
+    
     <!-- 添加背景图层，实现平滑过渡 -->
     <div class="background-layer gradient-bg"></div>
     <div class="background-layer image-bg" :style="imageBackground"></div>
     
-    <!-- 加载状态指示器 -->
-    <div class="loading-indicator" v-if="!backgroundLoaded && !backgroundError">
-      <div class="loading-spinner"></div>
-    </div>
-    
+    <!-- 其余内容保持不变 -->
     <div class="profile-card">
       <img :src="avatar" :alt="`用户 ${name} 的头像`" class="avatar" />
       <h2 class="name">{{ name }}</h2>
@@ -61,7 +62,9 @@ export default {
       ],
       backgroundLoaded: false,
       backgroundError: false,
-      backgroundUrl: 'https://api.wenturc.com/' // 替换成实际背景图URL
+      backgroundUrl: 'https://api.wenturc.com/', 
+      loadingProgress: 0, 
+      loadingTimer: null  
     };
   },
   computed: {
@@ -75,25 +78,43 @@ export default {
   },
   methods: {
     handleBackgroundLoad() {
-      // 添加短暂延迟使过渡更平滑
+      this.loadingProgress = 100;
       setTimeout(() => {
         this.backgroundLoaded = true;
         this.backgroundError = false;
+        if (this.loadingTimer) {
+          clearInterval(this.loadingTimer);
+          this.loadingTimer = null;
+        }
       }, 300);
     },
     handleBackgroundError() {
       this.backgroundLoaded = false;
       this.backgroundError = true;
       console.error('背景图片加载失败');
+      if (this.loadingTimer) {
+        clearInterval(this.loadingTimer);
+        this.loadingTimer = null;
+      }
     },
     scrollToBottom() {
       window.scrollTo({
         top: document.body.scrollHeight,
         behavior: 'smooth'
       });
+    },
+    simulateLoadingProgress() {
+      this.loadingTimer = setInterval(() => {
+        if (this.loadingProgress < 90) {
+          const increment = Math.max(0.5, 10 - (this.loadingProgress / 10));
+          this.loadingProgress += increment;
+        }
+      }, 200);
     }
   },
   mounted() {
+    this.simulateLoadingProgress();
+    
     const img = new Image();
     img.onload = this.handleBackgroundLoad;
     img.onerror = this.handleBackgroundError;
@@ -114,6 +135,46 @@ export default {
   overflow: hidden;
 }
 
+/* 顶部进度条加载指示器样式 */
+.github-progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: transparent;
+  z-index: 99999;
+  overflow: hidden;
+}
+
+.github-progress-bar {
+  height: 100%;
+  background: var(--primary-gradient, linear-gradient(to right, #dcbff8, #5e60ce, #6930c3));
+  width: 0;
+  transition: width 0.2s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0 10px var(--card-shadow, rgba(94, 96, 206, 0.5));
+}
+
+@keyframes progress-animation {
+  0% {
+    left: -30%;
+    width: 30%;
+  }
+  50% {
+    width: 30%;
+  }
+  70% {
+    width: 70%;
+  }
+  100% {
+    left: 100%;
+    width: 30%;
+  }
+}
+
 /* 背景层，用于平滑过渡 */
 .background-layer {
   position: absolute;
@@ -125,7 +186,7 @@ export default {
 }
 
 .gradient-bg {
-  background: linear-gradient(45deg, #dcbff8, #d1ecf9);
+  background: var(--primary-gradient, linear-gradient(45deg, #dcbff8, #d1ecf9));
   background-size: 200% 200%;
   animation: gradientShift 3s ease infinite;
   opacity: 1;
@@ -156,31 +217,10 @@ export default {
   z-index: 1;
 }
 
-/* 加载指示器 */
-.loading-indicator {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 2;
-}
-
-.loading-spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {transform: rotate(360deg);}
-}
-
 /* 个人资料卡片 */
 .profile-card {
   position: relative;
-  z-index: 1; /* 确保卡片在蒙版之上 */
+  z-index: 1;
   padding: 30px;
   border-radius: 16px;
   width: 30%;
@@ -188,19 +228,19 @@ export default {
   max-width: 400px;
   opacity: 0.9;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px var(--card-shadow, rgba(0,0,0,0.1));
   border: 4px solid transparent;
   background: 
-    linear-gradient(white, white) padding-box,
-    linear-gradient(to right, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc) border-box;
+    linear-gradient(var(--card-bg, white), var(--card-bg, white)) padding-box,
+    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
   background-size: auto, 300% 100%;
   animation: moveGradient 8s ease infinite;
 }
 
 .profile-card:hover {
   transform: translateY(-8px) scale(1.05);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
-  animation: moveGradient 3s ease infinite; /* 悬停时加快动画速度 */
+  box-shadow: 0 12px 25px var(--card-shadow, rgba(0,0,0,0.2));
+  animation: moveGradient 3s ease infinite;
 }
 
 /* 头像 */
@@ -211,15 +251,10 @@ export default {
   object-fit: cover;
   margin-bottom: 20px;
   z-index: 2;
-  
-  /* 头像也使用渐变边框 */
   border: 4px solid transparent;
-  
-  /* 与卡片相同的技术 */
   background: 
-    white padding-box,
-    linear-gradient(to right, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc) border-box;
-  
+    var(--card-bg, white) padding-box,
+    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
   background-size: auto, 300% 100%;
   animation: moveGradient 8s ease infinite;
 }
@@ -227,28 +262,28 @@ export default {
 /* 用户名 */
 .name {
   font-size: 1.8rem;
-  color: #333;
+  color: var(--text-color, #333);
   margin-bottom: 10px;
 }
 
 /* 个人简介 */
 .bio {
   font-size: 1rem;
-  color: #666;
+  color: var(--text-color, #666);
   line-height: 1.5;
   margin-bottom: 20px;
 }
 
 /* 社交链接 */
 .social-links a {
-  color: #5e60ce;
+  color: var(--icon-primary, #5e60ce);
   font-size: 1.5rem;
   margin: 0 10px;
   transition: color 0.3s;
 }
 
 .social-links a:hover {
-  color: #6930c3;
+  color: var(--icon-accent, #6930c3);
 }
 
 /* 底部箭头 */
@@ -258,7 +293,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   font-size: 3rem;
-  color: #7d7fff;
+  color: var(--icon-primary, #7d7fff);
   animation: bounce 2s infinite;
   cursor: pointer;
   z-index: 4;
