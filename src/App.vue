@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <BackgroundMusic />
     <ProfileCard />
     <router-view />
     <Footer />
@@ -9,28 +8,16 @@
 </template>
 
 <script>
-import ProfileCard from './components/ProfileCard.vue'
-import BackgroundMusic from './components/BackgroundMusic.vue'
-import Footer from './components/Footer.vue'
-import Logo from './components/Logo.vue'
+import ProfileCard from './components/body/ProfileCard.vue'
+import Footer from './components/buttom/Footer.vue'
+import Logo from './components/top/Logo.vue'
 
 export default {
   name: 'App',
   components: {
     ProfileCard,
-    BackgroundMusic,
     Footer,
     Logo
   }
 }
 </script>
-
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
-#app {
-  text-align: center;
-}
-</style>
