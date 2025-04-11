@@ -22,10 +22,10 @@ body, html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(38, 0, 188, 0.5);
+  background: var(--scrollbar-thumb, rgba(38, 0, 188, 0.5)); /* 使用主题变量喵～ */
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(150, 150, 150, 0.8);
+  background: var(--scrollbar-thumb-hover, rgba(150, 150, 150, 0.8)); /* 使用主题变量喵～ */
 }
