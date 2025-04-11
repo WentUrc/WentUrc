@@ -1,100 +1,124 @@
 /* 基础变量设置 - 默认使用紫蓝方案 */
 :root {
-    /* 默认亮色主题变量 - 紫蓝 */
-    --primary-gradient: linear-gradient(45deg, #6b90ff, #5e60ce);
-    --background-color: #ffffff;
-    --text-color: #333333;
-    --border-gradient: #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc;
-    --card-bg: rgba(255, 255, 255, 0.8);
-    --card-bg-hover: rgba(255, 255, 255, 0.95);
-    --card-shadow: rgba(91, 81, 200, 0.25);
-    --divider-color: rgba(94, 96, 206, 0.2);
-    
-    /* 按钮和交互元素 */
-    --button-hover: rgba(94, 96, 206, 0.05);
-    --button-active: rgba(94, 96, 206, 0.1);
-    --button-border: rgba(94, 96, 206, 0.3);
-    
-    /* 特殊元素颜色 */
-    --icon-primary: #5e60ce;
-    --icon-accent: #6b90ff;
-  }
+  /* 默认亮色主题变量 - 紫蓝 */
+  --primary-gradient: linear-gradient(45deg, #6b90ff, #5e60ce);
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --border-gradient: #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-bg-hover: rgba(255, 255, 255, 0.95);
+  --card-shadow: rgba(91, 81, 200, 0.25);
+  --divider-color: rgba(94, 96, 206, 0.2);
   
-  /* 暗色模式 - 紫蓝 */
-  [data-theme="dark"] {
-    --primary-gradient: linear-gradient(45deg, #6b90ff, #5e60ce);
-    --background-color: #212121;
-    --text-color: #f1f1f1;
-    --border-gradient: #9b8dda, #6b90ff, #7294d5, #b98db6;
-    --card-bg: rgba(40, 40, 40, 0.85);
-    --card-bg-hover: rgba(50, 50, 50, 0.95);
-    --card-shadow: rgba(0, 0, 0, 0.4);
-    --divider-color: rgba(150, 150, 255, 0.2);
-    
-    --button-hover: rgba(94, 96, 206, 0.15);
-    --button-active: rgba(94, 96, 206, 0.25);
-    --button-border: rgba(94, 96, 206, 0.4);
-    
-    --icon-primary: #8a8cff;
-    --icon-accent: #9fb4ff;
-  }
+  /* 按钮和交互元素 */
+  --button-hover: rgba(94, 96, 206, 0.05);
+  --button-active: rgba(94, 96, 206, 0.1);
+  --button-border: rgba(94, 96, 206, 0.3);
   
-  /* ===== 粉色少女主题 ===== */
-  [data-color-scheme="pink"] {
-    --primary-gradient: linear-gradient(45deg, #ff6b6b, #d471d4);
-    --border-gradient: #ffcece, #ffc2f9, #ffb3ef, #ffb8d9;
-    --card-shadow: rgba(255, 107, 107, 0.25);
-    --divider-color: rgba(212, 113, 212, 0.2);
-    
-    --button-hover: rgba(212, 113, 212, 0.05);
-    --button-active: rgba(212, 113, 212, 0.1);
-    --button-border: rgba(255, 107, 107, 0.3);
-    
-    --icon-primary: #d471d4;
-    --icon-accent: #ff6b6b;
-  }
+  /* 特殊元素颜色 */
+  --icon-primary: #5e60ce;
+  --icon-accent: #6b90ff;
   
-  /* 粉色少女暗色模式 */
-  [data-theme="dark"][data-color-scheme="pink"] {
-    --primary-gradient: linear-gradient(45deg, #ff6b6b, #d471d4);
-    --border-gradient: #d76d6d, #c160c1, #db6aba, #d66d9e;
-    --card-shadow: rgba(212, 113, 212, 0.4);
-    --divider-color: rgba(255, 107, 107, 0.3);
-    
-    --button-hover: rgba(212, 113, 212, 0.15);
-    --button-active: rgba(212, 113, 212, 0.25);
-    --button-border: rgba(255, 107, 107, 0.4);
-    
-    --icon-primary: #f38cff;
-    --icon-accent: #ff9c9c;
-  }
+  /* 滚动条样式 - 添加新变量喵～ */
+  --scrollbar-thumb: rgba(94, 96, 206, 0.5);
+  --scrollbar-thumb-hover: rgba(94, 96, 206, 0.8);
+}
+
+/* 暗色模式 - 紫蓝 */
+[data-theme="dark"] {
+  --primary-gradient: linear-gradient(45deg, #6b90ff, #5e60ce);
+  --background-color: #212121;
+  --text-color: #f1f1f1;
+  --border-gradient: #9b8dda, #6b90ff, #7294d5, #b98db6;
+  --card-bg: rgba(40, 40, 40, 0.85);
+  --card-bg-hover: rgba(50, 50, 50, 0.95);
+  --card-shadow: rgba(0, 0, 0, 0.4);
+  --divider-color: rgba(150, 150, 255, 0.2);
   
-  /* ===== 森林绿意主题 ===== */
-  [data-color-scheme="green"] {
-    --primary-gradient: linear-gradient(45deg, #69db7c, #38d9a9);
-    --border-gradient: #c2f9cc, #b3efd1, #a9e9c8, #bef7d8;
-    --card-shadow: rgba(105, 219, 124, 0.25);
-    --divider-color: rgba(56, 217, 169, 0.2);
-    
-    --button-hover: rgba(56, 217, 169, 0.05);
-    --button-active: rgba(56, 217, 169, 0.1);
-    --button-border: rgba(105, 219, 124, 0.3);
-    
-    --icon-primary: #38d9a9;
-    --icon-accent: #69db7c;
-  }
+  --button-hover: rgba(94, 96, 206, 0.15);
+  --button-active: rgba(94, 96, 206, 0.25);
+  --button-border: rgba(94, 96, 206, 0.4);
   
-  /* 森林绿意暗色模式 */
-  [data-theme="dark"][data-color-scheme="green"] {
-    --primary-gradient: linear-gradient(45deg, #69db7c, #38d9a9);
-    --border-gradient: #5cba6a, #35b288, #36b283, #4aba78;
-    --card-shadow: rgba(56, 217, 169, 0.4);
-    --divider-color: rgba(105, 219, 124, 0.3);
-    
-    --button-hover: rgba(56, 217, 169, 0.15);
-    --button-active: rgba(56, 217, 169, 0.25);
-    --button-border: rgba(105, 219, 124, 0.4);
-    
-    --icon-primary: #4dffd3;
-    --icon-accent: #8aff99;
-  }
+  --icon-primary: #8a8cff;
+  --icon-accent: #9fb4ff;
+  
+  /* 暗色模式滚动条样式喵～ */
+  --scrollbar-thumb: rgba(107, 144, 255, 0.5);
+  --scrollbar-thumb-hover: rgba(138, 140, 255, 0.8);
+}
+
+/* ===== 粉色少女主题 ===== */
+[data-color-scheme="pink"] {
+  --primary-gradient: linear-gradient(45deg, #ff6b6b, #d471d4);
+  --border-gradient: #ffcece, #ffc2f9, #ffb3ef, #ffb8d9;
+  --card-shadow: rgba(255, 107, 107, 0.25);
+  --divider-color: rgba(212, 113, 212, 0.2);
+  
+  --button-hover: rgba(212, 113, 212, 0.05);
+  --button-active: rgba(212, 113, 212, 0.1);
+  --button-border: rgba(255, 107, 107, 0.3);
+  
+  --icon-primary: #d471d4;
+  --icon-accent: #ff6b6b;
+  
+  /* 粉色滚动条样式喵～ */
+  --scrollbar-thumb: rgba(212, 113, 212, 0.5);
+  --scrollbar-thumb-hover: rgba(255, 107, 107, 0.7);
+}
+
+/* 粉色少女暗色模式 */
+[data-theme="dark"][data-color-scheme="pink"] {
+  --primary-gradient: linear-gradient(45deg, #ff6b6b, #d471d4);
+  --border-gradient: #d76d6d, #c160c1, #db6aba, #d66d9e;
+  --card-shadow: rgba(212, 113, 212, 0.4);
+  --divider-color: rgba(255, 107, 107, 0.3);
+  
+  --button-hover: rgba(212, 113, 212, 0.15);
+  --button-active: rgba(212, 113, 212, 0.25);
+  --button-border: rgba(255, 107, 107, 0.4);
+  
+  --icon-primary: #f38cff;
+  --icon-accent: #ff9c9c;
+  
+  /* 粉色暗色模式滚动条样式喵～ */
+  --scrollbar-thumb: rgba(243, 140, 255, 0.5);
+  --scrollbar-thumb-hover: rgba(255, 156, 156, 0.8);
+}
+
+/* ===== 森林绿意主题 ===== */
+[data-color-scheme="green"] {
+  --primary-gradient: linear-gradient(45deg, #69db7c, #38d9a9);
+  --border-gradient: #c2f9cc, #b3efd1, #a9e9c8, #bef7d8;
+  --card-shadow: rgba(105, 219, 124, 0.25);
+  --divider-color: rgba(56, 217, 169, 0.2);
+  
+  --button-hover: rgba(56, 217, 169, 0.05);
+  --button-active: rgba(56, 217, 169, 0.1);
+  --button-border: rgba(105, 219, 124, 0.3);
+  
+  --icon-primary: #38d9a9;
+  --icon-accent: #69db7c;
+  
+  /* 绿色滚动条样式喵～ */
+  --scrollbar-thumb: rgba(56, 217, 169, 0.5);
+  --scrollbar-thumb-hover: rgba(105, 219, 124, 0.7);
+}
+
+/* 森林绿意暗色模式 */
+[data-theme="dark"][data-color-scheme="green"] {
+  --primary-gradient: linear-gradient(45deg, #69db7c, #38d9a9);
+  --border-gradient: #5cba6a, #35b288, #36b283, #4aba78;
+  --card-shadow: rgba(56, 217, 169, 0.4);
+  --divider-color: rgba(105, 219, 124, 0.3);
+  
+  --button-hover: rgba(56, 217, 169, 0.15);
+  --button-active: rgba(56, 217, 169, 0.25);
+  --button-border: rgba(105, 219, 124, 0.4);
+  
+  --icon-primary: #4dffd3;
+  --icon-accent: #8aff99;
+  
+  /* 绿色暗色模式滚动条样式喵～ */
+  --scrollbar-thumb: rgba(77, 255, 211, 0.5);
+  --scrollbar-thumb-hover: rgba(138, 255, 153, 0.8);
+}
