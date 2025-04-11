@@ -41,7 +41,7 @@
             <TimeWidget />
             <DaylieWidget />
             <BackgroundMusic />
-            <BlackLightWidget ref="blackLight" />
+            <BlackLightWidget ref="blackLight" @theme-changed="onThemeChanged" />
             <NeoLife />
           </div>
         </div>
@@ -101,17 +101,27 @@ export default {
       this.isDarkMode = !this.isDarkMode;
       document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
       
+      // 从localStorage获取当前的配色方案，避免重置为默认喵～
+      const savedScheme = localStorage.getItem('color-scheme') || this.currentScheme;
+      this.currentScheme = savedScheme;
+      
       // 同步主题设置到 BlackLight 组件喵！
       if (this.$refs.blackLight) {
         this.$refs.blackLight.isDarkMode = this.isDarkMode;
       }
       
-      // 应用颜色方案喵～
+      // 应用颜色方案喵～，确保保留当前的配色
       const mode = this.isDarkMode ? 'dark' : 'light';
       applyThemeVariables(mode, this.currentScheme);
       
       // 保存设置到本地喵～
       this.saveThemeSettings();
+    },
+    
+    // 处理主题变更事件喵～
+    onThemeChanged(themeData) {
+      this.isDarkMode = themeData.isDarkMode;
+      this.currentScheme = themeData.scheme;
     },
     
     loadThemeSettings() {
@@ -142,6 +152,22 @@ export default {
     closeSidebar() {
       this.musicSidebarVisible = false;
       this.enableScroll(); 
+      
+      // 关闭侧边栏时，同步主题状态喵～
+      this.syncThemeFromStorage();
+    },
+    
+    // 同步本地存储中的主题设置喵～
+    syncThemeFromStorage() {
+      const savedMode = localStorage.getItem('theme-mode');
+      if (savedMode) {
+        this.isDarkMode = savedMode === 'dark';
+      }
+      
+      const savedScheme = localStorage.getItem('color-scheme');
+      if (savedScheme) {
+        this.currentScheme = savedScheme;
+      }
     },
     
     handleKeyDown(e) {
@@ -175,6 +201,15 @@ export default {
       document.body.style.width = '';
       
       window.scrollTo(0, this.scrollPosition);
+    }
+  },
+  // 侧边栏关闭时也同步主题状态喵～
+  watch: {
+    musicSidebarVisible(newValue) {
+      if (!newValue) {
+        // 侧边栏关闭时，同步主题状态
+        this.syncThemeFromStorage();
+      }
     }
   }
 }
