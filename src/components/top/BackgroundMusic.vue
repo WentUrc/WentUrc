@@ -90,7 +90,8 @@
 <script>
 // 直接导入播放列表数据
 import playlistData from '../../assets/data/playlist.json';
-import eventBus from '../../utils/eventBus.js'
+import eventBus from '../../utils/eventBus.js';
+import silentBrowsingTracker from '../other/achievements/easter-eggs/SilentBrowsingTracker.js';
 
 export default {
   name: 'BackgroundMusic',
@@ -110,7 +111,11 @@ export default {
       progress: 0,
       visualizerData: [],
 
-      achievementTriggered: false
+      achievementTriggered: false,
+      
+      // 追踪已完整播放的不同歌曲
+      completedTracks: new Set(),
+      musicConnoisseurUnlocked: false
     };
   },
   created() {
@@ -161,6 +166,18 @@ export default {
     setInterval(() => {
       this.updateVisualizer();
     }, 100);
+    
+    // 加载已完成的歌曲数据
+    this.loadCompletedTracks();
+    
+    // 检查是否已满足成就条件
+    this.checkMusicConnoisseurAchievement();
+    
+    // 初始化静音浏览跟踪器
+    silentBrowsingTracker.initialize();
+    
+    // 设置初始静音状态
+    silentBrowsingTracker.setMuteStatus(this.isMuted);
   },
   methods: {
     // 初始化音量控制，安全处理
@@ -195,12 +212,18 @@ export default {
       if (window.innerWidth <= 1024 && !this.isHovered) return;
       this.isMuted = !this.isMuted;
       this.audio.muted = this.isMuted;
+      
+      // 通知静音浏览跟踪器
+      silentBrowsingTracker.setMuteStatus(this.isMuted);
     },
     changeVolume() {
       this.audio.volume = this.volume / 100;
       if (this.isMuted && this.volume > 0) {
         this.isMuted = false;
         this.audio.muted = false;
+        
+        // 通知静音浏览跟踪器
+        silentBrowsingTracker.setMuteStatus(false);
       }
     },
     nextTrack() {
@@ -275,7 +298,41 @@ export default {
       }
     },
     handleTrackEnded() {
+      // 当歌曲自然播放结束时，记录为已完成播放
+      if (!this.completedTracks.has(this.currentTrackIndex)) {
+        this.completedTracks.add(this.currentTrackIndex);
+        this.checkMusicConnoisseurAchievement();
+        
+        // 保存已完成的歌曲到本地存储
+        this.saveCompletedTracks();
+      }
+      
       this.nextTrack();
+    },
+    checkMusicConnoisseurAchievement() {
+      if (this.completedTracks.size >= 5 && !this.musicConnoisseurUnlocked) {
+        this.musicConnoisseurUnlocked = true;
+        eventBus.emit('achievement-unlocked', 'music-connoisseur');
+        // 保存成就状态
+        localStorage.setItem('music-connoisseur-unlocked', 'true');
+      }
+    },
+    saveCompletedTracks() {
+      localStorage.setItem('music-completed-tracks', JSON.stringify(Array.from(this.completedTracks)));
+    },
+    loadCompletedTracks() {
+      try {
+        const saved = localStorage.getItem('music-completed-tracks');
+        if (saved) {
+          const tracks = JSON.parse(saved);
+          this.completedTracks = new Set(tracks);
+        }
+        
+        const achievementUnlocked = localStorage.getItem('music-connoisseur-unlocked') === 'true';
+        this.musicConnoisseurUnlocked = achievementUnlocked;
+      } catch (e) {
+        console.error('加载已完成的歌曲数据失败:', e);
+      }
     },
     getVisualizerHeight(index) {
       if (this.isPlaying) {
@@ -294,6 +351,10 @@ export default {
         this.visualizerData = Array(12).fill().map(() => Math.floor(Math.random() * 30) + 5);
       }
     }
+  },
+  beforeDestroy() {
+    // 清理静音浏览跟踪器
+    silentBrowsingTracker.cleanup();
   }
 };
 </script>

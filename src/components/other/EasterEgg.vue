@@ -317,6 +317,17 @@ export default {
         
         localStorage.setItem('wenturc-achievements', JSON.stringify(achievements));
         eventBus.emit('achievement-unlocked', key);
+        
+        // 检查成就猎人成就
+        setTimeout(() => {
+          import('./achievements/easter-eggs/AchievementHunterTracker.js').then(module => {
+            if (module.default && typeof module.default.checkAndUnlockImmediately === 'function') {
+              module.default.checkAndUnlockImmediately();
+            }
+          }).catch(err => {
+            console.error('检查成就猎人成就失败:', err);
+          });
+        }, 300);
       }
     }
   }

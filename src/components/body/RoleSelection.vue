@@ -1,6 +1,6 @@
 <template>
   <div class="role-selection">
-    <h1>选个卡片叭~</h1>
+    <h1>一起去前往不同的世界喵 ~ </h1>
     <div class="roles">
       <div class="roles-grid">
         <RoleCard 
