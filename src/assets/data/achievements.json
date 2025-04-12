@@ -1,0 +1,56 @@
+{
+  "logo-game": {
+    "name": "猫咪训练师",
+    "description": "发现并玩了Logo彩蛋小游戏",
+    "icon": "fas fa-gamepad",
+    "secret": false
+  },
+  "konami-code": {
+    "name": "老玩家",
+    "description": "输入了经典的Konami密码",
+    "icon": "fas fa-keyboard",
+    "secret": false
+  },
+  "game-master": {
+    "name": "游戏大师",
+    "description": "在喵喵小游戏中获得20分以上",
+    "icon": "fas fa-trophy",
+    "secret": false
+  },
+  "night-owl": {
+    "name": "夜猫子",
+    "description": "在凌晨(0点-5点)访问网站",
+    "icon": "fas fa-moon",
+    "secret": true
+  },
+  "early-bird": {
+    "name": "早起的鸟儿",
+    "description": "在清晨(5点-8点)访问网站",
+    "icon": "fas fa-sun",
+    "secret": true
+  },
+  "weekend-warrior": {
+    "name": "周末战士",
+    "description": "在周末访问网站",
+    "icon": "fas fa-calendar",
+    "secret": true
+  },
+  "theme-changer": {
+    "name": "颜色魔法师",
+    "description": "尝试切换了网站主题",
+    "icon": "fas fa-paint-brush",
+    "secret": false
+  },
+  "music-lover": {
+    "name": "音乐爱好者",
+    "description": "播放了背景音乐",
+    "icon": "fas fa-music",
+    "secret": false
+  },
+  "quote-collector": {
+    "name": "名言收藏家",
+    "description": "收藏了五条名言",
+    "icon": "fas fa-quote-right",
+    "secret": false
+  }
+}
