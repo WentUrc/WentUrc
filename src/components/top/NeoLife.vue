@@ -79,11 +79,6 @@
         </button>
       </div>
       
-      <!-- 复制成功提示 -->
-      <div class="copy-toast" v-if="showCopyToast">
-        已复制到剪贴板！
-      </div>
-      
       <!-- 成就提示 -->
       <div class="achievement-hint" v-if="showAchievementHint">
         <i class="fas fa-trophy hint-icon"></i>
@@ -96,6 +91,7 @@
 <script>
 import eventBus from '../../utils/eventBus.js'
 import quotesData from '../../assets/data/quotes.json'
+import notificationService from '../../utils/notificationService.js'
 
 export default {
   name: 'InspireWidget',
@@ -107,7 +103,7 @@ export default {
       quotes: quotesData,
       favorites: [],
       showFavorites: false,
-      showCopyToast: false,
+      // 移除showCopyToast，使用通知服务替代
       isCurrentFavorite: false,
       // 成就系统相关数据
       showAchievementHint: false,
@@ -183,11 +179,11 @@ export default {
         this.quoteStats.favoriteCount++;
         this.updateStats();
         
-        // 触发成就解锁
-        if (!this.achievementsUnlocked.quoteFavorite) {
-          this.achievementsUnlocked.quoteFavorite = true;
-          this.unlockAchievement('quote-favorited');
-        }
+        // 删除首次收藏成就触发逻辑，只保留名言收藏家成就
+        // if (!this.achievementsUnlocked.quoteFavorite) {
+        //   this.achievementsUnlocked.quoteFavorite = true;
+        //   this.unlockAchievement('quote-favorited');
+        // }
         
         // 检查"名言收藏家"成就 - 收藏5条名言
         if (this.favorites.length >= 5 && !this.achievementsUnlocked.quoteCollector) {
@@ -207,11 +203,8 @@ export default {
     copyQuote() {
       const textToCopy = `"${this.currentQuote.text}" — ${this.currentQuote.author}`;
       navigator.clipboard.writeText(textToCopy).then(() => {
-        // 显示复制成功提示
-        this.showCopyToast = true;
-        setTimeout(() => {
-          this.showCopyToast = false;
-        }, 2000);
+        // 使用通知服务替代本地Toast喵～
+        notificationService.configPresets.copySuccess();
         
         // 增加复制计数
         this.quoteStats.copyCount++;
@@ -361,9 +354,8 @@ export default {
         try {
           const achievements = JSON.parse(achievementsData);
           
-          // 如果已经解锁了所有与每日灵感相关的成就，不显示提示
+          // 修改检查逻辑，移除对quote-favorited的检查
           const hasUnlockedAll = 
-            (achievements['quote-favorited'] && achievements['quote-favorited'].unlocked) &&
             (achievements['quote-collector'] && achievements['quote-collector'].unlocked) &&
             (achievements['quote-sharer'] && achievements['quote-sharer'].unlocked) &&
             (achievements['quote-explorer'] && achievements['quote-explorer'].unlocked);
@@ -693,21 +685,6 @@ export default {
   background: var(--button-hover, rgba(94, 96, 206, 0.05));
 }
 
-/* 复制成功提示 */
-.copy-toast {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--primary-gradient, linear-gradient(135deg, #5e60ce, #6b90ff));
-  color: white;
-  padding: 8px 15px;
-  border-radius: 20px;
-  font-size: 12px;
-  animation: fadeInOut 2s forwards;
-  box-shadow: 0 3px 15px var(--card-shadow, rgba(91, 81, 200, 0.3));
-}
-
 /* 成就提示样式 */
 .achievement-hint {
   display: flex;
@@ -739,6 +716,7 @@ export default {
   100% { transform: rotate(-15deg); }
 }
 
+/* 保留动画定义供其他地方使用 */
 @keyframes fadeInOut {
   0% { opacity: 0; transform: translate(-50%, 10px); }
   15% { opacity: 1; transform: translate(-50%, 0); }
