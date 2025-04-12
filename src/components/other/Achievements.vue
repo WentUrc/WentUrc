@@ -1,12 +1,12 @@
 <template>
   <div>
-    <!-- 成就按钮，点击时打开成就面板 -->
-    <button class="achievements-button" @click="toggleAchievementsPanel" :class="{ 'has-new': hasNewAchievements }">
+    <!-- 成就按钮，点击时打开成就面板喵～ -->
+    <button class="achievements-button" @click="togglePanel" :class="{ 'has-new': hasNewAchievements }">
       <i class="fas fa-trophy"></i>
       <span class="achievement-count">{{ unlockedCount }}</span>
     </button>
     
-    <!-- 成就面板（弹窗形式）使用Vue过渡效果 -->
+    <!-- 成就面板（弹窗形式）使用Vue过渡效果喵～ -->
     <transition name="panel">
       <div class="achievements-overlay" v-if="showPanel" @click="closePanel">
         <div class="achievements-panel" @click.stop>
@@ -38,33 +38,32 @@
           <div class="panel-content">
             <transition-group name="achievement-list" tag="div" class="achievement-items-container">
               <div 
-                v-for="(achievement, id) in achievements" 
+                v-for="(achievement, id) in manager.achievements" 
                 :key="id" 
                 class="achievement-item"
                 :class="{ 
-                  'unlocked': userAchievements[id]?.unlocked,
-                  'new': userAchievements[id]?.isNew,
-                  'secret': achievement.secret && !userAchievements[id]?.unlocked
+                  'unlocked': isAchievementUnlocked(id),
+                  'new': isAchievementNew(id),
+                  'secret': isSecretAchievement(id)
                 }"
                 @click="acknowledgeAchievement(id)"
               >
                 <div class="achievement-icon">
-                  <i :class="isSecretAndLocked(achievement, id) ? 'fas fa-question' : achievement.icon"></i>
+                  <i :class="getAchievementIcon(id)"></i>
                 </div>
                 <div class="achievement-info">
                   <h3 class="achievement-name">
-                    {{ isSecretAndLocked(achievement, id) ? '???' : achievement.name }}
+                    {{ getAchievementName(id) }}
                   </h3>
                   <p class="achievement-description">
-                    {{ isSecretAndLocked(achievement, id) ? '这是一个隐藏成就，继续探索以解锁喵～' : achievement.description }}
+                    {{ getAchievementDescription(id) }}
                   </p>
-                  <p v-if="userAchievements[id]?.unlocked" class="achievement-date">
-                    {{ formatDate(userAchievements[id].timestamp) }}
+                  <p v-if="isAchievementUnlocked(id)" class="achievement-date">
+                    {{ formatDate(id) }}
                   </p>
                 </div>
                 <div class="achievement-status">
-                  <i v-if="userAchievements[id]?.unlocked" class="fas fa-check-circle"></i>
-                  <i v-else class="fas fa-lock"></i>
+                  <i :class="isAchievementUnlocked(id) ? 'fas fa-check-circle' : 'fas fa-lock'"></i>
                 </div>
               </div>
             </transition-group>
@@ -76,228 +75,121 @@
         </div>
       </div>
     </transition>
-    
-    <!-- 成就解锁通知使用改进的过渡效果 -->
-    <transition name="notification">
-      <div class="achievement-notification" v-if="notification.show">
-        <div class="notification-icon">
-          <i :class="notification.icon"></i>
-        </div>
-        <div class="notification-content">
-          <h4>解锁成就喵～</h4>
-          <p>{{ notification.name }}</p>
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
+import achievementManager from './achievements/core/AchievementManager.js'
 import eventBus from '../../utils/eventBus.js'
-import achievementsData from '../../assets/data/achievements.json'
+import notificationService from '../../utils/notificationService.js'
 
-export default {
-  name: 'Achievements',
-  data() {
-    return {
-      showPanel: false,
-      userAchievements: {},
-      hasNewAchievements: false, 
-      viewedNewAchievements: false, 
-      notification: {
-        show: false,
-        name: '',
-        icon: '',
-        timer: null
-      },
-      achievements: achievementsData
+// 响应式状态喵～
+const showPanel = ref(false)
+const manager = achievementManager
+const componentId = 'achievements-component-' + Date.now()
+
+// 本地状态，确保响应性
+const localUnlockedCount = ref(0)
+const localHasNewAchievements = ref(false)
+
+// 使用计算属性包装localState，确保响应性喵～
+const unlockedCount = computed(() => localUnlockedCount.value)
+const totalAchievements = computed(() => manager.totalAchievements)
+const unlockedPercentage = computed(() => manager.unlockedPercentage)
+const hasNewAchievements = computed(() => localHasNewAchievements.value)
+
+// 包装成就相关方法喵～
+function isAchievementUnlocked(id) {
+  return manager.isAchievementUnlocked(id)
+}
+
+function isAchievementNew(id) {
+  return manager.isAchievementNew(id)
+}
+
+function isSecretAchievement(id) {
+  return manager.isSecretAchievement(id)
+}
+
+function getAchievementIcon(id) {
+  return manager.getAchievementIcon(id)
+}
+
+function getAchievementName(id) {
+  return manager.getAchievementName(id)
+}
+
+function getAchievementDescription(id) {
+  return manager.getAchievementDescription(id)
+}
+
+function formatDate(id) {
+  return manager.formatDate(id)
+}
+
+function acknowledgeAchievement(id) {
+  manager.acknowledgeAchievement(id)
+}
+
+// 生命周期钩子喵～
+onMounted(() => {
+  // 同步初始状态
+  syncStateFromManager()
+  
+  // 注册事件监听
+  eventBus.register(componentId, 'achievements-updated', (count) => {
+    localUnlockedCount.value = count
+    // 触发一次完整同步以确保数据一致性
+    syncStateFromManager()
+  })
+  
+  // 添加新的监听器处理通知服务事件
+  eventBus.register(componentId, 'notification:shown', (notifInfo) => {
+    if (notifInfo.type === 'achievement') {
+      // 成就通知已显示，可以在这里添加额外处理
     }
-  },
-  computed: {
-    unlockedCount() {
-      return Object.keys(this.userAchievements).filter(id => 
-        this.userAchievements[id]?.unlocked
-      ).length;
-    },
-    totalAchievements() {
-      return Object.keys(this.achievements).length;
-    },
-    unlockedPercentage() {
-      if (this.totalAchievements === 0) return 0;
-      return Math.round((this.unlockedCount / this.totalAchievements) * 100);
-    }
-  },
-  mounted() {
-    // 从localStorage加载成就数据
-    this.loadAchievements();
-    this.checkTimeBasedAchievements();
-    
-    eventBus.on('achievement-unlocked', this.handleAchievementUnlock);
-    eventBus.on('theme-changed', () => this.unlockAchievement('theme-changer'));
-    eventBus.on('music-played', () => this.unlockAchievement('music-lover'));
-    eventBus.on('quote-favorited', () => this.unlockAchievement('quote-collector'));
-  },
-  beforeUnmount() { 
-    
-    // Vue 3 中使用 beforeUnmount 替代 beforeDestroy
-    eventBus.off('achievement-unlocked', this.handleAchievementUnlock);
-    eventBus.off('theme-changed');
-    eventBus.off('music-played');
-    eventBus.off('quote-favorited');
-    
-    if (this.notification.timer) {
-      clearTimeout(this.notification.timer);
-    }
-  },
-  methods: {
-    isSecretAndLocked(achievement, id) {
-      return achievement.secret && !(this.userAchievements[id]?.unlocked);
-    },
-    
-    toggleAchievementsPanel() {
-      this.showPanel = !this.showPanel;
-      if (this.showPanel) {
-        this.viewedNewAchievements = true;
-        this.hasNewAchievements = false;
-        
-        const updatedAchievements = { ...this.userAchievements };
-        Object.keys(updatedAchievements).forEach(id => {
-          if (updatedAchievements[id].isNew) {
-            updatedAchievements[id].isNew = false;
-          }
-        });
-        
-        // 保存到localStorage
-        this.userAchievements = updatedAchievements;
-        this.saveAchievements();
-      }
-    },
-    
-    closePanel() {
-      this.showPanel = false;
-    },
-    
-    loadAchievements() {
-      // 从localStorage加载成就数据
-      const saved = localStorage.getItem('wenturc-achievements') || '{}';
-      try {
-        this.userAchievements = JSON.parse(saved);
-        this.hasNewAchievements = Object.values(this.userAchievements).some(a => a.isNew);
-      } catch (e) {
-        console.error('解析成就数据失败', e);
-        this.userAchievements = {};
-      }
-    },
-    
-    saveAchievements() {
-      // 保存成就数据到localStorage
-      localStorage.setItem('wenturc-achievements', JSON.stringify(this.userAchievements));
-    },
-    
-    unlockAchievement(id) {
-      if (!this.achievements[id] || (this.userAchievements[id] && this.userAchievements[id].unlocked)) {
-        return;
-      }
-      
-      // 解锁成就
-      const achievement = {
-        unlocked: true,
-        timestamp: new Date().toISOString(),
-        isNew: true
-      };
-      
-      this.userAchievements = {
-        ...this.userAchievements,
-        [id]: achievement
-      };
-      
-      this.saveAchievements();
-      this.hasNewAchievements = true;
-      this.showNotification(id);
-    },
-    
-    handleAchievementUnlock(id) {
-      this.unlockAchievement(id);
-    },
-    
-    showNotification(id) {
-      // 清除之前的通知计时器
-      if (this.notification.timer) {
-        clearTimeout(this.notification.timer);
-      }
-      
-      const achievement = this.achievements[id];
-      if (!achievement) return;
-      
-      // 设置通知内容
-      this.notification = {
-        show: true,
-        name: achievement.name,
-        icon: achievement.icon,
-        timer: null
-      };
-      
-      // 设置通知自动消失
-      this.notification.timer = setTimeout(() => {
-        this.notification.show = false;
-      }, 4000);
-    },
-    
-    acknowledgeAchievement(id) {
-      if (this.userAchievements[id]?.isNew) {
-        const updatedAchievement = {
-          ...this.userAchievements[id],
-          isNew: false
-        };
-        
-        this.userAchievements = {
-          ...this.userAchievements,
-          [id]: updatedAchievement
-        };
-        
-        this.saveAchievements();
-      }
-    },
-    
-    checkTimeBasedAchievements() {
-      const now = new Date();
-      const hour = now.getHours();
-      const day = now.getDay(); 
-      
-      // 夜猫子成就 - 深夜访问
-      if (hour >= 0 && hour < 5) {
-        this.unlockAchievement('night-owl');
-      }
-      
-      // 早起的鸟儿 - 清晨访问
-      if (hour >= 5 && hour < 8) {
-        this.unlockAchievement('early-bird');
-      }
-      
-      // 周末战士 - 周末访问
-      if (day === 0 || day === 6) {
-        this.unlockAchievement('weekend-warrior');
-      }
-    },
-    
-    formatDate(dateString) {
-      if (!dateString) return '';
-      
-      try {
-        const date = new Date(dateString);
-        return date.toLocaleString('zh-CN', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-      } catch (e) {
-        return dateString;
-      }
-    }
+  });
+  
+  // 初始化成就管理器
+  manager.initialize().then(() => {
+    // 初始化完成后同步状态
+    syncStateFromManager()
+  })
+})
+
+onBeforeUnmount(() => {
+  // 清理组件专用的事件监听
+  eventBus.unregisterComponent(componentId)
+  
+  // 清理成就管理器
+  manager.cleanup()
+})
+
+// 同步管理器状态到本地响应式变量
+function syncStateFromManager() {
+  localUnlockedCount.value = manager.unlockedCount
+  localHasNewAchievements.value = manager.hasNewAchievements
+}
+
+// 方法喵～
+function togglePanel() {
+  showPanel.value = !showPanel.value
+  if (showPanel.value) {
+    manager.onPanelOpen()
+    syncStateFromManager()
   }
 }
+
+function closePanel() {
+  showPanel.value = false
+  syncStateFromManager()
+}
+
+// 监听解锁数量变化
+watch(() => manager.unlockedCount, (newVal) => {
+  localUnlockedCount.value = newVal
+})
 </script>
 
 <style scoped>
@@ -388,7 +280,7 @@ export default {
   padding: 0 3px;
 }
 
-/* 成就面板样式 */
+/* 成就面板样式喵～ */
 .achievements-overlay {
   position: fixed;
   top: 0;
@@ -403,7 +295,7 @@ export default {
   backdrop-filter: blur(3px);
 }
 
-/* 面板进入和离开的过渡 */
+/* 面板进入和离开的过渡喵～ */
 .panel-enter-active {
   transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -481,7 +373,7 @@ export default {
   color: var(--icon-accent, #6b90ff);
 }
 
-/* 成就统计区域 */
+/* 成就统计区域喵～ */
 .panel-stats {
   display: flex;
   justify-content: space-around;
@@ -703,11 +595,14 @@ export default {
   color: var(--divider-color, rgba(94, 96, 206, 0.3));
 }
 
-/* 面板底部 */
+/* 面板底部喵～ */
 .panel-footer {
   padding: 15px 20px;
   display: flex;
+  align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
   border-top: 1px solid var(--divider-color, rgba(94, 96, 206, 0.1));
 }
 
@@ -715,65 +610,10 @@ export default {
   font-size: 14px;
   color: var(--icon-primary, #5e60ce);
   font-style: italic;
-}
-
-/* 成就解锁通知 */
-.achievement-notification {
-  position: fixed;
-  bottom: 80px;
-  left: 20px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background: var(--card-bg, white);
-  border-radius: 12px;
-  padding: 12px 15px;
-  box-shadow: 
-    0 5px 20px var(--card-shadow, rgba(0, 0, 0, 0.2)),
-    0 0 0 2px var(--icon-primary, rgba(94, 96, 206, 0.2));
-  max-width: 280px;
-  z-index: 9999;
-}
-
-/* 通知进入和离开的过渡 */
-.notification-enter-active {
-  animation: notificationIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.notification-leave-active {
-  animation: notificationOut 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045);
-}
-
-.notification-icon {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  border-radius: 50%;
-  background: var(--primary-gradient, linear-gradient(135deg, #6b90ff, #5e60ce));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 18px;
-}
-
-.notification-content {
-  flex: 1;
-}
-
-.notification-content h4 {
-  margin: 0 0 5px;
-  font-size: 15px;
-  color: var(--icon-primary, #5e60ce);
-}
-
-.notification-content p {
   margin: 0;
-  font-size: 14px;
-  color: var(--text-color, #333);
 }
 
-/* 动画效果 */
+/* 动画效果喵～ */
 @keyframes pulse {
   0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
   70% { transform: scale(1.1); box-shadow: 0 0 0 5px rgba(255, 107, 107, 0); }
@@ -791,18 +631,7 @@ export default {
   100% { transform: scale(1); opacity: 1; }
 }
 
-@keyframes notificationIn {
-  0% { transform: translateX(-80px); opacity: 0; }
-  60% { transform: translateX(10px); }
-  100% { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes notificationOut {
-  0% { transform: translateX(0); opacity: 1; }
-  100% { transform: translateX(-100px); opacity: 0; }
-}
-
-/* 响应式调整 */
+/* 响应式调整喵～ */
 @media (max-width: 768px) {
   .achievements-panel {
     width: 95%;
@@ -830,3 +659,4 @@ export default {
   }
 }
 </style>
+```
