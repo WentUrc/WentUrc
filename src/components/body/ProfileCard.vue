@@ -1,6 +1,6 @@
 <template>
   <div class="profile-container" :class="{ 'image-loaded': backgroundLoaded }">
-    <!-- GitHub 风格的进度条加载指示器 -->
+    <!-- 进度条加载指示器 -->
     <div class="github-progress-container" v-if="!backgroundLoaded && !backgroundError">
       <div class="github-progress-bar" :style="{width: loadingProgress + '%'}"></div>
     </div>
@@ -9,7 +9,7 @@
     <div class="background-layer gradient-bg"></div>
     <div class="background-layer image-bg" :style="imageBackground"></div>
     
-    <!-- 其余内容保持不变 -->
+    <!-- 个人资料卡片 -->
     <div class="profile-card">
       <img :src="avatar" :alt="`用户 ${name} 的头像`" class="avatar" />
       <h2 class="name">{{ name }}</h2>
@@ -28,6 +28,7 @@
         </a>
       </div>
     </div>
+
     <!-- 添加底部箭头 -->
     <div class="arrow-down" @click="scrollToBottom">
       <i class="fas fa-chevron-down"></i>
@@ -64,7 +65,8 @@ export default {
       backgroundError: false,
       backgroundUrl: 'https://api.wenturc.com/', 
       loadingProgress: 0, 
-      loadingTimer: null  
+      loadingTimer: null,
+      navBarHeight: 60 // 导航栏高度
     };
   },
   computed: {
@@ -98,8 +100,11 @@ export default {
       }
     },
     scrollToBottom() {
+      // 获取当前组件的DOM元素
+      const profileElement = this.$el;
+      const elementBottom = profileElement.offsetTop + profileElement.offsetHeight;
       window.scrollTo({
-        top: document.body.scrollHeight,
+        top: elementBottom - this.navBarHeight,
         behavior: 'smooth'
       });
     },
@@ -114,6 +119,10 @@ export default {
   },
   mounted() {
     this.simulateLoadingProgress();
+    const logoElement = document.querySelector('.logo-banner');
+    if (logoElement) {
+      this.navBarHeight = logoElement.offsetHeight;
+    }
     
     const img = new Image();
     img.onload = this.handleBackgroundLoad;
@@ -135,7 +144,6 @@ export default {
   overflow: hidden;
 }
 
-/* 顶部进度条加载指示器样式 */
 .github-progress-container {
   position: fixed;
   top: 0;
@@ -311,7 +319,6 @@ export default {
   }
 }
 
-/* 渐变动画 */
 @keyframes gradientShift {
   0% {
     background-position: 0% 50%;

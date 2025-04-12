@@ -184,6 +184,7 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 120px; /* 给予足够的最小高度 */
 }
 
 .role-content h2 {
@@ -205,11 +206,35 @@ export default {
   font-size: 1rem;
   color: var(--text-color, #555);
   line-height: 1.5;
-  display: -webkit-box;
+  /* 移除行数限制，允许文本完整显示 */
+  /* display: -webkit-box;
   -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  -webkit-box-orient: vertical; */
   margin-top: 5px;
+  
+  /* 让卡片文字内容可滚动 */
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 100px; /* 设置最大高度，超出时显示滚动条 */
+  scrollbar-width: thin;
+}
+
+/* 美化滚动条 */
+.role-content p::-webkit-scrollbar {
+  width: 4px;
+}
+
+.role-content p::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.role-content p::-webkit-scrollbar-thumb {
+  background: var(--divider-color, rgba(94, 96, 206, 0.3));
+  border-radius: 2px;
+}
+
+.role-content p::-webkit-scrollbar-thumb:hover {
+  background: var(--icon-primary, rgba(94, 96, 206, 0.5));
 }
 
 .card-indicator {
@@ -256,7 +281,9 @@ export default {
   
   .role-content p {
     font-size: 0.9rem;
-    -webkit-line-clamp: 2;
+    /* 在移动设备上也移除行数限制 */
+    /* -webkit-line-clamp: 2; */
+    max-height: 80px; /* 移动设备上稍微减小最大高度 */
   }
 }
 </style>
