@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import notificationService from '../../utils/notificationService.js';
+
 export default {
   name: 'ProfileCard',
   data() {
@@ -93,6 +95,10 @@ export default {
     handleBackgroundError() {
       this.backgroundLoaded = false;
       this.backgroundError = true;
+      
+      // 使用通知服务显示错误喵～
+      notificationService.error('背景图片加载失败了喵～');
+      
       console.error('背景图片加载失败');
       if (this.loadingTimer) {
         clearInterval(this.loadingTimer);

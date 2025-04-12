@@ -52,5 +52,83 @@
     "description": "收藏了五条名言",
     "icon": "fas fa-quote-right",
     "secret": false
+  },
+  "loyal-fan": {
+    "name": "忠实粉丝",
+    "description": "连续5天访问网站",
+    "icon": "fas fa-star",
+    "secret": false
+  },
+  "scroll-champion": {
+    "name": "滚动冠军",
+    "description": "在一次访问中滚动超过5000像素",
+    "icon": "fas fa-mouse",
+    "secret": true
+  },
+  "click-addict": {
+    "name": "点击狂热",
+    "description": "在网站上点击超过100次",
+    "icon": "fas fa-hand-pointer",
+    "secret": true
+  },
+  "easter-egg-hunter": {
+    "name": "彩蛋猎人",
+    "description": "发现网站中的所有彩蛋",
+    "icon": "fas fa-egg",
+    "secret": true
+  },
+  "quote-explorer": {
+    "name": "智慧探索者",
+    "description": "浏览并刷新10次每日灵感",
+    "icon": "fas fa-lightbulb",
+    "secret": false
+  },
+  "dev-tools-explorer": {
+    "name": "开发好奇喵",
+    "description": "打开浏览器开发者工具查看代码",
+    "icon": "fas fa-code",
+    "secret": true
+  },
+  "four-seasons": {
+    "name": "四季变换",
+    "description": "在四个不同季节访问网站",
+    "icon": "fas fa-leaf",
+    "secret": false
+  },
+  "music-connoisseur": {
+    "name": "音乐鉴赏家",
+    "description": "播放完整5首不同的背景音乐",
+    "icon": "fas fa-headphones",
+    "secret": false
+  },
+  "silent-browsing": {
+    "name": "寂静时光",
+    "description": "在静音状态下浏览网站10分钟",
+    "icon": "fas fa-volume-mute", 
+    "secret": true
+  },
+  "new-year-joy": {
+    "name": "新年喜乐",
+    "description": "在新年第一天访问网站",
+    "icon": "fas fa-glass-cheers",
+    "secret": true
+  },
+  "midnight-thinker": {
+    "name": "午夜思考者",
+    "description": "在午夜12点整访问网站",
+    "icon": "fas fa-moon",
+    "secret": true
+  },
+  "achievement-hunter": {
+    "name": "成就猎人",
+    "description": "解锁10个成就喵～",
+    "icon": "fas fa-medal",
+    "secret": false
+  },
+  "achievement-master": {
+    "name": "成就大师",
+    "description": "解锁所有成就（真不容易喵～）",
+    "icon": "fas fa-crown",
+    "secret": false
   }
 }

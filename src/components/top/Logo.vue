@@ -1,18 +1,16 @@
 <template>
   <div class="logo-banner" :class="{ 'scrolled': !isAtTop }">
-    <a href="/" @click.prevent="goHome" class="logo-link">
-      <img src="/favicon.webp" alt="Logo" draggable="false" @contextmenu.prevent />
+    <a href="/" @click.prevent="handleLogoClick" class="logo-link">
+      <img ref="logoImg" src="/favicon.webp" alt="Logo" draggable="false" @contextmenu.prevent />
       <span class="logo-text">WentUrc</span>
     </a>
     
-    <!-- 添加深色/浅色模式切换按钮喵！ -->
     <div class="theme-toggle">
       <button class="theme-toggle-btn" @click="toggleTheme">
         <i :class="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
       </button>
     </div>
     
-    <!-- 控制按钮 -->
     <div class="music-control">
       <div class="sidebar-button" @click="toggleMusicSidebar">
         <div class="button-inner">
@@ -21,12 +19,10 @@
       </div>
     </div>
     
-    <!-- 遮罩层 - 用于点击关闭侧边栏 -->
     <transition name="fade">
       <div class="sidebar-overlay" v-if="musicSidebarVisible" @click="closeSidebar"></div>
     </transition>
     
-    <!-- 侧边栏组件 - 修改了transition方式 -->
     <transition name="slide-fade">
       <div class="right-sidebar" v-if="musicSidebarVisible">
         <div class="sidebar-layout">
@@ -55,6 +51,7 @@ import TimeWidget from './Time.vue'
 import BlackLightWidget from './BlackLight.vue'
 import { applyThemeVariables } from '../../utils/root'
 import NeoLife from './NeoLife.vue'
+import logoGame from '../other/achievements/easter-eggs/LogoGame.js'
 
 export default {
   name: 'Logo',
@@ -70,19 +67,28 @@ export default {
       musicSidebarVisible: false,
       scrollPosition: 0,
       isDarkMode: false,
-      currentScheme: 'default'
+      currentScheme: 'default',
+      logoLastClickTime: 0,
+      logoClickCount: 0,
+      CLICK_TIMEOUT: 2000
     }
   },
   mounted() {
     window.addEventListener('scroll', this.onScroll);
     window.addEventListener('keydown', this.handleKeyDown);
     
-    // 加载保存的主题设置喵～
     this.loadThemeSettings();
+    
+    logoGame.initialize({ 
+      vueComponent: this,
+      element: this.$refs.logoImg
+    });
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('keydown', this.handleKeyDown);
+    
+    logoGame.cleanup();
     
     document.body.style.overflow = '';
     document.body.style.position = '';
@@ -90,46 +96,87 @@ export default {
     document.body.style.width = '';
   },
   methods: {
+    handleLogoClick(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      const now = Date.now();
+      
+      if (now - this.logoLastClickTime < this.CLICK_TIMEOUT) {
+        this.logoClickCount++;
+        
+        if (this.logoClickCount >= 5) {
+          if (this.$refs.logoImg) {
+            this.$refs.logoImg.classList.add('game-active');
+            setTimeout(() => {
+              this.$refs.logoImg.classList.remove('game-active');
+            }, 2000);
+          }
+          
+          import('../../utils/eventBus.js').then(module => {
+            const eventBus = module.default;
+            eventBus.emit('achievement-unlocked', 'logo-game');
+          });
+          
+          setTimeout(() => {
+            this.logoClickCount = 0;
+          }, 2000);
+        }
+      } else {
+        this.logoClickCount = 1;
+        
+        setTimeout(() => {
+          if (this.logoClickCount === 1) {
+            this.goHome();
+          }
+        }, 300);
+      }
+      
+      this.logoLastClickTime = now;
+      return false;
+    },
+    
+    goHome() {
+      if (window.location.pathname === '/') {
+        window.location.reload();
+      } else {
+        window.location.href = '/';
+      }
+    },
+    
     onScroll() {
       this.isAtTop = window.pageYOffset === 0;
     },
+    
     toggleTheme() {
-      // 切换主题模式喵！
       this.isDarkMode = !this.isDarkMode;
       document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
       
-      // 从localStorage获取当前的配色方案，避免重置为默认喵～
       const savedScheme = localStorage.getItem('color-scheme') || this.currentScheme;
       this.currentScheme = savedScheme;
       
-      // 同步主题设置到 BlackLight 组件喵！
       if (this.$refs.blackLight) {
         this.$refs.blackLight.isDarkMode = this.isDarkMode;
       }
       
-      // 应用颜色方案喵～，确保保留当前的配色
       const mode = this.isDarkMode ? 'dark' : 'light';
       applyThemeVariables(mode, this.currentScheme);
       
-      // 保存设置到本地喵～
       this.saveThemeSettings();
     },
     
-    // 处理主题变更事件喵～
     onThemeChanged(themeData) {
       this.isDarkMode = themeData.isDarkMode;
       this.currentScheme = themeData.scheme;
     },
     
     loadThemeSettings() {
-      // 加载主题模式（明亮/黑暗）喵～
       const savedMode = localStorage.getItem('theme-mode');
       if (savedMode) {
         this.isDarkMode = savedMode === 'dark';
         document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
       }
       
-      // 加载配色方案喵～
       const savedScheme = localStorage.getItem('color-scheme');
       if (savedScheme) {
         this.currentScheme = savedScheme;
@@ -150,11 +197,9 @@ export default {
       this.musicSidebarVisible = false;
       this.enableScroll(); 
       
-      // 关闭侧边栏时，同步主题状态喵～
       this.syncThemeFromStorage();
     },
     
-    // 同步本地存储中的主题设置喵～
     syncThemeFromStorage() {
       const savedMode = localStorage.getItem('theme-mode');
       if (savedMode) {
@@ -181,7 +226,6 @@ export default {
       }
     },
     
-    // 禁用滚动的更强大方法
     disableScroll() {
       this.scrollPosition = window.pageYOffset;
       
@@ -200,11 +244,9 @@ export default {
       window.scrollTo(0, this.scrollPosition);
     }
   },
-  // 侧边栏关闭时也同步主题状态喵～
   watch: {
     musicSidebarVisible(newValue) {
       if (!newValue) {
-        // 侧边栏关闭时，同步主题状态
         this.syncThemeFromStorage();
       }
     }
@@ -242,18 +284,17 @@ export default {
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* 移除了隐藏导航栏的样式，改为添加滚动时的阴影效果喵～ */
 .logo-banner.scrolled {
   box-shadow: 0 2px 15px var(--card-shadow, rgba(0, 0, 0, 0.1));
 }
 
-.logo-banner a {
+.logo-link {
   display: flex;
   align-items: center;
   text-decoration: none;
 }
 
-.logo-banner a img {
+.logo-link img {
   width: 40px;
   height: 40px;
   object-fit: contain;
@@ -262,6 +303,7 @@ export default {
   user-drag: none;
   -webkit-user-drag: none;
   user-select: none; 
+  transition: all 0.3s ease;
 }
 
 .logo-text {
@@ -288,14 +330,12 @@ export default {
   }
 }
 
-/* 添加主题切换按钮样式喵！ */
 .theme-toggle {
   position: relative;
   margin-left: auto; 
   margin-right: 15px;
 }
 
-/* 修改后的统一按钮样式 - 2px 轮廓 */
 .theme-toggle-btn {
   width: 40px;
   height: 40px;
@@ -357,7 +397,6 @@ export default {
   position: relative;
 }
 
-/* 侧边栏按钮样式 - 使用2px轮廓 */
 .sidebar-button {
   width: 40px;
   height: 40px;
@@ -376,7 +415,6 @@ export default {
   border: none;
 }
 
-/* 移除重复定义 */
 .sidebar-button::before {
   content: '';
   position: absolute;
@@ -404,7 +442,6 @@ export default {
     0 0 0 2px var(--icon-primary, rgba(94, 96, 206, 0.5));
 }
 
-/* 悬停时让背景渐变更明显喵～ */
 .sidebar-button:hover::before {
   opacity: 0.3;
 }
@@ -415,13 +452,11 @@ export default {
   transition: all 0.3s ease;
 }
 
-/* 悬停时让图标颜色更突出喵～ */
 .sidebar-button:hover i {
   color: var(--icon-accent, #6b90ff);
   transform: scale(1.2);
 }
 
-/* 修复遮罩层样式 - 更高透明度和正确的z-index喵～ */
 .sidebar-overlay {
   position: fixed;
   top: 0;
@@ -437,7 +472,6 @@ export default {
   pointer-events: auto;
 }
 
-/* 遮罩层动画效果 */
 .fade-enter-active {
   transition: opacity 0.3s ease;
 }
@@ -556,7 +590,6 @@ export default {
   background: var(--button-active, rgba(94, 96, 206, 0.2));
 }
 
-/* 优化内容区域 */
 .sidebar-content {
   flex-grow: 1;
   overflow-y: auto;
@@ -564,7 +597,6 @@ export default {
   margin-right: -10px;
 }
 
-/* 自定义滚动条 */
 .sidebar-content::-webkit-scrollbar {
   width: 6px;
 }
@@ -582,7 +614,19 @@ export default {
   background: var(--button-active, rgba(94, 96, 206, 0.5));
 }
 
-/* 响应式调整 */
+@keyframes logoGameAnimation {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.2) rotate(5deg); }
+  50% { transform: scale(1) rotate(-5deg); }
+  75% { transform: scale(1.1) rotate(5deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+.logo-link img.game-active {
+  animation: logoGameAnimation 0.5s ease-in-out 4;
+  border-color: var(--icon-accent, #6b90ff);
+}
+
 @media (max-width: 768px) {
   .right-sidebar {
     width: 100%;
@@ -593,7 +637,6 @@ export default {
     width: 0;
   }
   
-  /* 替换为顶部渐变边界 */
   .right-sidebar::after {
     content: '';
     position: absolute;
