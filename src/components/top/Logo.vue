@@ -1,6 +1,6 @@
 <template>
   <div class="logo-banner" :class="{ 'scrolled': !isAtTop }">
-    <a href="/">
+    <a href="/" @click.prevent="goHome" class="logo-link">
       <img src="/favicon.webp" alt="Logo" draggable="false" @contextmenu.prevent />
       <span class="logo-text">WentUrc</span>
     </a>
@@ -39,7 +39,6 @@
           
           <div class="sidebar-content">
             <TimeWidget />
-            <DaylieWidget />
             <BackgroundMusic />
             <BlackLightWidget ref="blackLight" @theme-changed="onThemeChanged" />
             <NeoLife />
@@ -53,7 +52,6 @@
 <script>
 import BackgroundMusic from './BackgroundMusic.vue'
 import TimeWidget from './Time.vue'
-import DaylieWidget from './Daylie.vue'
 import BlackLightWidget from './BlackLight.vue'
 import { applyThemeVariables } from '../../utils/root'
 import NeoLife from './NeoLife.vue'
@@ -63,7 +61,6 @@ export default {
   components: {
     BackgroundMusic,
     TimeWidget,
-    DaylieWidget,
     BlackLightWidget,
     NeoLife
   },

@@ -55,6 +55,12 @@
             </button>
           </div>
         </div>
+        
+        <!-- 成就提示 -->
+        <div class="achievement-hint" v-if="!achievementUnlocked">
+          <i class="fas fa-trophy hint-icon"></i>
+          <span>更换主题可以解锁成就喔～</span>
+        </div>
       </div>
     </div>
   </div>
@@ -63,6 +69,7 @@
 <script>
 // 导入主题管理器中的应用函数喵～
 import { applyThemeVariables } from '../../utils/root'
+import eventBus from '../../utils/eventBus.js'
 
 export default {
   name: 'BlackLightWidget',
@@ -71,6 +78,8 @@ export default {
       isHovered: false,
       isDarkMode: false,
       currentScheme: 'default',
+      achievementUnlocked: false,
+      initialLoad: true,
       colorSchemes: [
         {
           id: 'default',
@@ -121,33 +130,34 @@ export default {
     }
   },
   created() {
-    // 从本地存储加载主题设置喵～
     this.loadThemeSettings();
+    this.checkAchievementStatus();
+    this.$nextTick(() => {
+      this.initialLoad = false;
+    });
   },
   methods: {
     toggleTheme() {
-      // 切换明暗主题喵～
       document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
       this.saveThemeSettings();
-      
-      // 确保当前配色方案在切换后也应用喵～
-      this.setColorScheme(this.currentScheme);
-      
-      // 通知父组件主题已更改喵～
+      this.setColorScheme(this.currentScheme, true);
       this.$emit('theme-changed', {
         isDarkMode: this.isDarkMode,
         scheme: this.currentScheme
       });
+      this.triggerAchievement();
     },
     
-    setColorScheme(schemeId) {
-      this.currentScheme = schemeId;
+    setColorScheme(schemeId, isUserAction = false) {
+      if (this.currentScheme === schemeId && !isUserAction) {
+        this.currentScheme = schemeId;
+        return;
+      }
       
-      // 找到选中的主题喵～
+      const oldScheme = this.currentScheme;
+      this.currentScheme = schemeId;
       const scheme = this.colorSchemes.find(s => s.id === schemeId);
       if (!scheme) return;
-      
-      // 使用 data 属性方式设置颜色方案喵～
       const root = document.documentElement;
       
       if (schemeId === 'default') {
@@ -157,42 +167,77 @@ export default {
       }
       
       const mode = this.isDarkMode ? 'dark' : 'light';
-      
-      // 使用主题管理器的函数应用变量喵～
       applyThemeVariables(mode, schemeId);
-      
-      // 保存设置喵～
       this.saveThemeSettings();
       
-      // 通知父组件配色方案已更改喵～
-      this.$emit('theme-changed', {
-        isDarkMode: this.isDarkMode,
-        scheme: this.currentScheme
-      });
+      if ((isUserAction || (oldScheme !== schemeId)) && !this.initialLoad) {
+        this.$emit('theme-changed', {
+          isDarkMode: this.isDarkMode,
+          scheme: this.currentScheme
+        });
+        this.triggerAchievement();
+      }
     },
     
     loadThemeSettings() {
-      // 加载主题模式（明亮/黑暗）喵～
       const savedMode = localStorage.getItem('theme-mode');
       if (savedMode) {
         this.isDarkMode = savedMode === 'dark';
         document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
       }
       
-      // 加载配色方案喵～
+      const previousScheme = this.currentScheme;
       const savedScheme = localStorage.getItem('color-scheme');
       if (savedScheme) {
         this.currentScheme = savedScheme;
-        this.setColorScheme(this.currentScheme);
+        const scheme = this.colorSchemes.find(s => s.id === savedScheme);
+        if (!scheme) return;
+    
+        const root = document.documentElement;
+        
+        if (savedScheme === 'default') {
+          root.removeAttribute('data-color-scheme');
+        } else {
+          root.setAttribute('data-color-scheme', savedScheme);
+        }
+        
+        const mode = this.isDarkMode ? 'dark' : 'light';
+        
+        applyThemeVariables(mode, savedScheme);
       } else {
-        // 默认方案喵～
-        this.setColorScheme('default');
+        this.currentScheme = 'default';
+        document.documentElement.removeAttribute('data-color-scheme');
+        const mode = this.isDarkMode ? 'dark' : 'light';
+        applyThemeVariables(mode, 'default');
       }
     },
     
     saveThemeSettings() {
       localStorage.setItem('theme-mode', this.isDarkMode ? 'dark' : 'light');
       localStorage.setItem('color-scheme', this.currentScheme);
+    },
+    
+    triggerAchievement() {
+      eventBus.emit('theme-changed');
+      this.achievementUnlocked = true;
+      localStorage.setItem('theme-achievement-unlocked', 'true');
+    },
+    
+    checkAchievementStatus() {
+      const unlocked = localStorage.getItem('theme-achievement-unlocked') === 'true';
+      this.achievementUnlocked = unlocked;
+
+      const achievementsData = localStorage.getItem('wenturc-achievements');
+      if (achievementsData) {
+        try {
+          const achievements = JSON.parse(achievementsData);
+          if (achievements['theme-changer'] && achievements['theme-changer'].unlocked) {
+            this.achievementUnlocked = true;
+          }
+        } catch (e) {
+          console.error('解析成就数据失败', e);
+        }
+      }
     }
   }
 };
@@ -258,7 +303,6 @@ export default {
   transition: all 0.5s ease;
 }
 
-/* 主题内容区域 */
 .theme-content {
   display: flex;
   flex-direction: column;
@@ -446,6 +490,37 @@ input:checked + .slider:before {
   color: var(--text-color, #333);
 }
 
+/* 成就提示样式 */
+.achievement-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--button-hover, rgba(94, 96, 206, 0.05));
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--icon-primary, #5e60ce);
+  border: 1px dashed var(--button-border, rgba(94, 96, 206, 0.3));
+  margin-top: 5px;
+  animation: pulse-hint 2s infinite alternate;
+}
+
+.hint-icon {
+  color: gold;
+  animation: rotate-icon 3s infinite ease;
+}
+
+@keyframes pulse-hint {
+  from { opacity: 0.8; transform: scale(0.99); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rotate-icon {
+  0% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+  100% { transform: rotate(-15deg); }
+}
+
 /* 响应式调整 */
 @media (max-width: 768px) {
   .mode-label span {
@@ -458,6 +533,11 @@ input:checked + .slider:before {
   
   .scheme-name {
     font-size: 13px;
+  }
+  
+  .achievement-hint {
+    font-size: 12px;
+    padding: 6px 10px;
   }
 }
 </style>

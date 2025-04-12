@@ -90,6 +90,7 @@
 <script>
 // 直接导入播放列表数据
 import playlistData from '../../assets/data/playlist.json';
+import eventBus from '../../utils/eventBus.js'
 
 export default {
   name: 'BackgroundMusic',
@@ -107,14 +108,14 @@ export default {
       currentTime: 0,
       duration: 0,
       progress: 0,
-      visualizerData: []
+      visualizerData: [],
+
+      achievementTriggered: false
     };
   },
   created() {
     // 从导入的JSON文件初始化播放列表
     this.playlist = playlistData;
-    
-    // 从文件名提取歌曲信息
     this.playlistInfo = this.playlist.map(path => {
       const fileName = path.split('/').pop();
       const parts = fileName.replace('.mp3', '').split('-');
@@ -178,7 +179,15 @@ export default {
         this.isPlaying = false;
       } else {
         this.audio.play()
-          .then(() => { this.isPlaying = true; })
+          .then(() => { 
+            this.isPlaying = true;
+            
+            // 添加成就触发代码喵～
+            if (!this.achievementTriggered) {
+              eventBus.emit('music-played');
+              this.achievementTriggered = true;
+            }
+          })
           .catch(err => { console.error('播放失败:', err); });
       }
     },
@@ -212,8 +221,6 @@ export default {
     },
     getRandomTrack() {
       if (this.playlist.length <= 1) return 0;
-      
-      // 避免连续播放相同歌曲
       const availableTracks = Array.from(
         {length: this.playlist.length},
         (_, i) => i
@@ -226,8 +233,6 @@ export default {
     },
     toggleCollapse() {
       this.isCollapsed = !this.isCollapsed;
-      
-      // 切换到展开状态时，确保音量控制初始化
       if (!this.isCollapsed) {
         this.$nextTick(() => {
           this.initVolumeControl();
@@ -245,7 +250,11 @@ export default {
       this.progress = (this.currentTime / this.duration) * 100 || 0;
     },
     loadMetadata() {
-      this.duration = this.audio.duration;
+      if (this.audio && !isNaN(this.audio.duration)) {
+        this.duration = this.audio.duration;
+      } else {
+        this.duration = 0;
+      }
     },
     formatTime(seconds) {
       if (!seconds || isNaN(seconds)) return '0:00';
@@ -337,7 +346,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-bottom: 5px; /* 减少下方间距 */
+  margin-bottom: 5px;
 }
 
 .card-title {
@@ -391,7 +400,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-bottom: 12px; /* 增加音乐信息与进度条的间距 */
+  margin-bottom: 12px; 
 }
 
 .now-playing-indicator {
@@ -428,7 +437,6 @@ export default {
   margin-left: auto;
 }
 
-/* 进度条和时间信息 */
 .progress-container {
   width: 100%;
   position: relative;
@@ -441,7 +449,7 @@ export default {
   border-radius: 3px;
   overflow: visible;
   cursor: pointer;
-  margin-bottom: 10px; /* 增加进度条与播放模式/时间的间距 */
+  margin-bottom: 10px; 
   position: relative;
 }
 
@@ -451,7 +459,6 @@ export default {
   border-radius: 3px;
 }
 
-/* 进度条上的圆形控制点 */
 .progress-thumb {
   position: absolute;
   top: 50%;
@@ -464,14 +471,12 @@ export default {
   z-index: 2;
 }
 
-/* 进度信息行（包含播放模式图标和时间） */
 .progress-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* 播放模式按钮的容器 */
 .play-mode {
   display: flex;
   align-items: center;
@@ -479,21 +484,18 @@ export default {
   cursor: pointer;
 }
 
-/* 播放模式图标 */
 .play-mode-icon {
   font-size: 12px;
   color: var(--text-color, #666);
   transition: color 0.2s ease;
 }
 
-/* 播放模式文本 */
 .play-mode-text {
   font-size: 12px;
   color: var(--text-color, #666);
   transition: color 0.2s ease;
 }
 
-/* 播放模式悬停效果 */
 .play-mode:hover .play-mode-icon,
 .play-mode:hover .play-mode-text {
   color: var(--icon-primary, #5e60ce);
@@ -539,17 +541,15 @@ export default {
 
 /* 第四行：媒体控制按钮 */
 .media-controls {
-  margin-top: auto; /* 将控件推到底部 */
+  margin-top: auto; 
 }
 
-/* 展开状态下减少与上方音量控制的间距 */
 .expanded-controls {
-  margin-top: -5px; /* 负间距让控制按钮向上移动 */
+  margin-top: -5px; 
 }
 
-/* 折叠状态下的控制按钮间距调整 */
 .collapsed-controls {
-  margin-top: 5px; /* 折叠状态减少上边距 */
+  margin-top: 5px; 
 }
 
 .primary-controls {
@@ -591,7 +591,6 @@ export default {
   box-shadow: 0 0 10px var(--card-shadow, rgba(94, 96, 206, 0.3));
 }
 
-/* 可视化效果 - 移到底部 */
 .visualizer {
   display: flex;
   align-items: flex-end;
