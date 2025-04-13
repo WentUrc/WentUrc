@@ -7,7 +7,7 @@ class LogoGame {
   constructor() {
     this.clickCount = 0;
     this.clickTimeout = null;
-    this.logoRef = null; // 存储Vue组件的ref而非DOM
+    this.logoRef = null; 
     this.isGameActive = false;
     this.gameStarted = false;
     
@@ -23,15 +23,12 @@ class LogoGame {
     const { element, vueComponent } = options;
     
     if (element) {
-      // 传入原始DOM元素喵～
       this.logoRef = { element };
       console.log('Logo游戏初始化成功喵～使用DOM元素');
     } else if (vueComponent && vueComponent.$refs && vueComponent.$refs.logoImg) {
-      // Vue Options API的$refs
       this.logoRef = { element: vueComponent.$refs.logoImg };
       console.log('Logo游戏初始化成功喵～使用Vue Options API');
     } else if (vueComponent && vueComponent.value) {
-      // Vue Composition API的ref
       this.logoRef = { element: vueComponent.value };
       console.log('Logo游戏初始化成功喵～使用Vue Composition API');
     } else {
@@ -71,9 +68,7 @@ class LogoGame {
    * @returns {boolean} - 是否已处理点击
    */
   handleClick(clickCount) {
-    // 如果连续点击次数达到5次，则激活游戏
     if (clickCount >= 5) {
-      // 改用startGame代替activateGame，保持一致性
       this.startGame();
       return true;
     }
@@ -93,17 +88,14 @@ class LogoGame {
     this.gameStarted = true;
     this.isGameActive = true;
     
-    // 添加游戏激活CSS类
     this.logoRef.element.classList.add('game-active');
     
-    // 游戏结束后清理
     setTimeout(() => {
       if (this.logoRef && this.logoRef.element) {
         this.logoRef.element.classList.remove('game-active');
       }
       this.isGameActive = false;
       
-      // 使用事件总线触发成就，修复事件名称以匹配成就ID
       eventBus.emit('achievement-unlocked', 'logo-game');
       
       setTimeout(() => {
@@ -121,7 +113,6 @@ class LogoGame {
       clearTimeout(this.clickTimeout);
     }
     
-    // 清空引用喵～
     this.logoRef = null;
     this.isGameActive = false;
     this.clickCount = 0;

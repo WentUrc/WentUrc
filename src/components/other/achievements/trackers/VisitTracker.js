@@ -24,34 +24,24 @@ class VisitTracker {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     const todayStr = today.toISOString().split('T')[0]
-    
-    // 从存储服务读取访问记录
     const visitDates = storageService.getObject('visit-dates', [])
     
-    // 记录今天的访问
     if (!visitDates.includes(todayStr)) {
       visitDates.push(todayStr)
-      
-      // 只保留最近30天的记录
       const recentDates = visitDates.length > 30 
         ? visitDates.slice(visitDates.length - 30) 
         : [...visitDates]
-      
-      // 使用存储服务保存
+
       storageService.setObject('visit-dates', recentDates)
     }
-    
-    // 排序日期以便计算连续天数
+
     const sortedDates = [...visitDates].sort()
-    
-    // 计算最长连续访问天数
     const maxDays = this.calculateMaxConsecutiveDays(sortedDates)
     
     if (maxDays >= 5) {
       this.manager.unlockAchievement('loyal-fan')
     }
-    
-    // 保存当前的连续天数
+
     storageService.setNumber('consecutive-days', this.calculateCurrentStreak(sortedDates))
   }
   

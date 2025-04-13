@@ -95,8 +95,7 @@ export default {
     handleBackgroundError() {
       this.backgroundLoaded = false;
       this.backgroundError = true;
-      
-      // 使用通知服务显示错误喵～
+
       notificationService.error('背景图片加载失败了喵～');
       
       console.error('背景图片加载失败');
@@ -106,7 +105,6 @@ export default {
       }
     },
     scrollToBottom() {
-      // 获取当前组件的DOM元素
       const profileElement = this.$el;
       const elementBottom = profileElement.offsetTop + profileElement.offsetHeight;
       window.scrollTo({

@@ -21,10 +21,7 @@ class SeasonTracker {
    * 启用季节跟踪
    */
   enable() {
-    // 加载已保存的季节访问记录
     this.loadSeasonsData();
-    
-    // 检查当前季节并更新记录
     this.checkCurrentSeason();
   }
 
@@ -40,8 +37,6 @@ class SeasonTracker {
     } catch (e) {
       console.error('加载季节数据失败', e);
     }
-
-    // 检查成就是否已解锁
     this.checkAchievementStatus();
   }
 
@@ -74,27 +69,22 @@ class SeasonTracker {
    */
   getCurrentSeason() {
     const now = new Date();
-    const month = now.getMonth() + 1; // 月份是从0开始的，所以加1
+    const month = now.getMonth() + 1; 
     
     // 按北半球季节划分
-    if (month >= 3 && month <= 5) return 'spring';  // 春季：3-5月
-    if (month >= 6 && month <= 8) return 'summer';  // 夏季：6-8月
-    if (month >= 9 && month <= 11) return 'autumn'; // 秋季：9-11月
-    return 'winter';  // 冬季：12,1,2月
+    if (month >= 3 && month <= 5) return 'spring';  
+    if (month >= 6 && month <= 8) return 'summer';  
+    if (month >= 9 && month <= 11) return 'autumn'; 
+    return 'winter'; 
   }
 
   /**
    * 检查是否已收集齐四个季节
    */
   checkAllSeasonsCompleted() {
-    // 如果成就已触发，不再检查
     if (this.achievementTriggered) return;
-    
-    // 检查四个季节是否都已访问
     const allSeasonsVisited = Object.values(this.seasons).every(visited => visited);
-    
     if (allSeasonsVisited) {
-      // 触发成就解锁
       this.achievementTriggered = true;
       eventBus.emit('achievement-unlocked', this.achievementId);
     }
