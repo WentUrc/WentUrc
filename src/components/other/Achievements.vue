@@ -84,22 +84,18 @@ import achievementManager from './achievements/core/AchievementManager.js'
 import eventBus from '../../utils/eventBus.js'
 import notificationService from '../../utils/notificationService.js'
 
-// 响应式状态喵～
 const showPanel = ref(false)
 const manager = achievementManager
 const componentId = 'achievements-component-' + Date.now()
 
-// 本地状态，确保响应性
 const localUnlockedCount = ref(0)
 const localHasNewAchievements = ref(false)
 
-// 使用计算属性包装localState，确保响应性喵～
 const unlockedCount = computed(() => localUnlockedCount.value)
 const totalAchievements = computed(() => manager.totalAchievements)
 const unlockedPercentage = computed(() => manager.unlockedPercentage)
 const hasNewAchievements = computed(() => localHasNewAchievements.value)
 
-// 包装成就相关方法喵～
 function isAchievementUnlocked(id) {
   return manager.isAchievementUnlocked(id)
 }
@@ -132,47 +128,34 @@ function acknowledgeAchievement(id) {
   manager.acknowledgeAchievement(id)
 }
 
-// 生命周期钩子喵～
 onMounted(() => {
-  // 同步初始状态
   syncStateFromManager()
   
-  // 注册事件监听
   eventBus.register(componentId, 'achievements-updated', (count) => {
     localUnlockedCount.value = count
-    // 触发一次完整同步以确保数据一致性
     syncStateFromManager()
   })
   
-  // 添加新的监听器处理通知服务事件
   eventBus.register(componentId, 'notification:shown', (notifInfo) => {
     if (notifInfo.type === 'achievement') {
-      // 成就通知已显示，可以在这里添加额外处理
     }
   });
   
-  // 初始化成就管理器
   manager.initialize().then(() => {
-    // 初始化完成后同步状态
     syncStateFromManager()
   })
 })
 
 onBeforeUnmount(() => {
-  // 清理组件专用的事件监听
   eventBus.unregisterComponent(componentId)
-  
-  // 清理成就管理器
   manager.cleanup()
 })
 
-// 同步管理器状态到本地响应式变量
 function syncStateFromManager() {
   localUnlockedCount.value = manager.unlockedCount
   localHasNewAchievements.value = manager.hasNewAchievements
 }
 
-// 方法喵～
 function togglePanel() {
   showPanel.value = !showPanel.value
   if (showPanel.value) {
@@ -186,7 +169,6 @@ function closePanel() {
   syncStateFromManager()
 }
 
-// 监听解锁数量变化
 watch(() => manager.unlockedCount, (newVal) => {
   localUnlockedCount.value = newVal
 })

@@ -12,8 +12,6 @@ class AchievementMasterTracker {
     this.totalAchievements = 0;
     this.eventHandler = null;
     this.pendingCheck = false;
-    
-    // 计算除了"achievement-master"外的成就总数
     this.countTotalAchievements();
   }
 
@@ -21,7 +19,6 @@ class AchievementMasterTracker {
    * 计算总成就数（排除自身）
    */
   countTotalAchievements() {
-    // 从成就数据中获取总数，但排除自己
     this.totalAchievements = Object.keys(achievementsData).filter(
       key => key !== 'achievement-master'
     ).length;
@@ -34,26 +31,17 @@ class AchievementMasterTracker {
   initialize() {
     if (this.initialized) return;
     this.initialized = true;
-    
-    // 从localStorage加载成就状态
     this.loadAchievementsState();
-    
-    // 如果已经全部解锁但成就大师还未解锁，立即解锁
     if (this.unlockedCount >= this.totalAchievements && !this.achievementUnlocked) {
       this.unlockAchievement();
     }
-    
-    // 监听新成就解锁事件
     this.eventHandler = (achievementId) => {
-      // 排除自己以避免无限循环
       if (achievementId !== 'achievement-master') {
         this.scheduleCheck();
       }
     };
     
     eventBus.on('achievement-unlocked', this.eventHandler);
-    
-    // 延迟一秒再次检查，确保所有成就数据都已加载
     setTimeout(() => {
       this.loadAchievementsState();
       
@@ -71,13 +59,9 @@ class AchievementMasterTracker {
       const achievementsData = localStorage.getItem('wenturc-achievements');
       if (achievementsData) {
         const achievements = JSON.parse(achievementsData);
-        
-        // 计算已解锁的成就数量（排除成就大师自身）
         this.unlockedCount = Object.entries(achievements).filter(
           ([key, achievement]) => key !== 'achievement-master' && achievement && achievement.unlocked === true
         ).length;
-        
-        // 检查成就大师成就是否已解锁
         this.achievementUnlocked = achievements['achievement-master'] && 
           achievements['achievement-master'].unlocked === true;
       }
@@ -95,8 +79,6 @@ class AchievementMasterTracker {
     if (this.pendingCheck) return;
     
     this.pendingCheck = true;
-    
-    // 使用较长的延迟确保localStorage已更新
     setTimeout(() => {
       this.pendingCheck = false;
       this.onAchievementUnlocked();
@@ -107,10 +89,7 @@ class AchievementMasterTracker {
    * 处理成就解锁事件
    */
   onAchievementUnlocked() {
-    // 重新加载成就状态
     this.loadAchievementsState();
-    
-    // 检查是否达到目标
     if (this.unlockedCount >= this.totalAchievements && !this.achievementUnlocked) {
       this.unlockAchievement();
     }

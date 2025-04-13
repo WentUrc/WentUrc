@@ -42,11 +42,9 @@ export default {
     }
   },
   computed: {
-    // 自定义每行的不规则字体大小
     fontSizes() {
       return ['10rem', '6rem', '12rem', '14rem', '8rem']
     },
-    // 自定义每行动画时长
     durations() {
       return ['5s', '4s', '6s', '5s', '7s']
     }
