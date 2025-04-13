@@ -16,11 +16,7 @@ class NewYearTracker {
   initialize() {
     if (this.initialized) return;
     this.initialized = true;
-    
-    // 检查成就是否已经解锁
     this.loadState();
-    
-    // 检测是否是新年第一天喵～
     if (!this.achievementUnlocked) {
       this.checkNewYear();
     }

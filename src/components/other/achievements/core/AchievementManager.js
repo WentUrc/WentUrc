@@ -15,28 +15,21 @@ class AchievementManager {
     
     this.userAchievements = {};
     this.hasNewAchievements = false;
-    
-    // 初始化追踪器数组 - 用于统一管理
     this.trackers = [];
-    
-    // 事件监听器缓存，用于清理
     this.eventHandlers = {};
     
-    this.recentlyUnlocked = new Set(); // 记录最近解锁的成就，避免重复通知
+    this.recentlyUnlocked = new Set(); 
   }
   
   /**
    * 初始化成就系统
    */
   async initialize() {
-    // 加载用户成就数据
     this.userAchievements = this.storage.loadAchievements();
     this.hasNewAchievements = this.checkForNewAchievements();
-    
-    // 异步初始化追踪器
+
     await this._initTrackers();
-    
-    // 设置事件监听
+
     this.setupEventListeners();
   }
   
@@ -58,16 +51,14 @@ class AchievementManager {
         import('../trackers/VisitTracker.js'),
         import('../easter-eggs/EasterEggManager.js')
       ]);
-      
-      // 创建并添加追踪器到统一数组
+
       this.trackers = [
         new ActivityTracker(this),
         new TimeTracker(this),
         new VisitTracker(this),
         new EasterEggManager(this)
       ];
-      
-      // 初始化所有追踪器
+
       for (const tracker of this.trackers) {
         await tracker.initialize?.();
       }
@@ -80,15 +71,13 @@ class AchievementManager {
    * 设置事件监听器
    */
   setupEventListeners() {
-    // 使用缓存并绑定this上下文，便于后续清理
     this.eventHandlers = {
       'achievement-unlocked': this.handleAchievementUnlock.bind(this),
       'theme-changed': () => this.unlockAchievement('theme-changer'),
       'music-played': () => this.unlockAchievement('music-lover'),
       'quote-favorited': () => this.unlockAchievement('quote-collector')
     };
-    
-    // 注册所有事件监听器
+
     Object.entries(this.eventHandlers).forEach(([event, handler]) => {
       eventBus.on(event, handler);
     });
@@ -102,16 +91,13 @@ class AchievementManager {
     Object.entries(this.eventHandlers).forEach(([event, handler]) => {
       eventBus.off(event, handler);
     });
-    
-    // 清理所有追踪器
+
     for (const tracker of this.trackers) {
       tracker.cleanup?.();
     }
-    
-    // 清空追踪器数组
+
     this.trackers = [];
-    
-    // 清理通知管理器
+
     this.notifications.cleanup();
   }
   
@@ -132,64 +118,49 @@ class AchievementManager {
     if (this.recentlyUnlocked && this.recentlyUnlocked.has(id)) {
       return false;
     }
-    
-    // 初始化集合（如果不存在）
+
     if (!this.recentlyUnlocked) {
       this.recentlyUnlocked = new Set();
     }
-    
-    // 添加到最近解锁列表
+
     this.recentlyUnlocked.add(id);
-    
-    // 5秒后从列表中移除
+
     setTimeout(() => {
       if (this.recentlyUnlocked) {
         this.recentlyUnlocked.delete(id);
       }
     }, 5000);
-    
-    // 成就不存在检查
+
     if (!this.achievements[id]) {
       console.error(`成就ID不存在: ${id}`);
       return false;
     }
-    
-    // 已解锁检查
+
     if (this.isAchievementUnlocked(id)) {
       return false;
     }
-    
-    // 解锁成就
+
     const achievement = {
       unlocked: true,
       timestamp: new Date().toISOString(),
       isNew: true
     };
-    
-    // 创建新对象以确保Vue响应性
+
     this.userAchievements = {
       ...this.userAchievements,
       [id]: achievement
     };
-    
-    // 存储更新后的成就
+
     this.storage.saveAchievements(this.userAchievements);
     this.hasNewAchievements = true;
-    
-    // 确保通知数据完整
+
     const achievementData = this.achievements[id];
     if (achievementData) {
-      // 触发通知，使用公共事件总线确保Vue组件能感知变化
       eventBus.emit('show-achievement-notification', {...achievementData, id});
-      
-      // 同时调用内部通知方法
       this.notifications.showNotification({...achievementData, id});
     }
-    
-    // 触发全局事件以通知所有监听组件
+
     eventBus.emit('achievements-updated', this.unlockedCount);
-    
-    // 检查成就猎人成就
     this.checkAchievementHunter();
     
     return true;
@@ -199,7 +170,6 @@ class AchievementManager {
    * 检查是否应该解锁成就猎人成就
    */
   checkAchievementHunter() {
-    // 延迟检查，确保userAchievements是最新的
     setTimeout(() => {
       import('../easter-eggs/AchievementHunterTracker.js').then(module => {
         if (module.default && typeof module.default.checkAndUnlockImmediately === 'function') {
@@ -234,8 +204,6 @@ class AchievementManager {
       };
       
       this.storage.saveAchievements(this.userAchievements);
-      
-      // 更新"有新成就"的标志
       this.hasNewAchievements = this.checkForNewAchievements();
     }
   }

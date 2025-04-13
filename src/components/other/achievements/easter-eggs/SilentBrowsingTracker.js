@@ -10,21 +10,17 @@ class SilentBrowsingTracker {
     this.startTime = null;
     this.accumulatedTime = 0;
     this.achievementUnlocked = false;
-    this.ACHIEVEMENT_TIME = 10 * 60 * 1000; // 10分钟，单位毫秒
+    this.ACHIEVEMENT_TIME = 10 * 60 * 1000; 
     this.intervalId = null;
     this.lastActiveTime = Date.now();
-    this.checkIntervalMs = 5000; // 检查间隔：5秒
+    this.checkIntervalMs = 5000; 
     this.initialized = false;
   }
 
   initialize() {
     if (this.initialized) return;
     this.initialized = true;
-    
-    // 从localStorage加载已累积的时间
     this.loadState();
-    
-    // 监听页面可见性变化
     document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
     
     // 设置定时检查
@@ -43,7 +39,7 @@ class SilentBrowsingTracker {
     // 监听页面可见性变化
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
-        this.lastActiveTime = Date.now(); // 重置活动时间
+        this.lastActiveTime = Date.now();
       }
     });
     
@@ -93,7 +89,7 @@ class SilentBrowsingTracker {
       this.pauseTracking();
     } else {
       // 页面可见，恢复计时（如果处于静音状态）
-      this.lastActiveTime = Date.now(); // 重置活动时间
+      this.lastActiveTime = Date.now(); 
       if (this.isMuted) {
         this.startTracking();
       }
@@ -140,7 +136,7 @@ class SilentBrowsingTracker {
   
   updateTracking() {
     if (this.achievementUnlocked) {
-      return; // 已经解锁成就，不再跟踪
+      return; 
     }
     
     // 计算当前总时间
