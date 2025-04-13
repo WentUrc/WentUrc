@@ -23,23 +23,17 @@ class AchievementHunterTracker {
     
     // 从localStorage加载已解锁成就信息
     this.loadAchievementsState();
-    
-    // 如果达到目标但未解锁，立即解锁
     if (this.unlockedCount >= this.targetCount && !this.achievementUnlocked) {
       this.unlockAchievement();
     }
     
-    // 监听新成就解锁事件 - 使用统一的事件总线和正确的方法
     this.eventHandler = (achievementId) => {
-      // 排除自己以避免无限循环
       if (achievementId !== 'achievement-hunter') {
         this.scheduleCheck();
       }
     };
     
     eventBus.on('achievement-unlocked', this.eventHandler);
-    
-    // 延迟一秒再次检查，确保所有成就数据都已加载
     setTimeout(() => {
       this.loadAchievementsState();
       
@@ -57,19 +51,15 @@ class AchievementHunterTracker {
       const achievementsData = localStorage.getItem('wenturc-achievements');
       if (achievementsData) {
         const achievements = JSON.parse(achievementsData);
-        
-        // 计算已解锁的成就数量 - 优化计数逻辑
         this.unlockedCount = 0;
         for (const key in achievements) {
-          // 排除自己以避免循环依赖
           if (key !== 'achievement-hunter' && 
               achievements[key] && 
               achievements[key].unlocked === true) {
             this.unlockedCount++;
           }
         }
-        
-        // 检查成就猎人成就是否已解锁
+
         this.achievementUnlocked = achievements['achievement-hunter'] && 
           achievements['achievement-hunter'].unlocked === true;
 
@@ -88,8 +78,6 @@ class AchievementHunterTracker {
     if (this.pendingCheck) return;
     
     this.pendingCheck = true;
-    
-    // 使用较长的延迟确保localStorage已更新
     setTimeout(() => {
       this.pendingCheck = false;
       this.onAchievementUnlocked();
@@ -100,10 +88,7 @@ class AchievementHunterTracker {
    * 处理成就解锁事件
    */
   onAchievementUnlocked() {
-    // 重新加载成就状态
     this.loadAchievementsState();
-    
-    // 检查是否达到目标
     if (this.unlockedCount >= this.targetCount && !this.achievementUnlocked) {
       this.unlockAchievement();
     }

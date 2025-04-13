@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import RoleSelection from './components//body/RoleSelection.vue'
+import RoleSelection from './components/body/RoleSelection.vue'
 import Dialogue from './components/body/Dialogue.vue'
 
 const routes = [

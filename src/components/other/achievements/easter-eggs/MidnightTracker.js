@@ -17,18 +17,12 @@ class MidnightTracker {
   initialize() {
     if (this.initialized) return;
     this.initialized = true;
-    
-    // 检查成就是否已经解锁
     this.loadState();
-    
-    // 检测是否是午夜12点
     if (!this.achievementUnlocked) {
       this.checkMidnight();
-      
-      // 设置定时检查午夜时间
       this.midnightCheckInterval = setInterval(() => {
         this.checkMidnight();
-      }, 30000); // 每30秒检查一次
+      }, 30000); 
     }
   }
   
@@ -83,8 +77,7 @@ class MidnightTracker {
     if (!this.achievementUnlocked) {
       this.achievementUnlocked = true;
       eventBus.emit('achievement-unlocked', 'midnight-thinker');
-      
-      // 成就已解锁，可以清理定时器
+
       if (this.midnightCheckInterval) {
         clearInterval(this.midnightCheckInterval);
         this.midnightCheckInterval = null;
