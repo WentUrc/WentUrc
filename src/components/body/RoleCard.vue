@@ -82,11 +82,18 @@ export default {
   position: relative;
   border-radius: 18px;
   outline: none;
+  width: 100%; /* 确保宽度 100% */
+  margin: 0; /* 移除外边距 */
+  padding: 0; /* 移除内边距 */
+  box-sizing: border-box; /* 确保边框计算在宽度内 */
 }
 
 .role-card:focus .card-inner {
   box-shadow: 0 12px 25px var(--card-shadow, rgba(94, 96, 206, 0.25));
-  border: 2px solid var(--icon-primary, #5e60ce);
+  background: 
+    linear-gradient(var(--card-bg-hover, white), var(--card-bg-hover, white)) padding-box,
+    linear-gradient(to right, var(--icon-primary, #5e60ce), var(--icon-accent, #6b90ff)) border-box;
+  border-color: transparent;
   transform: translateY(-8px);
 }
 
@@ -95,7 +102,9 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 20px;
-  background: var(--card-bg, white);
+  background: 
+    linear-gradient(var(--card-bg, white), var(--card-bg, white)) padding-box,
+    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
   border: 2px solid transparent;
   border-radius: 16px;
   box-shadow: 0 8px 20px var(--card-shadow, rgba(0,0,0,0.08)), 0 4px 8px rgba(94, 96, 206, 0.05);
@@ -103,12 +112,32 @@ export default {
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   overflow: hidden;
   position: relative;
+  width: 100%; /* 确保内部容器宽度为100% */
+  margin: 0; /* 移除任何边距 */
+  box-sizing: border-box;
 }
 
 .role-card:hover .card-inner {
   transform: translateY(-8px) scale(1.03);
   box-shadow: 0 15px 30px var(--card-shadow, rgba(94, 96, 206, 0.2)), 0 8px 15px var(--card-shadow, rgba(94, 96, 206, 0.15));
-  border-color: var(--icon-primary, #5e60ce);
+  background: 
+    linear-gradient(var(--card-bg-hover, white), var(--card-bg-hover, white)) padding-box,
+    linear-gradient(to right, var(--border-gradient, #6a73c9, #5e60ce, #5e60ce, #6a73c9)) border-box;
+  border-color: transparent;
+}
+
+/* 添加暗色模式适配 */
+:root[data-theme="dark"] .card-inner {
+  background: 
+    linear-gradient(var(--card-bg, #212121), var(--card-bg, #212121)) padding-box,
+    linear-gradient(to right, var(--border-gradient, #9b8dda, #6b90ff, #7294d5, #b98db6)) border-box;
+}
+
+:root[data-theme="dark"] .role-card:hover .card-inner,
+:root[data-theme="dark"] .role-card:focus .card-inner {
+  background: 
+    linear-gradient(var(--card-bg-hover, #2a2a2a), var(--card-bg-hover, #2a2a2a)) padding-box,
+    linear-gradient(to right, var(--border-gradient, #9b8dda, #6b90ff, #7294d5, #b98db6)) border-box;
 }
 
 .role-content {
@@ -267,23 +296,55 @@ export default {
 }
 
 @media (max-width: 768px) {
+  .role-card {
+    margin: 0;
+    padding: 0;
+    border-radius: 15px;
+  }
+  
   .card-inner {
     padding: 15px;
+    margin: 0;
+    border-width: 2px;
+    border-radius: 14px;
+    width: 100%;
   }
   
   .image-container {
-    height: 180px;
+    height: 180px; /* 略微减小图片容器高度 */
+  }
+}
+
+@media (max-width: 480px) {
+  .role-card {
+    width: 100%;
+    padding: 0;
+    margin: 0;
   }
   
-  .role-content h2 {
-    font-size: 1.3rem;
+  .role-card > * {
+    width: 100%;
+    margin: 0;
   }
   
-  .role-content p {
-    font-size: 0.9rem;
-    /* 在移动设备上也移除行数限制 */
-    /* -webkit-line-clamp: 2; */
-    max-height: 80px; /* 移动设备上稍微减小最大高度 */
+  .card-inner {
+    padding: 15px; /* 增加内边距 */
+    width: 100%;
+    border-width: 2px;
+    margin-bottom: 5px; /* 添加底部边距 */
+  }
+  
+  .image-container {
+    height: 170px; /* 适当减小图片容器高度 */
+  }
+  
+  .role-info {
+    min-height: 100px; /* 减小最小高度 */
+  }
+  
+  /* 添加卡片之间的视觉分隔 */
+  .role-card:not(:last-child) {
+    margin-bottom: 10px;
   }
 }
 </style>
