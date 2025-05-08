@@ -38,6 +38,8 @@
             <BackgroundMusic />
             <BlackLightWidget ref="blackLight" @theme-changed="onThemeChanged" />
             <NeoLife />
+            <!-- 添加底部间隔占位元素 -->
+            <div class="bottom-spacer"></div>
           </div>
         </div>
       </div>
@@ -614,6 +616,12 @@ export default {
   background: var(--button-active, rgba(94, 96, 206, 0.5));
 }
 
+/* 添加明显的底部间隔元素 - 默认为0高度（桌面端） */
+.bottom-spacer {
+  height: 0;
+  width: 100%;
+}
+
 @keyframes logoGameAnimation {
   0% { transform: scale(1); }
   25% { transform: scale(1.2) rotate(5deg); }
@@ -631,6 +639,8 @@ export default {
   .right-sidebar {
     width: 100%;
     border-radius: 0;
+    /* 增加底部内边距，确保在所有设备上都有效 */
+    padding-bottom: max(60px, env(safe-area-inset-bottom, 60px));
   }
   
   .right-sidebar::before {
@@ -647,6 +657,11 @@ export default {
     background: linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
   }
   
+  /* 调整底部间隔在移动端的高度 */
+  .bottom-spacer {
+    height: 120px; /* 移动端设置更高的间隔 */
+  }
+  
   .sidebar-button {
     width: 36px;
     height: 36px;
@@ -659,6 +674,20 @@ export default {
   
   .theme-toggle {
     margin-right: 12px;
+  }
+}
+
+/* 兼容性更强的底部安全区域适配 */
+@supports (padding: max(0px)) {
+  /* 移除桌面端的底部间隔 */
+  .bottom-spacer {
+    height: 0;
+  }
+  
+  @media (max-width: 768px) {
+    .bottom-spacer {
+      height: max(120px, env(safe-area-inset-bottom, 120px) + 60px);
+    }
   }
 }
 </style>

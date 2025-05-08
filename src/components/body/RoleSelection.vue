@@ -94,6 +94,7 @@ export default {
   font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
   color: var(--text-color, #333);
   overflow: hidden;
+  transition: background 0.3s ease; /* 添加背景过渡效果 */
 }
 
 /* 添加超大渐变文字背景 */
@@ -144,6 +145,7 @@ export default {
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
+  width: 100%; /* 确保宽度为100% */
 }
 
 .roles-grid {
@@ -152,16 +154,28 @@ export default {
   gap: 24px;
   justify-content: center;
   grid-auto-rows: 1fr;
+  width: 100%;
 }
 
 /* 媒体查询 */
 @media (max-width: 768px) {
   .roles-grid {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px; /* 增加中等屏幕上的卡片间距 */
+    padding: 0;
+    width: 100%;
+    margin: 0;
+  }
+  
+  .roles {
+    padding: 10px 5px; /* 减小水平内边距 */
+    margin: 0;
+    width: 100%;
   }
   
   .role-selection h1 {
     font-size: 2rem;
+    margin-bottom: 20px; /* 缩小标题下方间距 */
   }
 
   .role-selection::before {
@@ -170,18 +184,28 @@ export default {
 }
 
 @media (max-width: 480px) {
-  .role-card {
-    width: 80%;
-    height: 85%;
-    max-width: 100%;
-    background: white;
-    border: 2px solid transparent;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: transform 0.4s ease, box-shadow 0.4s ease, border 0.4s ease;
-    margin: 0 auto;
+  .roles-grid {
+    grid-template-columns: 1fr; /* 非常小的屏幕上每行只显示一张卡片 */
+    gap: 20px; /* 增加小屏幕上的卡片间距 */
+    margin: 10px 0; /* 添加上下边距 */
+    padding: 0;
+    width: 100%;
+  }
+  
+  .roles {
+    padding: 10px 15px; /* 增加内边距，给整体留白 */
+    width: 100%;
+  }
+
+  .role-selection .role-card {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    max-width: none;
+    background: none;
+    box-shadow: none;
+    border: none;
   }
 }
 </style>

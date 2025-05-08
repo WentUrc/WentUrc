@@ -21,8 +21,14 @@
         <p v-for="(line, index) in script" :key="index" class="dialogue-line">{{ line }}</p>
       </div>
       <div class="dialogue-buttons">
-        <button class="dialogue-button" @click="proceed">进入冒险</button>
-        <button class="dialogue-button back" @click="goBack">后悔啦？</button>
+        <button class="dialogue-button adventure" @click="proceed">
+          <i class="fas fa-compass"></i>
+          <span>进入冒险</span>
+        </button>
+        <button class="dialogue-button back" @click="goBack">
+          <i class="fas fa-arrow-left"></i>
+          <span>后悔啦？</span>
+        </button>
       </div>
     </div>
   </div>
@@ -96,6 +102,7 @@ export default {
   background: var(--card-bg, rgba(255, 255, 255, 0.8));
   background-size: 400% 400%;
   overflow: hidden;
+  transition: background 0.3s ease; /* 添加背景过渡效果 */
 }
 
 /* 新增渐变色上边框 */
@@ -167,9 +174,12 @@ export default {
 .dialogue-box {
   position: relative;
   z-index: 3;
-  background: var(--card-bg-hover, rgba(255, 255, 255, 0.95));
+  background: 
+    linear-gradient(var(--card-bg-hover, rgba(255, 255, 255, 0.95)), var(--card-bg-hover, rgba(255, 255, 255, 0.95))) padding-box,
+    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
   padding: 28px 30px;
   border-radius: 18px;
+  border: 2px solid transparent;
   box-shadow: 
     0 10px 25px -5px var(--card-shadow, rgba(0, 0, 0, 0.1)),
     0 5px 10px -5px var(--card-shadow, rgba(0, 0, 0, 0.05));
@@ -177,10 +187,9 @@ export default {
   width: 80%;
   height: 420px;
   max-width: 500px;
-  border: 2px solid transparent;
   transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-              border 0.3s ease, 
-              box-shadow 0.3s ease;
+              box-shadow 0.3s ease,
+              background 0.3s ease;
   display: flex;
   flex-direction: column;
   backdrop-filter: blur(5px);
@@ -220,7 +229,9 @@ export default {
 
 .dialogue-box:hover {
   transform: translateY(-6px);
-  border-color: var(--icon-primary, #6a73c9);
+  background: 
+    linear-gradient(var(--card-bg-hover, rgba(255, 255, 255, 0.98)), var(--card-bg-hover, rgba(255, 255, 255, 0.98))) padding-box,
+    linear-gradient(to right, var(--border-gradient, #6a73c9, #5e60ce, #5e60ce, #6a73c9)) border-box;
   box-shadow: 
     0 15px 30px -10px var(--card-shadow, rgba(0, 0, 0, 0.15)),
     0 8px 15px -5px var(--card-shadow, rgba(0, 0, 0, 0.1));
@@ -235,6 +246,19 @@ export default {
 .dialogue-box:hover::after {
   transform: scale(1.1, 0.22);
   opacity: 0.1;
+}
+
+/* 适配暗色主题 */
+:root[data-theme="dark"] .dialogue-box {
+  background: 
+    linear-gradient(var(--card-bg-hover, rgba(40, 40, 40, 0.95)), var(--card-bg-hover, rgba(40, 40, 40, 0.95))) padding-box,
+    linear-gradient(to right, var(--border-gradient, #9b8dda, #6b90ff, #7294d5, #b98db6)) border-box;
+}
+
+:root[data-theme="dark"] .dialogue-box:hover {
+  background: 
+    linear-gradient(var(--card-bg-hover, rgba(45, 45, 45, 0.98)), var(--card-bg-hover, rgba(45, 45, 45, 0.98))) padding-box,
+    linear-gradient(to right, var(--border-gradient, #9b8dda, #6b90ff, #7294d5, #b98db6)) border-box;
 }
 
 .dialogue-title {
@@ -314,90 +338,75 @@ export default {
   margin-bottom: 0;
 }
 
+/* 简化的按钮容器样式 */
 .dialogue-buttons {
   display: flex;
   justify-content: center;
   gap: 24px;
-  margin-top: 4px;
-  position: relative; /* 为按钮装饰定位 */
+  margin-top: 20px;
 }
 
-/* 按钮周围的微光效果 */
-.dialogue-buttons::before {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 30px;
-  background: var(--primary-gradient, linear-gradient(90deg, transparent, var(--icon-primary, #5e67ce), transparent));
-  opacity: 0.1;
-  top: -15px;
-  filter: blur(10px);
-  border-radius: 50%;
-}
-
+/* 简化后的按钮基本样式 */
 .dialogue-button {
-  padding: 12px 28px;
-  font-size: 17px;
-  background: var(--icon-primary, #5e67ce);
-  color: #fff;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  box-shadow: 
-    0 5px 15px -3px var(--card-shadow, rgba(0, 0, 0, 0.2)),
-    0 2px 5px -2px var(--card-shadow, rgba(0, 0, 0, 0.1));
   position: relative;
-  overflow: hidden;
-  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  /* 使用主题系统的变量，而不是硬编码的颜色 */
+  background: var(--primary-gradient, linear-gradient(135deg, var(--icon-primary, #5e60ce) 0%, var(--icon-accent, #6b90ff) 100%));
+  border-radius: 30px;
+  color: white;
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: 0.5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px var(--card-shadow, rgba(91, 81, 200, 0.3));
 }
 
-/* 统一按钮的hover效果方向：改为从上到下 */
-.dialogue-button::before {
-  content: "";
-  position: absolute;
-  top: -100%;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--icon-accent, #5750d3);
-  z-index: -1;
-  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-  opacity: 0.9;
+/* 移除特定颜色设置，使用主题变量 */
+.dialogue-button.adventure {
+  background: var(--primary-gradient, linear-gradient(135deg, var(--icon-primary, #5e60ce) 0%, var(--icon-accent, #6b90ff) 100%));
+}
+
+/* 修改返回按钮样式，使用主题系统变量 */
+.dialogue-button.back {
+  /* 使用同样的主题渐变变量，但调整方向和透明度使其看起来不同 */
+  background: var(--primary-gradient-alt, linear-gradient(135deg, 
+    var(--icon-accent, #6b90ff) 0%, 
+    var(--icon-primary, #5e60ce) 100%));
+}
+
+.dialogue-button i {
+  font-size: 18px;
 }
 
 .dialogue-button:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 
-    0 8px 20px -5px var(--card-shadow, rgba(0, 0, 0, 0.3)),
-    0 4px 10px -3px var(--card-shadow, rgba(0, 0, 0, 0.2));
-  letter-spacing: 0.8px;
-}
-
-.dialogue-button:hover::before {
-  top: 0; /* 从上到下的覆盖效果 */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px var(--card-shadow, rgba(91, 81, 200, 0.4));
 }
 
 .dialogue-button:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px var(--card-shadow, rgba(91, 81, 200, 0.25));
 }
 
-/* 修改后的返回按钮样式 - 使其更醒目 */
-.dialogue-button.back {
-  background: var(--icon-primary, #5e67ce);
-  color: #fff;
-  opacity: 0.9;
+/* 适配暗色主题 */
+:root[data-theme="dark"] .dialogue-button {
+  box-shadow: 0 4px 15px var(--card-shadow, rgba(0, 0, 0, 0.3));
 }
 
-.dialogue-button.back::before {
-  background: var(--icon-accent, #5750d3);
+:root[data-theme="dark"] .dialogue-button:hover {
+  box-shadow: 0 6px 20px var(--card-shadow, rgba(0, 0, 0, 0.4));
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* 移除特定颜色的暗色主题设置，完全依赖CSS变量 */
+:root[data-theme="dark"] .dialogue-button.adventure,
+:root[data-theme="dark"] .dialogue-button.back {
+  /* 不再指定具体颜色，完全依靠主题系统变量 */
 }
 
 /* 响应式调整 */
@@ -422,11 +431,13 @@ export default {
   
   .dialogue-buttons {
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
   }
   
   .dialogue-button {
     width: 100%;
+    padding: 12px 20px;
+    font-size: 16px;
   }
 }
 </style>
