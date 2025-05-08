@@ -2,6 +2,8 @@
   <div id="app">
     <ProfileCard />
     <router-view />
+    <MessageBoard /> <!-- 添加留言板 -->
+    <FriendLinks /> <!-- 添加友情链接 -->
     <Footer />
     <Logo />
     <EasterEgg />
@@ -10,20 +12,24 @@
 </template>
 
 <script>
-import ProfileCard from './components/body/ProfileCard.vue'
-import Footer from './components/buttom/Footer.vue'
-import Logo from './components/top/Logo.vue'
-import EasterEgg from './components/other/EasterEgg.vue'
-import Achievements from './components/other/Achievements.vue'
-import newYearTracker from './components/other/achievements/easter-eggs/NewYearTracker.js'
-import midnightTracker from './components/other/achievements/easter-eggs/MidnightTracker.js'
-import achievementHunterTracker from './components/other/achievements/easter-eggs/AchievementHunterTracker.js'
-import achievementMasterTracker from './components/other/achievements/easter-eggs/AchievementMasterTracker.js'
+import ProfileCard from './components/body/ProfileCard.vue';
+import MessageBoard from './components/body/MessageBoard.vue'; 
+import FriendLinks from './components/body/FriendLinks.vue'; // 导入友情链接组件
+import Footer from './components/buttom/Footer.vue';
+import Logo from './components/top/Logo.vue';
+import EasterEgg from './components/other/EasterEgg.vue';
+import Achievements from './components/other/Achievements.vue';
+import newYearTracker from './components/other/achievements/easter-eggs/NewYearTracker.js';
+import midnightTracker from './components/other/achievements/easter-eggs/MidnightTracker.js';
+import achievementHunterTracker from './components/other/achievements/easter-eggs/AchievementHunterTracker.js';
+import achievementMasterTracker from './components/other/achievements/easter-eggs/AchievementMasterTracker.js';
 
 export default {
   name: 'App',
   components: {
     ProfileCard,
+    MessageBoard,
+    FriendLinks, // 注册友情链接组件
     Footer,
     Logo,
     EasterEgg,
