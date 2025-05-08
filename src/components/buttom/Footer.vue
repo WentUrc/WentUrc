@@ -27,6 +27,7 @@ export default {
   animation: gradientShift 15s ease infinite;
   position: relative;
   z-index: 1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 /* 添加一个背景调整层 - 默认为浅色模式 */
@@ -64,6 +65,7 @@ export default {
   font-weight: bold;
   position: relative;
   z-index: 2;
+  letter-spacing: 0.02em; /* 添加轻微字间距提升可读性 */
 }
 
 /* 渐变文本效果 - 移除阴影 */
@@ -76,7 +78,7 @@ export default {
   background-size: 400%;
   background-position: 0% 50%;
   transition: background-position 0.5s ease-in-out;
-  /* 移除文字阴影 */
+  font-family: inherit; /* 确保继承父元素字体 */
 }
 
 /* 深色模式下调整文字亮度 */
