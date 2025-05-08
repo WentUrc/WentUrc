@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import RoleSelection from './components/body/RoleSelection.vue'
 import Dialogue from './components/body/Dialogue.vue'
 
@@ -8,7 +8,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(), // 改为哈希模式路由
   routes
 })
 
