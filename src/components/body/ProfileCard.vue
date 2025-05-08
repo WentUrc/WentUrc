@@ -401,10 +401,12 @@ export default {
   perspective: 1000px;
   width: 30%;
   max-width: 400px;
+  min-width: 320px;
   position: relative;
   z-index: 1;
   transition: height 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   height: auto;
+  margin: 0 auto; /* 确保水平居中 */
 }
 
 /* 当翻转时增加容器高度，为友链提供更多空间 */
@@ -426,6 +428,8 @@ export default {
 @media (max-width: 768px) {
   .flip-container {
     width: 90%;
+    min-width: auto; /* 移动端取消最小宽度限制 */
+    margin: 0 auto; /* 确保在移动端也居中 */
   }
   .flip-container.flipped {
     min-height: 450px; /* 移动端稍微减少高度 */
@@ -451,6 +455,7 @@ export default {
   animation: moveGradient 8s ease infinite;
   transform-style: preserve-3d; /* 确保3D效果 */
   backface-visibility: hidden; /* 隐藏背面 */
+  margin: 0 auto; /* 确保卡片本身也居中 */
 }
 
 /* 翻转按钮样式 */
