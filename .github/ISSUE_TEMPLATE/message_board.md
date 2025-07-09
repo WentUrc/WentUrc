@@ -2,7 +2,7 @@
 name: 留言板
 about: 欢迎来留言喵～说点什么给作者吧！
 title: "[留言] "
-labels: message
+labels: 留言板
 assignees: ''
 
 ---

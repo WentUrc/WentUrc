@@ -98,7 +98,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 750px;
+  padding: 20px;
+  min-height: 100vh;
   background: var(--card-bg, rgba(255, 255, 255, 0.8));
   background-size: 400% 400%;
   overflow: hidden;

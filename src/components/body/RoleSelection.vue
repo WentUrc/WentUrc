@@ -89,12 +89,12 @@ export default {
   padding: 40px 20px;
   text-align: center;
   background: var(--card-bg, rgba(255, 255, 255, 0.8));
-  min-height: 50vh;
-  min-height: 750px;
+  min-height: 100vh;
   font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
   color: var(--text-color, #333);
   overflow: hidden;
   transition: background 0.3s ease; /* 添加背景过渡效果 */
+  width: 100%;
 }
 
 /* 添加超大渐变文字背景 */
