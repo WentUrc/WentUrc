@@ -22,6 +22,24 @@
   /* 滚动条样式 - 添加新变量喵～ */
   --scrollbar-thumb: rgba(94, 96, 206, 0.5);
   --scrollbar-thumb-hover: rgba(94, 96, 206, 0.8);
+  
+  /* 记录页面专用变量 */
+  --page-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --sidebar-bg: #f8f9fa;
+  --header-bg: #ffffff;
+  --content-bg: #ffffff;
+  --text-secondary: #666666;
+  --border-color: #e9ecef;
+  --border-light: #f1f3f4;
+  --hover-bg: #e9ecef;
+  --primary-light: #e8e9ff;
+  --error-color: #dc3545;
+  --primary-dark: #4c4fd4;
+  --code-bg: #f8f9fa;
+  --code-color: #d63384;
+  --quote-bg: #f8f9fa;
+  --table-stripe: #f8f9fa;
+  --table-hover: #e9ecef;
 }
 
 /* 暗色模式 - 紫蓝 */
@@ -45,6 +63,24 @@
   /* 暗色模式滚动条样式喵～ */
   --scrollbar-thumb: rgba(107, 144, 255, 0.5);
   --scrollbar-thumb-hover: rgba(138, 140, 255, 0.8);
+  
+  /* 记录页面暗色模式专用变量 */
+  --page-bg: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  --sidebar-bg: #2a2a2a;
+  --header-bg: #333333;
+  --content-bg: #282828;
+  --text-secondary: #bbbbbb;
+  --border-color: #444444;
+  --border-light: #3a3a3a;
+  --hover-bg: #3a3a3a;
+  --primary-light: #4a4c7a;
+  --error-color: #ff6b6b;
+  --primary-dark: #7a7cff;
+  --code-bg: #2a2a2a;
+  --code-color: #ff7eb3;
+  --quote-bg: #2a2a2a;
+  --table-stripe: #2a2a2a;
+  --table-hover: #3a3a3a;
 }
 
 /* ===== 粉色少女主题 ===== */
@@ -64,6 +100,24 @@
   /* 粉色滚动条样式喵～ */
   --scrollbar-thumb: rgba(212, 113, 212, 0.5);
   --scrollbar-thumb-hover: rgba(255, 107, 107, 0.7);
+  
+  /* 记录页面粉色主题专用变量 */
+  --page-bg: linear-gradient(135deg, #fef7f7 0%, #ffc2e8 100%);
+  --sidebar-bg: #fef0f0;
+  --header-bg: #fff5f5;
+  --content-bg: #ffffff;
+  --text-secondary: #8b5a6b;
+  --border-color: #f0c2d4;
+  --border-light: #f9e0e8;
+  --hover-bg: #f0c2d4;
+  --primary-light: #ffbdde;
+  --error-color: #dc3545;
+  --primary-dark: #b85c8a;
+  --code-bg: #fef0f0;
+  --code-color: #d471d4;
+  --quote-bg: #fef0f0;
+  --table-stripe: #fef0f0;
+  --table-hover: #f0c2d4;
 }
 
 /* 粉色少女暗色模式 */
@@ -83,6 +137,24 @@
   /* 粉色暗色模式滚动条样式喵～ */
   --scrollbar-thumb: rgba(243, 140, 255, 0.5);
   --scrollbar-thumb-hover: rgba(255, 156, 156, 0.8);
+  
+  /* 记录页面粉色暗色模式专用变量 */
+  --page-bg: linear-gradient(135deg, #2d1a1a 0%, #3d2d2d 100%);
+  --sidebar-bg: #3a2a2a;
+  --header-bg: #4a3333;
+  --content-bg: #382828;
+  --text-secondary: #dbb8c8;
+  --border-color: #6a4a5a;
+  --border-light: #5a3a4a;
+  --hover-bg: #5a3a4a;
+  --primary-light: #7a4c6a;
+  --error-color: #ff9c9c;
+  --primary-dark: #ff9ccc;
+  --code-bg: #3a2a2a;
+  --code-color: #f38cff;
+  --quote-bg: #3a2a2a;
+  --table-stripe: #3a2a2a;
+  --table-hover: #5a3a4a;
 }
 
 /* ===== 森林绿意主题 ===== */
@@ -102,6 +174,24 @@
   /* 绿色滚动条样式喵～ */
   --scrollbar-thumb: rgba(56, 217, 169, 0.5);
   --scrollbar-thumb-hover: rgba(105, 219, 124, 0.7);
+  
+  /* 记录页面绿色主题专用变量 */
+  --page-bg: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  --sidebar-bg: #f0fdf4;
+  --header-bg: #f9fdf9;
+  --content-bg: #ffffff;
+  --text-secondary: #6b7280;
+  --border-color: #d1fae5;
+  --border-light: #e6fffa;
+  --hover-bg: #d1fae5;
+  --primary-light: #bbf7d0;
+  --error-color: #dc3545;
+  --primary-dark: #059669;
+  --code-bg: #f0fdf4;
+  --code-color: #10b981;
+  --quote-bg: #f0fdf4;
+  --table-stripe: #f0fdf4;
+  --table-hover: #d1fae5;
 }
 
 /* 森林绿意暗色模式 */
@@ -121,4 +211,22 @@
   /* 绿色暗色模式滚动条样式喵～ */
   --scrollbar-thumb: rgba(77, 255, 211, 0.5);
   --scrollbar-thumb-hover: rgba(138, 255, 153, 0.8);
+  
+  /* 记录页面绿色暗色模式专用变量 */
+  --page-bg: linear-gradient(135deg, #1a2e1a 0%, #2d3d2d 100%);
+  --sidebar-bg: #1f2f1f;
+  --header-bg: #2a3a2a;
+  --content-bg: #1e2e1e;
+  --text-secondary: #a1c4a1;
+  --border-color: #3a5a3a;
+  --border-light: #2a4a2a;
+  --hover-bg: #2a4a2a;
+  --primary-light: #4a6a4a;
+  --error-color: #ff6b6b;
+  --primary-dark: #4dffd3;
+  --code-bg: #1f2f1f;
+  --code-color: #4dffd3;
+  --quote-bg: #1f2f1f;
+  --table-stripe: #1f2f1f;
+  --table-hover: #2a4a2a;
 }
