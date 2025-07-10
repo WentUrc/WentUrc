@@ -18,7 +18,7 @@ export default {
     return {
       showBackToTop: false,
       scrollThreshold: 300, // 滚动300px后显示按钮
-      navbarHeight: 60 // 导航栏高度
+      navbarHeight: 0 // 导航栏高度
     };
   },
   methods: {
