@@ -86,15 +86,31 @@ export default {
 <style scoped>
 .role-selection {
   position: relative; /* 为伪元素定位 */
-  padding: 40px 20px;
+  padding: 50px 20px;
   text-align: center;
   background: var(--card-bg, rgba(255, 255, 255, 0.8));
-  min-height: 100vh;
   font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
   color: var(--text-color, #333);
-  overflow: hidden;
-  transition: background 0.3s ease; /* 添加背景过渡效果 */
   width: 100%;
+  box-sizing: border-box;
+}
+
+/* 桌面端：固定高度 + 内部滚动 */
+@media (min-width: 769px) {
+  .role-selection {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+/* 移动端：自适应高度 + 传统布局 */
+@media (max-width: 768px) {
+  .role-selection {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
 }
 
 /* 添加超大渐变文字背景 */
@@ -113,17 +129,7 @@ export default {
   z-index: 0;
 }
 
-/* 新增渐变色上边框 */
-.role-selection::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
-  z-index: 1;
-}
+
 
 /* 确保前景内容在伪元素之上 */
 .role-selection > * {
@@ -159,6 +165,10 @@ export default {
 
 /* 媒体查询 */
 @media (max-width: 768px) {
+  .role-selection {
+    padding: 30px 20px;
+  }
+  
   .roles-grid {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 24px; /* 增加中等屏幕上的卡片间距 */
@@ -184,6 +194,10 @@ export default {
 }
 
 @media (max-width: 480px) {
+  .role-selection {
+    padding: 20px 10px;
+  }
+  
   .roles-grid {
     grid-template-columns: 1fr; /* 非常小的屏幕上每行只显示一张卡片 */
     gap: 20px; /* 增加小屏幕上的卡片间距 */
@@ -206,6 +220,26 @@ export default {
     background: none;
     box-shadow: none;
     border: none;
+  }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 360px) {
+  .role-selection {
+    padding: 15px 5px; /* 和其他页面保持一致的思路 */
+  }
+  
+  .roles {
+    padding: 5px; /* 进一步减少内边距 */
+  }
+  
+  .role-selection h1 {
+    font-size: 1.5rem; /* 最小标题尺寸 */
+    margin-bottom: 15px;
+  }
+  
+  .roles-grid {
+    gap: 15px; /* 减少卡片间距 */
   }
 }
 </style>

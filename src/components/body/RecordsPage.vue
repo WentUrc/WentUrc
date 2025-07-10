@@ -5,7 +5,7 @@
       <div class="section-header">
         <h1 class="section-title">
           <i class="fas fa-book"></i>
-          过往的回想
+          故事集
         </h1>
         <p class="section-subtitle">没有未来的未来</p>
       </div>
@@ -415,7 +415,6 @@ export default {
       files: [],
       selectedFile: '',
       fileContent: '',
-      selectedFileInfo: null,
       loading: false,
       error: null,
       contentLoading: false,
@@ -688,16 +687,33 @@ export default {
 </script>
 
 <style scoped>
-/* 外层容器 - 与其他组件保持一致 */
+/* 外层容器 - 响应式布局策略 */
 .records-page {
   position: relative;
   max-width: 100%;
   margin: 0;
   padding: 50px 0;
   background: var(--card-bg, rgba(255, 255, 255, 0.8));
-  min-height: 100vh;
-  overflow: hidden;
   color: var(--text-color, #333);
+  box-sizing: border-box;
+}
+
+/* 桌面端：固定高度 + 内部滚动 */
+@media (min-width: 769px) {
+  .records-page {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+/* 移动端：自适应高度 + 传统布局 */
+@media (max-width: 768px) {
+  .records-page {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
 }
 
 /* 添加背景渐变文字 */
@@ -716,19 +732,9 @@ export default {
   z-index: 0;
 }
 
-/* 添加渐变色顶部边框 */
-.records-page::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
-  z-index: 1;
-}
 
-/* 内层容器 - 与其他组件保持一致 */
+
+/* 内层容器 - 减小高度 */
 .records-inner {
   position: relative;
   z-index: 2;
@@ -743,6 +749,25 @@ export default {
   border-radius: 16px;
   box-shadow: 0 8px 20px var(--card-shadow, rgba(91, 81, 200, 0.1));
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 桌面端：固定高度 */
+@media (min-width: 769px) {
+  .records-inner {
+    height: 70vh; /* 设置为视口高度的70% */
+    max-height: 700px; /* 最大高度限制 */
+  }
+}
+
+/* 移动端：自适应高度 */
+@media (max-width: 768px) {
+  .records-inner {
+    height: auto;
+    min-height: auto; /* 完全自适应，不设置最小高度限制 */
+    margin-bottom: 20px; /* 底部留白，确保滚动体验 */
+  }
 }
 
 .records-inner:hover {
@@ -793,14 +818,39 @@ export default {
 .records-container {
   background: var(--card-bg-hover, rgba(255, 255, 255, 0.8));
   border-radius: 12px;
-  overflow: hidden;
   box-shadow: 0 4px 12px var(--card-shadow, rgba(91, 81, 200, 0.1));
+  flex: 1; /* 占据剩余空间 */
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* 允许缩小 */
+}
+
+/* 移动端：减少records-container空白区域 */
+@media (max-width: 768px) {
+  .records-container {
+    flex: 0 1 auto; /* 不强制占据剩余空间，根据内容自适应 */
+    min-height: 200px; /* 设置最小高度，避免太小 */
+  }
 }
 
 .loading-state,
 .error-state {
   text-align: center;
   padding: 30px 0;
+}
+
+.loading-state .loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  color: var(--icon-primary, #5e60ce);
+}
+
+.loading-state i {
+  font-size: 2.5rem;
+  color: var(--icon-primary, #5e60ce);
+  animation: spin 1s linear infinite;
 }
 
 .spinner {
@@ -936,9 +986,10 @@ export default {
 
 .records-content {
   display: flex;
-  height: calc(100vh - 250px);
-  min-height: 45vh;
-  max-height: 65vh;
+  flex: 1;
+  min-height: 0; /* 允许flex子项缩小 */
+  height: 100%; /* 确保占据完整高度 */
+  text-align: left; /* 重置文本对齐为左对齐 */
 }
 
 /* 响应式设计 - 错误状态 */
@@ -972,7 +1023,18 @@ export default {
   width: 300px;
   background: var(--sidebar-bg);
   border-right: 1px solid var(--border-color);
-  overflow-y: auto;
+  height: 100%; /* 确保占据完整高度 */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 防止整个侧边栏滚动 */
+  border-radius: 12px 0 0 12px; /* 左侧圆角 */
+}
+
+.file-list {
+  height: 100%; /* 占据整个侧边栏高度 */
+  display: flex;
+  flex-direction: column;
+  text-align: left; /* 确保文件列表左对齐 */
 }
 
 .file-list-header {
@@ -982,6 +1044,7 @@ export default {
   padding: 20px;
   border-bottom: 1px solid var(--border-color);
   background: var(--header-bg);
+  flex-shrink: 0; /* 防止被压缩 */
 }
 
 .file-list-header h3 {
@@ -1037,6 +1100,9 @@ export default {
 
 .file-items {
   padding: 0;
+  flex: 1; /* 占据剩余空间 */
+  overflow-y: auto; /* 允许滚动 */
+  min-height: 0; /* 允许缩小 */
 }
 
 .file-item {
@@ -1044,6 +1110,7 @@ export default {
   border-bottom: 1px solid var(--border-light);
   cursor: pointer;
   transition: background 0.3s;
+  text-align: left; /* 确保文件项左对齐 */
 }
 
 .file-item:hover {
@@ -1083,6 +1150,10 @@ export default {
   flex: 1;
   overflow-y: auto;
   background: var(--content-bg);
+  height: 100%; /* 确保占据完整高度 */
+  min-height: 0; /* 允许缩小 */
+  border-radius: 0 12px 12px 0; /* 右侧圆角 */
+  text-align: left; /* 确保主内容区域左对齐 */
 }
 
 .welcome-message {
@@ -1105,6 +1176,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  text-align: left; /* 确保文件内容区域左对齐 */
 }
 
 .file-header {
@@ -1184,12 +1256,13 @@ export default {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
+  text-align: left; /* 确保markdown内容左对齐 */
 }
 
 /* 响应式设计 */
 @media (max-width: 769px) {
   .records-page {
-    padding: 50px 0;
+    padding: 30px 0;
   }
   
   .records-page::before {
@@ -1197,9 +1270,10 @@ export default {
   }
   
   .records-inner {
-    width: 85%;
-    padding: 25px;
-    margin: 15px auto 0;
+    width: 83%;
+    padding: 20px;
+    margin: 15px auto;
+    flex: 0 1 auto; /* 改为自适应高度，不强制占据剩余空间 */
   }
   
   .section-title {
@@ -1208,23 +1282,24 @@ export default {
   
   .records-content {
     flex-direction: column;
-    height: auto; /* 移除固定高度 */
-    min-height: auto; /* 移除最小高度限制 */
-    max-height: none; /* 移除最大高度限制 */
+    flex: 1;
+    overflow: hidden;
   }
   
   .sidebar {
     width: 100%;
-    max-height: none; /* 移除高度限制，让内容自然展开 */
+    flex: 0 0 auto;
     margin-bottom: 20px; /* 添加与主内容的间距 */
     border-right: none; /* 移除右边框 */
     border-bottom: 2px solid var(--border-color); /* 添加底部边框分隔 */
+    overflow-y: auto;
+    border-radius: 12px 12px 0 0; /* 移动端：上方圆角 */
   }
   
   .main-content {
-    min-height: 400px;
-    max-height: none; /* 移除高度限制 */
-    height: auto; /* 让内容自然展开 */
+    flex: 1;
+    overflow-y: auto;
+    border-radius: 0 0 12px 12px; /* 移动端：下方圆角 */
   }
   
   .file-info-bar {
@@ -1271,13 +1346,14 @@ export default {
 
 @media (max-width: 480px) {
   .records-page {
-    padding: 20px 10px; /* 减少顶部padding，因为有固定导航栏 */
+    padding: 20px 0; /* 和其他页面保持一致 */
   }
   
   .records-inner {
     width: 95%; /* 增加宽度利用 */
-    padding: 20px;
-    margin: 10px auto 0;
+    padding: 15px; /* 和留言板保持一致 */
+    margin: 10px auto;
+    flex: 0 1 auto; /* 改为自适应高度，不强制占据剩余空间 */
   }
   
   .section-title {
@@ -1363,6 +1439,8 @@ export default {
   .records-inner {
     width: 98%;
     padding: 15px;
+    margin: 5px auto;
+    flex: 0 1 auto; /* 改为自适应高度，不强制占据剩余空间 */
   }
   
   .section-title {
@@ -1453,6 +1531,7 @@ export default {
   background: 
     linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
     linear-gradient(to right, var(--border-gradient)) border-box;
+  text-align: left; /* 确保对话框内容左对齐 */
 }
 
 .dialog-header {
@@ -1698,6 +1777,7 @@ export default {
     width: 95%;
     margin: 20px;
     max-height: 85vh; /* 留出更多空间给内容 */
+    text-align: left; /* 确保移动端对话框内容左对齐 */
   }
   
   .dialog-header,
@@ -1765,6 +1845,7 @@ export default {
     margin: 10px;
     max-height: 90vh;
     border-radius: 12px;
+    text-align: left; /* 确保小屏幕设备对话框内容左对齐 */
   }
   
   .dialog-header,
@@ -1854,6 +1935,7 @@ export default {
   background: var(--header-bg);
   padding: 15px 20px;
   border-bottom: 1px solid var(--border-color);
+  border-radius: 12px 12px 0 0; /* 添加顶部圆角 */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
   scrollbar-width: none; /* Firefox */
@@ -1886,11 +1968,13 @@ export default {
   display: flex;
   gap: 10px;
   min-width: min-content;
+  text-align: center; /* 确保标签按钮内容居中 */
 }
 
 .tab-button {
   display: flex;
   align-items: center;
+  justify-content: center; /* 标签按钮内容居中 */
   gap: 8px;
   padding: 10px 16px;
   margin: 5px 0;
@@ -1904,7 +1988,7 @@ export default {
   white-space: nowrap;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
-
+  text-align: center; /* 确保按钮文本居中 */
 }
 
 .tab-button i {
@@ -2007,6 +2091,8 @@ export default {
   padding: 20px;
   background: var(--body-bg);
   min-height: 300px;
+  text-align: left; /* 确保移动端内容左对齐 */
+  border-radius: 0 0 12px 12px; /* 添加底部圆角，与tabs-header的顶部圆角配对 */
 }
 
 /* 响应式设计 */
@@ -2084,7 +2170,7 @@ export default {
   }
 
   .tabs-container {
-    justify-content: flex-start;
+    justify-content: center; /* 移动端标签居中对齐 */
     gap: 6px;
   }
 
@@ -2222,6 +2308,7 @@ export default {
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--border-color);
+  text-align: left; /* 确保预览容器内容左对齐 */
 }
 
 .preview-header {
@@ -2304,6 +2391,7 @@ export default {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  text-align: left; /* 确保预览内容左对齐 */
 }
 
 .preview-file-info {
@@ -2334,6 +2422,7 @@ export default {
   padding: 30px;
   overflow-y: auto;
   background: var(--body-bg);
+  text-align: left; /* 确保预览markdown内容左对齐 */
 }
 
 /* 预览模式下的markdown内容优化 */
@@ -2395,6 +2484,7 @@ export default {
     width: 95vw;
     height: 95vh;
     border-radius: 8px;
+    text-align: left; /* 确保移动端预览容器内容左对齐 */
   }
 
   .preview-header {

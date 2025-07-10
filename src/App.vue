@@ -1,7 +1,12 @@
 <template>
   <div id="app">
     <ProfileCard />
-    <router-view />
+    <div class="app-layout">
+      <TabNavigation />
+      <div class="content-container">
+        <router-view />
+      </div>
+    </div>
     <Footer />
     <Logo />
     <EasterEgg />
@@ -12,6 +17,7 @@
 
 <script>
 import ProfileCard from './components/body/ProfileCard.vue';
+import TabNavigation from './components/body/TabNavigation.vue';
 import Footer from './components/buttom/Footer.vue';
 import Logo from './components/top/Logo.vue';
 import EasterEgg from './components/other/EasterEgg.vue';
@@ -26,6 +32,7 @@ export default {
   name: 'App',
   components: {
     ProfileCard,
+    TabNavigation,
     Footer,
     Logo,
     EasterEgg,
@@ -56,3 +63,97 @@ export default {
   }
 }
 </script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+/* 固定视口布局 */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 桌面端：固定视口布局 */
+@media (min-width: 769px) {
+  .app-layout {
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
+/* 移动端：自适应布局 */
+@media (max-width: 768px) {
+  .app-layout {
+    min-height: 100vh;
+    overflow: visible;
+  }
+}
+
+.content-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* 桌面端：固定视口布局 */
+@media (min-width: 769px) {
+  .content-container {
+    height: calc(100vh - 130px); /* 减去TabNavigation高度 */
+    overflow: hidden; /* 禁止容器滚动 */
+  }
+  
+  .content-container > * {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  /* 桌面端滚动条美化 */
+  .content-container > *::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .content-container > *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .content-container > *::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb, rgba(94, 96, 206, 0.3));
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+  
+  .content-container > *::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover, rgba(94, 96, 206, 0.5));
+  }
+}
+
+/* 移动端：传统自适应布局 */
+@media (max-width: 768px) {
+  .content-container {
+    height: auto;
+    overflow: visible;
+  }
+  
+  .content-container > * {
+    height: auto;
+    min-height: auto;
+    overflow: visible;
+  }
+}
+
+
+
+/* 基础样式 */
+.content-container > * {
+  box-sizing: border-box;
+}
+
+
+</style>
