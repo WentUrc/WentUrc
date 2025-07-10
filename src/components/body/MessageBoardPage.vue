@@ -299,16 +299,33 @@ export default {
 </script>
 
 <style scoped>
-/* 外层容器 - 与其他组件保持一致 */
+/* 外层容器 - 响应式布局策略 */
 .message-board-page {
   position: relative;
   max-width: 100%;
   margin: 0;
   padding: 50px 0;
   background: var(--card-bg, rgba(255, 255, 255, 0.8));
-  min-height: 100vh;
-  overflow: hidden;
   color: var(--text-color, #333);
+  box-sizing: border-box;
+}
+
+/* 桌面端：固定高度 + 内部滚动 */
+@media (min-width: 769px) {
+  .message-board-page {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+/* 移动端：自适应高度 + 传统布局 */
+@media (max-width: 768px) {
+  .message-board-page {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
 }
 
 /* 添加背景渐变文字 */
@@ -327,17 +344,7 @@ export default {
   z-index: 0;
 }
 
-/* 添加渐变色顶部边框 */
-.message-board-page::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
-  z-index: 1;
-}
+
 
 /* 内层容器 - 与其他组件保持一致 */
 .message-board-inner {
@@ -653,6 +660,66 @@ export default {
   
   .issues-container {
     width: 95%; /* 在小屏幕上增加宽度比例 */
+  }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 480px) {
+  .message-board-page {
+    padding: 20px 0; /* 和角色选择页面保持一致 */
+  }
+  
+  .message-board-inner {
+    width: 95%; /* 和Records页面一致 */
+    padding: 15px; /* 减少内边距 */
+    margin: 10px auto;
+  }
+  
+  .section-title {
+    font-size: 1.4rem; /* 进一步缩小标题 */
+  }
+  
+  .section-subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .issue-item {
+    padding: 12px; /* 减少留言项间距 */
+  }
+  
+  .issue-author {
+    font-size: 0.9rem;
+  }
+  
+  .issue-body {
+    font-size: 0.9rem;
+  }
+  
+  .message-board-link {
+    padding: 10px 20px; /* 减少按钮内边距 */
+    font-size: 0.9rem;
+  }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 360px) {
+  .message-board-inner {
+    width: 98%; /* 和Records页面一致 */
+    padding: 12px; /* 进一步减少内边距 */
+    margin: 5px auto;
+  }
+  
+  .section-title {
+    font-size: 1.2rem; /* 最小标题尺寸 */
+  }
+  
+  .issue-item {
+    padding: 10px; /* 最小留言项间距 */
+  }
+  
+  .message-board-link {
+    padding: 8px 16px; /* 最小按钮内边距 */
+    font-size: 0.85rem;
   }
 }
 </style> 

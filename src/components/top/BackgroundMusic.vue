@@ -372,7 +372,7 @@ export default {
   border-radius: 16px;
   overflow: hidden;
   transform: none;
-  transition: height 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+  transition: height 0.4s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   opacity: 1;
   height: 320px;
   box-sizing: border-box;
@@ -386,7 +386,7 @@ export default {
   background:
     linear-gradient(var(--card-bg-hover, rgba(255, 255, 255, 0.95)), var(--card-bg-hover, rgba(255, 255, 255, 0.95))) padding-box,
     linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
-  box-shadow: 0 8px 20px var(--card-shadow, rgba(91, 81, 200, 0.25));
+  box-shadow: 0 8px 20px var(--card-shadow, rgba(91, 81, 200, 0.1));
   opacity: 1;
 }
 

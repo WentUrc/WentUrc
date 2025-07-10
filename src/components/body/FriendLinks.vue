@@ -259,8 +259,56 @@ export default {
 
 @media (max-width: 480px) {
   .friend-links-inner {
-    width: 83%; /* 在超小屏幕上稍微扩大宽度比例以便阅读 */
-    padding: 20px;
+    width: 95%; /* 在超小屏幕上扩大宽度比例 */
+    padding: 15px; /* 减少内边距 */
+  }
+  
+  .friends-grid {
+    gap: 15px; /* 减少网格间距 */
+  }
+  
+  .friend-link {
+    padding: 12px; /* 减少friend-link的内边距 */
+    min-width: 0; /* 允许收缩到内容大小 */
+  }
+  
+  .friend-desc {
+    max-width: 150px; /* 进一步限制描述文字宽度 */
+    font-size: 0.8rem;
+  }
+  
+  .friend-avatar {
+    width: 40px; /* 缩小头像尺寸 */
+    height: 40px;
+    margin-right: 12px;
+  }
+}
+
+@media (max-width: 320px) {
+  .friend-links-inner {
+    width: 98%; /* 超小屏幕上最大化利用空间 */
+    padding: 12px;
+  }
+  
+  .friend-link {
+    padding: 10px;
+    flex-direction: column; /* 垂直排列头像和信息 */
+    text-align: center;
+  }
+  
+  .friend-avatar {
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+  
+  .friend-info {
+    align-items: center;
+  }
+  
+  .friend-desc {
+    max-width: none; /* 移除宽度限制 */
+    white-space: normal; /* 允许换行 */
+    text-align: center;
   }
 }
 </style>

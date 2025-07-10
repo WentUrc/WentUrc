@@ -99,23 +99,28 @@ export default {
   justify-content: center;
   align-items: center;
   padding: 20px;
-  min-height: 100vh;
   background: var(--card-bg, rgba(255, 255, 255, 0.8));
   background-size: 400% 400%;
-  overflow: hidden;
   transition: background 0.3s ease; /* 添加背景过渡效果 */
+  box-sizing: border-box;
 }
 
-/* 新增渐变色上边框 */
-.dialogue-container::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
-  z-index: 2;
+/* 桌面端：固定高度 + 内部滚动 */
+@media (min-width: 769px) {
+  .dialogue-container {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+/* 移动端：自适应高度 + 传统布局 */
+@media (max-width: 768px) {
+  .dialogue-container {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
 }
 
 /* 背景文字区域，按行排列 */
@@ -132,6 +137,9 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   overflow: hidden;
+  /* 使用mask实现顶部自然淡出效果 */
+  -webkit-mask: linear-gradient(to bottom, transparent 0%, transparent 60px, rgba(255,255,255,1) 120px, rgba(255,255,255,1) 100%);
+  mask: linear-gradient(to bottom, transparent 0%, transparent 60px, rgba(255,255,255,1) 120px, rgba(255,255,255,1) 100%);
 }
 
 /* 每行容器：字体大小由内联 style 设置 */
@@ -196,6 +204,7 @@ export default {
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   overflow: hidden; /* 添加溢出隐藏，使装饰元素不超出边界 */
+  transform: translateY(-40px); /* 向上移动40px */
 }
 
 /* 添加卡片装饰元素 - 角落小圆点 */
@@ -229,7 +238,7 @@ export default {
 }
 
 .dialogue-box:hover {
-  transform: translateY(-6px);
+  transform: translateY(-46px); /* 在基础-40px基础上再向上6px */
   background: 
     linear-gradient(var(--card-bg-hover, rgba(255, 255, 255, 0.98)), var(--card-bg-hover, rgba(255, 255, 255, 0.98))) padding-box,
     linear-gradient(to right, var(--border-gradient, #6a73c9, #5e60ce, #5e60ce, #6a73c9)) border-box;

@@ -52,16 +52,33 @@ export default {
 </script>
 
 <style scoped>
-/* 外层容器 - 与其他组件保持一致 */
+/* 外层容器 - 响应式布局策略 */
 .friend-links-page {
   position: relative;
   max-width: 100%;
   margin: 0;
   padding: 50px 0;
   background: var(--card-bg, rgba(255, 255, 255, 0.8));
-  min-height: 100vh;
-  overflow: hidden;
   color: var(--text-color, #333);
+  box-sizing: border-box;
+}
+
+/* 桌面端：固定高度 + 内部滚动 */
+@media (min-width: 769px) {
+  .friend-links-page {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+/* 移动端：自适应高度 + 传统布局 */
+@media (max-width: 768px) {
+  .friend-links-page {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
 }
 
 /* 添加背景渐变文字 */
@@ -80,17 +97,7 @@ export default {
   z-index: 0;
 }
 
-/* 添加渐变色顶部边框 */
-.friend-links-page::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
-  z-index: 1;
-}
+
 
 /* 内层容器 - 与其他组件保持一致 */
 .friend-links-inner {
@@ -260,7 +267,7 @@ export default {
 /* 响应式设计 */
 @media (max-width: 768px) {
   .friend-links-page {
-    padding: 50px 0;
+    padding: 30px 0; /* 和其他页面保持一致 */
   }
   
   .friend-links-page::before {
@@ -268,8 +275,8 @@ export default {
   }
   
   .friend-links-inner {
-    width: 85%;
-    padding: 25px;
+    width: 83%; /* 和其他页面保持一致 */
+    padding: 20px; /* 和其他页面保持一致 */
     margin: 15px auto 0;
   }
   
@@ -279,9 +286,73 @@ export default {
 }
 
 @media (max-width: 480px) {
+  .friend-links-page {
+    padding: 20px 0; /* 和其他页面保持一致 */
+  }
+  
   .friend-links-inner {
-    width: 90%;
-    padding: 20px;
+    width: 95%; /* 和其他页面保持一致 */
+    padding: 15px; /* 和其他页面保持一致 */
+    margin: 10px auto;
+  }
+  
+  .section-title {
+    font-size: 1.4rem; /* 进一步缩小标题 */
+  }
+  
+  .friends-grid {
+    grid-template-columns: 1fr; /* 小屏幕单列显示 */
+    gap: 15px;
+  }
+  
+  .friend-link {
+    padding: 12px; /* 减少友链卡片内边距 */
+  }
+  
+  .friend-avatar {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .exchange-note {
+    padding: 15px; /* 减少提示区域内边距 */
+  }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 360px) {
+  .friend-links-inner {
+    width: 98%; /* 和其他页面保持一致 */
+    padding: 12px; /* 进一步减少内边距 */
+    margin: 5px auto;
+  }
+  
+  .section-title {
+    font-size: 1.2rem; /* 最小标题尺寸 */
+  }
+  
+  .friend-link {
+    padding: 10px; /* 最小友链卡片内边距 */
+  }
+  
+  .friend-avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+  }
+  
+  .friend-name {
+    font-size: 0.9rem;
+    max-width: 150px;
+  }
+  
+  .friend-desc {
+    font-size: 0.8rem;
+    max-width: 150px;
+  }
+  
+  .exchange-note {
+    padding: 12px; /* 最小提示区域内边距 */
   }
 }
 </style> 
