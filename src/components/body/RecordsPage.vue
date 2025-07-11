@@ -38,7 +38,7 @@
               <i class="fas fa-redo"></i>
               重试加载
             </button>
-            <button @click="showTokenDialog = true" class="config-button">
+            <button @click="openTokenDialog" class="config-button">
               <i class="fas fa-cog"></i>
               配置Token
             </button>
@@ -96,7 +96,7 @@
                 </button>
                 
                 <!-- Token 配置按钮 -->
-                <button class="mobile-settings-btn" @click="showTokenDialog = true" title="配置GitHub Token">
+                <button class="mobile-settings-btn" @click="openTokenDialog" title="配置GitHub Token">
                   <i class="fas fa-cog"></i>
                 </button>
                 
@@ -148,7 +148,7 @@
               </div>
               
               <!-- GitHub Token 设置按钮 -->
-              <button class="settings-button" @click="showTokenDialog = true" :title="'配置GitHub Token提高API限制'">
+              <button class="settings-button" @click="openTokenDialog" :title="'配置GitHub Token提高API限制'">
                 <i class="fas fa-cog"></i>
               </button>
             </div>
@@ -563,10 +563,36 @@ export default {
     },
 
     // Token 对话框相关方法
+    openTokenDialog() {
+      this.showTokenDialog = true;
+      // 禁用背景滚动
+      this.disableBodyScroll();
+    },
+
     closeTokenDialog() {
       this.showTokenDialog = false;
       this.tokenInput = '';
       this.showToken = false;
+      // 恢复背景滚动
+      this.enableBodyScroll();
+    },
+
+    // 禁用背景滚动
+    disableBodyScroll() {
+      // 简单粗暴的方式：只禁用overflow，不改变位置
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      document.documentElement.classList.add('no-scroll');
+      document.body.classList.add('no-scroll');
+    },
+
+    // 恢复背景滚动
+    enableBodyScroll() {
+      // 恢复滚动
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      document.documentElement.classList.remove('no-scroll');
+      document.body.classList.remove('no-scroll');
     },
 
     toggleTokenVisibility() {
@@ -626,11 +652,8 @@ export default {
     togglePreview() {
       this.showPreview = !this.showPreview;
       if (this.showPreview) {
-        // 禁用背景滚动 - 同时禁用html和body
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-        document.documentElement.classList.add('no-scroll');
-        document.body.classList.add('no-scroll');
+        // 禁用背景滚动
+        this.disableBodyScroll();
         
         // 等待DOM更新后添加滚动监听器
         this.$nextTick(() => {
@@ -638,10 +661,7 @@ export default {
         });
       } else {
         // 恢复背景滚动
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-        document.documentElement.classList.remove('no-scroll');
-        document.body.classList.remove('no-scroll');
+        this.enableBodyScroll();
         
         // 移除滚动监听器
         this.removePreviewScrollListener();
@@ -651,10 +671,7 @@ export default {
     closePreview() {
       this.showPreview = false;
       // 恢复背景滚动
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      document.documentElement.classList.remove('no-scroll');
-      document.body.classList.remove('no-scroll');
+      this.enableBodyScroll();
       
       // 移除滚动监听器
       this.removePreviewScrollListener();
@@ -712,10 +729,14 @@ export default {
     };
     window.addEventListener('resize', this.handleResize);
     
-    // 添加ESC键监听器关闭预览
+    // 添加ESC键监听器关闭预览和弹窗
     this.handleKeydown = (event) => {
-      if (event.key === 'Escape' && this.showPreview) {
-        this.closePreview();
+      if (event.key === 'Escape') {
+        if (this.showPreview) {
+          this.closePreview();
+        } else if (this.showTokenDialog) {
+          this.closeTokenDialog();
+        }
       }
     };
     document.addEventListener('keydown', this.handleKeydown);
@@ -730,11 +751,8 @@ export default {
     }
     // 移除预览滚动监听器
     this.removePreviewScrollListener();
-    // 确保恢复背景滚动
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
-    document.documentElement.classList.remove('no-scroll');
-    document.body.classList.remove('no-scroll');
+    // 确保恢复背景滚动（预览弹窗和Token弹窗）
+    this.enableBodyScroll();
   },
 };
 </script>
@@ -892,14 +910,18 @@ export default {
 .error-state {
   text-align: center;
   padding: 30px 0;
-}
-
-.loading-state {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
+}
+
+.loading-state {
   padding: 0;
+}
+
+.error-state {
+  flex-direction: column;
 }
 
 .loading-state .loading-content {
@@ -938,15 +960,24 @@ export default {
   100% { transform: rotate(360deg); }
 }
 
-.error-header {
+.error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 600px; /* 限制最大宽度，避免过宽 */
+}
+
+.error-info {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 30px;
-  margin-bottom: 30px;
+  width: 100%;
 }
 
-.error-header i {
+.error-info i {
   font-size: 2.5rem;
   color: var(--icon-primary, #5e60ce);
   opacity: 0.7;
@@ -980,6 +1011,7 @@ export default {
   font-size: 1.2rem;
 }
 
+.config-button,
 .token-config-button {
   display: flex;
   align-items: center;
@@ -998,12 +1030,14 @@ export default {
   font-size: 1rem;
 }
 
+.config-button:hover,
 .token-config-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(107, 144, 255, 0.4);
   background: var(--icon-primary, #5e60ce);
 }
 
+.config-button i,
 .token-config-button i {
   font-size: 1.2rem;
 }
@@ -1017,7 +1051,7 @@ export default {
   flex-wrap: wrap;
 }
 
-.error-header .api-info {
+.error-info .api-info {
   padding: 15px;
   background: var(--card-bg-hover);
   border-radius: 8px;
@@ -1027,21 +1061,21 @@ export default {
   max-width: 300px;
 }
 
-.error-header .api-info h4 {
+.error-info .api-info h4 {
   margin: 0 0 8px 0;
   color: var(--icon-primary);
   font-size: 0.95rem;
   font-weight: 600;
 }
 
-.error-header .api-info p {
+.error-info .api-info p {
   margin: 4px 0;
   font-size: 0.85rem;
   color: var(--text-color, #333);
   line-height: 1.4;
 }
 
-.error-header .token-hint {
+.error-info .token-hint {
   color: var(--icon-accent, #6b90ff) !important;
   font-weight: 500;
   font-style: italic;
@@ -1058,13 +1092,22 @@ export default {
 
 /* 响应式设计 - 错误状态 */
 @media (max-width: 769px) {
-  .error-header {
+  .error-state {
+    padding: 20px;
+  }
+  
+  .error-content {
+    gap: 20px;
+    max-width: 100%;
+  }
+  
+  .error-info {
     flex-direction: column;
     align-items: center;
     gap: 20px;
   }
   
-  .error-header .api-info {
+  .error-info .api-info {
     min-width: auto;
     max-width: 90%;
     width: 100%;
@@ -1077,6 +1120,7 @@ export default {
   }
   
   .retry-button,
+  .config-button,
   .token-config-button {
     width: 200px;
     justify-content: center;
@@ -1595,6 +1639,8 @@ export default {
     linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
     linear-gradient(to right, var(--border-gradient)) border-box;
   text-align: left; /* 确保对话框内容左对齐 */
+  display: flex;
+  flex-direction: column; /* 确保垂直布局，header在顶部 */
 }
 
 .dialog-header {
@@ -1603,6 +1649,11 @@ export default {
   align-items: center;
   padding: 20px 30px;
   border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0; /* 防止header被压缩 */
+  position: sticky;
+  top: 0;
+  background: var(--card-bg); /* 确保滚动时header背景不透明 */
+  z-index: 1; /* 确保header在内容之上 */
 }
 
 .dialog-header h3 {
@@ -1634,6 +1685,8 @@ export default {
 
 .dialog-content {
   padding: 30px;
+  flex: 1; /* 允许内容区域占据剩余空间 */
+  overflow-y: auto; /* 允许内容滚动 */
 }
 
 .info-section {
@@ -1792,6 +1845,8 @@ export default {
   gap: 15px;
   padding: 20px 30px;
   border-top: 1px solid var(--border-color);
+  flex-shrink: 0; /* 防止底部按钮区域被压缩 */
+  background: var(--card-bg); /* 确保底部按钮区域背景一致 */
 }
 
 .btn-primary,
@@ -2886,16 +2941,10 @@ export default {
     font-size: 0.8rem;
   }
 }
-</style>
 
 /* 全局样式：禁用滚动的类 */
-:global(.no-scroll) {
-  overflow: hidden !important;
-  position: fixed !important;
-  width: 100% !important;
-  height: 100% !important;
-}
-
+:global(body.no-scroll),
 :global(html.no-scroll) {
   overflow: hidden !important;
-} 
+}
+</style>
