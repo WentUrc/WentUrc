@@ -67,21 +67,45 @@
             
             <!-- 固定的控制按钮区域 -->
             <div class="mobile-controls">
-              <!-- API 状态显示 -->
-              <div class="api-status-mobile" v-if="apiStatus.remaining !== null" :title="getApiStatusTooltip()">
-                <i class="fas fa-info-circle"></i>
-                <span class="api-count">{{ apiStatus.remaining }}</span>
+              <!-- 文件标题（仅在选中文件时显示） -->
+              
+              <div class="mobile-control-buttons">
+                <!-- 文件操作按钮（仅在选中文件时显示） -->
+                <button 
+                  v-if="selectedFile"
+                  class="mobile-preview-btn"
+                  @click="togglePreview"
+                  :title="showPreview ? '关闭预览' : '全屏预览'"
+                >
+                  <i :class="showPreview ? 'fas fa-compress' : 'fas fa-expand'"></i>
+                </button>
+                <a 
+                  v-if="selectedFile"
+                  :href="getGitHubUrl(selectedFile)" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="mobile-github-link"
+                  title="在 GitHub 上查看"
+                >
+                  <i class="fab fa-github"></i>
+                </a>
+                
+                <!-- 刷新按钮 -->
+                <button @click="refreshFiles" class="mobile-refresh-btn" :disabled="refreshing" title="刷新文件列表">
+                  <i class="fas fa-sync-alt" :class="{ 'fa-spin': refreshing }"></i>
+                </button>
+                
+                <!-- Token 配置按钮 -->
+                <button class="mobile-settings-btn" @click="showTokenDialog = true" title="配置GitHub Token">
+                  <i class="fas fa-cog"></i>
+                </button>
+                
+                <!-- API 状态显示 -->
+                <div class="api-status-mobile" v-if="apiStatus.remaining !== null" :title="getApiStatusTooltip()">
+                  <i class="fas fa-info-circle"></i>
+                  <span class="api-count">{{ apiStatus.remaining }}</span>
+                </div>
               </div>
-              
-              <!-- 刷新按钮 -->
-              <button @click="refreshFiles" class="mobile-refresh-btn" :disabled="refreshing" title="刷新文件列表">
-                <i class="fas fa-sync-alt" :class="{ 'fa-spin': refreshing }"></i>
-              </button>
-              
-              <!-- Token 配置按钮 -->
-              <button class="mobile-settings-btn" @click="showTokenDialog = true" title="配置GitHub Token">
-                <i class="fas fa-cog"></i>
-              </button>
             </div>
           </div>
           
@@ -93,47 +117,7 @@
             </div>
 
             <div v-else class="file-content">
-              <!-- 文件信息头部 -->
-              <div class="file-header">
-                <div class="file-title">
-                  <h2>{{ getDisplayName(selectedFile) }}</h2>
-                  <div class="file-actions">
-                    <button 
-                      class="preview-btn"
-                      @click="togglePreview"
-                      :title="showPreview ? '关闭预览' : '全屏预览'"
-                    >
-                      <i :class="showPreview ? 'fas fa-compress' : 'fas fa-expand'"></i>
-                    </button>
-                    <a 
-                      :href="getGitHubUrl(selectedFile)" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      class="github-link"
-                      title="在 GitHub 上查看"
-                    >
-                      <i class="fab fa-github"></i>
-                    </a>
-                  </div>
-                </div>
-                
-                <div v-if="selectedFileInfo" class="file-info-bar">
-                  <span class="info-item">
-                    <i class="fas fa-calendar-alt"></i>
-                    更新于 {{ formatDate(selectedFileInfo.lastModified) }}
-                  </span>
-                  <span v-if="selectedFileInfo.author" class="info-item">
-                    <i class="fas fa-user"></i>
-                    {{ selectedFileInfo.author }}
-                  </span>
-                  <span class="info-item">
-                    <i class="fas fa-file-alt"></i>
-                    {{ formatSize(selectedFileInfo.size) }}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Markdown 内容 -->
+              <!-- Markdown 内容（移动端file-header已合并到tabs-header中） -->
               <div class="markdown-container">
                 <MarkdownRenderer 
                   :content="fileContent" 
@@ -296,12 +280,24 @@
             </span>
           </div>
           
-          <div class="preview-markdown">
+          <div class="preview-markdown" ref="previewMarkdown">
             <MarkdownRenderer 
               :content="fileContent" 
               :loading="contentLoading"
               :error="contentError"
             />
+            
+            <!-- 预览弹窗中的返回顶部按钮 -->
+            <transition name="preview-back-to-top-fade">
+              <button 
+                v-show="showPreviewBackToTop"
+                class="preview-back-to-top" 
+                @click="scrollToTopPreview"
+                title="返回顶部"
+              >
+                <i class="fas fa-chevron-up"></i>
+              </button>
+            </transition>
           </div>
         </div>
       </div>
@@ -404,6 +400,7 @@
 import GitHubService from '../../services/githubService.js';
 import MarkdownRenderer from '../other/MarkdownRenderer.vue';
 import '../../assets/css/color.css'; // 确保导入主题变量
+import { gsap } from 'gsap';
 
 export default {
   name: 'RecordsPage',
@@ -425,6 +422,7 @@ export default {
       showToken: false,
       windowWidth: window.innerWidth,
       showPreview: false,
+      showPreviewBackToTop: false, // 控制预览弹窗返回顶部按钮显示
       tokenConfig: {
         token: '',
         username: 'YOUR_GITHUB_USERNAME',
@@ -633,12 +631,20 @@ export default {
         document.body.style.overflow = 'hidden';
         document.documentElement.classList.add('no-scroll');
         document.body.classList.add('no-scroll');
+        
+        // 等待DOM更新后添加滚动监听器
+        this.$nextTick(() => {
+          this.addPreviewScrollListener();
+        });
       } else {
         // 恢复背景滚动
         document.documentElement.style.overflow = '';
         document.body.style.overflow = '';
         document.documentElement.classList.remove('no-scroll');
         document.body.classList.remove('no-scroll');
+        
+        // 移除滚动监听器
+        this.removePreviewScrollListener();
       }
     },
 
@@ -649,10 +655,55 @@ export default {
       document.body.style.overflow = '';
       document.documentElement.classList.remove('no-scroll');
       document.body.classList.remove('no-scroll');
+      
+      // 移除滚动监听器
+      this.removePreviewScrollListener();
+    },
+
+    // 添加预览窗口滚动监听器
+    addPreviewScrollListener() {
+      if (this.$refs.previewMarkdown) {
+        this.handlePreviewScroll = () => {
+          const scrollTop = this.$refs.previewMarkdown.scrollTop;
+          this.showPreviewBackToTop = scrollTop > 300; // 滚动超过300px后显示按钮
+        };
+        this.$refs.previewMarkdown.addEventListener('scroll', this.handlePreviewScroll);
+        // 初始检查
+        this.handlePreviewScroll();
+      }
+    },
+
+    // 移除预览窗口滚动监听器
+    removePreviewScrollListener() {
+      if (this.handlePreviewScroll && this.$refs.previewMarkdown) {
+        this.$refs.previewMarkdown.removeEventListener('scroll', this.handlePreviewScroll);
+      }
+      this.showPreviewBackToTop = false; // 重置按钮状态
+      this.handlePreviewScroll = null;
+    },
+
+    // 预览弹窗中滚动到顶部
+    scrollToTopPreview() {
+      if (this.$refs.previewMarkdown) {
+        this.$refs.previewMarkdown.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
     }
   },
 
   mounted() {
+    // 立即执行入场动画 - 与RoleCard保持一致
+    this.$nextTick(() => {
+      gsap.from(this.$el.querySelector('.records-inner'), {
+        duration: 0.4,
+        y: 50,
+        opacity: 0,
+        ease: 'power2.out'
+      });
+    });
+    
     this.loadFiles();
     this.loadSavedToken();
     // 添加窗口大小变化监听器
@@ -677,6 +728,8 @@ export default {
     if (this.handleKeydown) {
       document.removeEventListener('keydown', this.handleKeydown);
     }
+    // 移除预览滚动监听器
+    this.removePreviewScrollListener();
     // 确保恢复背景滚动
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
@@ -761,11 +814,11 @@ export default {
   }
 }
 
-/* 移动端：自适应高度 */
+/* 移动端：固定高度 */
 @media (max-width: 768px) {
   .records-inner {
-    height: auto;
-    min-height: auto; /* 完全自适应，不设置最小高度限制 */
+    height: 75vh; /* 移动端也设置固定高度 */
+    max-height: 900px; /* 移动端最大高度限制 */
     margin-bottom: 20px; /* 底部留白，确保滚动体验 */
   }
 }
@@ -825,11 +878,13 @@ export default {
   min-height: 0; /* 允许缩小 */
 }
 
-/* 移动端：减少records-container空白区域 */
+/* 移动端：固定高度的文件浏览区域 */
 @media (max-width: 768px) {
   .records-container {
-    flex: 0 1 auto; /* 不强制占据剩余空间，根据内容自适应 */
-    min-height: 200px; /* 设置最小高度，避免太小 */
+    flex: 1; /* 占据剩余空间 */
+    min-height: 0; /* 允许缩小到flex容器大小 */
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -839,10 +894,19 @@ export default {
   padding: 30px 0;
 }
 
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0;
+}
+
 .loading-state .loading-content {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 15px;
   color: var(--icon-primary, #5e60ce);
 }
@@ -1303,8 +1367,7 @@ export default {
   }
   
   .file-info-bar {
-    flex-direction: column;
-    gap: 10px;
+    display: none; /* 移动端隐藏文件详细信息 */
   }
   
   /* 优化文件列表的移动端显示 */
@@ -2024,6 +2087,64 @@ export default {
   flex-shrink: 0; /* Prevent controls from shrinking */
 }
 
+.mobile-control-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 移动端文件操作按钮统一样式 */
+.mobile-preview-btn,
+.mobile-github-link {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg, rgba(255, 255, 255, 0.9));
+  border: 1px solid var(--border-color, rgba(94, 96, 206, 0.2));
+  border-radius: 8px;
+  color: var(--icon-primary, #5e60ce);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* 确保链接元素样式重置 */
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* 专门确保所有文件操作按钮的边框显示 */
+.mobile-preview-btn,
+.mobile-github-link {
+  border: 1px solid var(--border-color, rgba(94, 96, 206, 0.2)) !important;
+  box-sizing: border-box;
+}
+
+.mobile-preview-btn i,
+.mobile-github-link i {
+  font-size: 0.9rem;
+  transition: transform 0.3s ease;
+}
+
+.mobile-preview-btn:hover,
+.mobile-github-link:hover {
+  background: var(--card-bg-hover, rgba(255, 255, 255, 1));
+  border-color: var(--icon-primary, #5e60ce);
+}
+
+.mobile-preview-btn:hover i,
+.mobile-github-link:hover i {
+  transform: scale(1.1);
+  color: var(--icon-accent, #6b90ff);
+}
+
+.mobile-preview-btn:active,
+.mobile-github-link:active {
+  transition-duration: 0.1s;
+}
+
 .api-status-mobile {
   display: flex;
   align-items: center;
@@ -2044,45 +2165,64 @@ export default {
   font-weight: 600;
 }
 
-.mobile-refresh-btn {
-  background: none;
-  border: none;
-  color: var(--icon-primary);
+.mobile-refresh-btn,
+.mobile-settings-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg, rgba(255, 255, 255, 0.9));
+  border: 1px solid var(--border-color, rgba(94, 96, 206, 0.2)) !important;
+  border-radius: 8px;
+  color: var(--icon-primary, #5e60ce);
   cursor: pointer;
-  padding: 8px;
-  border-radius: 4px;
-  transition: background 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+  /* 确保按钮样式重置 */
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-.mobile-refresh-btn:hover {
-  background: var(--hover-bg);
+.mobile-refresh-btn i,
+.mobile-settings-btn i {
+  font-size: 0.9rem;
+  transition: transform 0.3s ease;
+}
+
+.mobile-refresh-btn:hover,
+.mobile-settings-btn:hover {
+  background: var(--card-bg-hover, rgba(255, 255, 255, 1));
+  border-color: var(--icon-primary, #5e60ce);
+}
+
+.mobile-refresh-btn:hover i {
+  transform: scale(1.1);
+  color: var(--icon-accent, #6b90ff);
+}
+
+.mobile-settings-btn:hover i {
+  transform: rotate(90deg) scale(1.1);
+  color: var(--icon-accent, #6b90ff);
 }
 
 .mobile-refresh-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
-.mobile-refresh-btn i {
-  font-size: 1.2rem;
+.mobile-refresh-btn:disabled:hover {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+  transform: none;
 }
 
-.mobile-settings-btn {
-  background: none;
-  border: none;
-  color: var(--icon-primary);
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  opacity: 0.7;
-}
-
-.mobile-settings-btn:hover {
-  opacity: 1;
-  background: var(--card-bg-hover);
-  transform: rotate(90deg);
+.mobile-refresh-btn:active,
+.mobile-settings-btn:active {
+  transition-duration: 0.1s;
 }
 
 .mobile-content {
@@ -2090,9 +2230,73 @@ export default {
   overflow-y: auto;
   padding: 20px;
   background: var(--body-bg);
-  min-height: 300px;
+  min-height: 0; /* 允许收缩到flex容器大小 */
   text-align: left; /* 确保移动端内容左对齐 */
   border-radius: 0 0 12px 12px; /* 添加底部圆角，与tabs-header的顶部圆角配对 */
+}
+
+/* 更新mobile-controls为两行布局 */
+.mobile-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: auto;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.mobile-file-title {
+  display: flex;
+  align-items: center;
+}
+
+.mobile-file-title h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+.mobile-control-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.mobile-file-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 8px;
+  padding-right: 8px;
+  border-right: 1px solid var(--divider-color);
+}
+
+.mobile-preview-btn,
+.mobile-github-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: var(--card-bg);
+  color: var(--icon-primary);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.mobile-preview-btn:hover,
+.mobile-github-link:hover {
+  background: var(--button-hover);
 }
 
 /* 响应式设计 */
@@ -2134,9 +2338,16 @@ export default {
   }
 
   .mobile-controls {
-    width: auto;
-    justify-content: flex-end;
-    flex-shrink: 0;
+    gap: 6px;
+  }
+  
+  .mobile-file-title h3 {
+    font-size: 0.85rem;
+    max-width: 150px;
+  }
+  
+  .mobile-control-buttons {
+    gap: 6px;
   }
 
   .mobile-content {
@@ -2144,8 +2355,9 @@ export default {
   }
 
   .mobile-content .welcome-message {
-    margin-top: 60px;
-    padding-top: 40px;
+    margin-top: 0;
+    padding-top: 0;
+    height: calc(100% - 30px);
   }
 }
 
@@ -2216,6 +2428,24 @@ export default {
   .mobile-content {
     padding: 12px;
   }
+  
+  .mobile-file-title h3 {
+    font-size: 0.8rem;
+    max-width: 120px;
+  }
+  
+  .mobile-control-buttons {
+    gap: 4px;
+  }
+  
+
+  
+  .mobile-preview-btn,
+  .mobile-github-link {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
 
   .mobile-content .welcome-message {
     margin-top: 40px;
@@ -2227,8 +2457,9 @@ export default {
 
 @media (max-width: 480px) {
   .mobile-content .welcome-message {
-    margin-top: 40px;
-    padding-top: 30px;
+    margin-top: 0;
+    padding-top: 0;
+    height: calc(100% - 24px);
   }
 }
 
@@ -2299,7 +2530,7 @@ export default {
 
 .preview-container {
   width: 90vw;
-  height: 90vh;
+  height: 80vh;
   max-width: 1200px;
   background: var(--card-bg);
   border-radius: 12px;
@@ -2423,6 +2654,51 @@ export default {
   overflow-y: auto;
   background: var(--body-bg);
   text-align: left; /* 确保预览markdown内容左对齐 */
+  position: relative; /* 为返回顶部按钮提供定位上下文 */
+}
+
+/* 预览弹窗中的返回顶部按钮 */
+.preview-back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--card-bg, rgba(255, 255, 255, 0.9));
+  border: 1px solid var(--border-color, rgba(94, 96, 206, 0.2));
+  color: var(--icon-primary, #5e60ce);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.preview-back-to-top:hover {
+  background: var(--card-bg-hover, rgba(255, 255, 255, 1));
+  border-color: var(--icon-primary, #5e60ce);
+  color: var(--icon-accent, #6b90ff);
+  transform: translateY(-2px);
+}
+
+.preview-back-to-top:active {
+  transform: translateY(0);
+  transition-duration: 0.1s;
+}
+
+/* 预览返回顶部按钮的过渡动画 */
+.preview-back-to-top-fade-enter-active, 
+.preview-back-to-top-fade-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.preview-back-to-top-fade-enter, 
+.preview-back-to-top-fade-leave-to {
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
 }
 
 /* 预览模式下的markdown内容优化 */
@@ -2471,6 +2747,8 @@ export default {
   border: 1px solid var(--border-color);
 }
 
+
+
 .preview-markdown :deep(code:not(pre code)) {
   padding: 0.2rem 0.4rem;
   background: var(--card-bg-hover);
@@ -2482,7 +2760,7 @@ export default {
 @media (max-width: 769px) {
   .preview-container {
     width: 95vw;
-    height: 95vh;
+    height: 70vh;
     border-radius: 8px;
     text-align: left; /* 确保移动端预览容器内容左对齐 */
   }
@@ -2494,6 +2772,11 @@ export default {
   .preview-title h3 {
     font-size: 1.2rem;
   }
+  
+  .preview-content {
+    height: calc(100% - 70px); /* 减去header的高度（现在更小了） */
+    min-height: 0;
+  }
 
   .preview-file-info {
     padding: 12px 20px;
@@ -2502,6 +2785,17 @@ export default {
 
   .preview-markdown {
     padding: 20px;
+    height: auto;
+    min-height: calc(100% - 60px); /* 减去file-info的高度 */
+  }
+  
+  /* 预览弹窗返回顶部按钮平板端调整 */
+  .preview-back-to-top {
+    bottom: 25px;
+    right: 25px;
+    width: 48px;
+    height: 48px;
+    font-size: 1.05rem;
   }
 
   .preview-markdown :deep(.markdown-content) {
@@ -2519,6 +2813,77 @@ export default {
 
   .preview-markdown :deep(h3) {
     font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .preview-container {
+    width: 98vw;
+    height: 100vh;
+    border-radius: 6px;
+  }
+  
+  .preview-header {
+    padding: 12px 15px;
+  }
+  
+  .preview-title h3 {
+    font-size: 1.1rem;
+  }
+  
+  .preview-actions {
+    gap: 8px;
+  }
+  
+  .github-link-preview,
+  .close-preview-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+  
+  .preview-content {
+    height: calc(100% - 60px); /* 减去更小的header高度 */
+    min-height: 0;
+  }
+  
+  .preview-file-info {
+    padding: 10px 15px;
+    font-size: 0.8rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .preview-markdown {
+    padding: 15px;
+    height: auto;
+    min-height: calc(100% - 80px); /* 减去垂直排列的file-info高度 */
+  }
+  
+  /* 预览弹窗返回顶部按钮移动端调整 */
+  .preview-back-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    font-size: 1rem;
+  }
+  
+  /* 移动端按钮尺寸调整 */
+  .mobile-preview-btn,
+  .mobile-github-link,
+  .mobile-refresh-btn,
+  .mobile-settings-btn {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .mobile-preview-btn i,
+  .mobile-github-link i,
+  .mobile-refresh-btn i,
+  .mobile-settings-btn i {
+    font-size: 0.8rem;
   }
 }
 </style>
