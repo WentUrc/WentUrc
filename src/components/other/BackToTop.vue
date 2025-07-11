@@ -93,39 +93,58 @@ export default {
   right: 30px;
   width: 50px;
   height: 50px;
-  background: var(--icon-primary);
-  color: var(--background-color);
-  border: none;
   border-radius: 50%;
-  cursor: pointer;
+  background: var(--card-bg, rgba(255, 255, 255, 0.9));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  border: none;
+  box-shadow: 
+    0 4px 10px var(--card-shadow, rgba(0, 0, 0, 0.1)),
+    0 0 0 2px var(--divider-color, rgba(94, 96, 206, 0.15));
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 1000;
-  box-shadow: 0 4px 20px var(--card-shadow);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.back-to-top-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--primary-gradient, linear-gradient(135deg, #dcbff8, #d1ecf9));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.back-to-top-btn i {
+  position: relative;
+  z-index: 1;
+  color: var(--icon-primary, #5e60ce);
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
 }
 
 .back-to-top-btn:hover {
   transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 30px var(--card-shadow);
-  background: var(--icon-accent);
-  color: var(--background-color);
+  box-shadow: 
+    0 8px 16px var(--card-shadow, rgba(0, 0, 0, 0.15)),
+    0 0 0 2px var(--icon-primary, rgba(94, 96, 206, 0.5));
+}
+
+.back-to-top-btn:hover::before {
+  opacity: 0.3;
+}
+
+.back-to-top-btn:hover i {
+  color: var(--icon-accent, #6b90ff);
+  transform: scale(1.1);
 }
 
 .back-to-top-btn:active {
   transform: translateY(-1px) scale(1);
   transition-duration: 0.1s;
-}
-
-.back-to-top-btn i {
-  opacity: 0.9;
-  transition: opacity 0.3s ease;
-}
-
-.back-to-top-btn:hover i {
-  opacity: 1;
 }
 
 /* 淡入淡出动画 */
@@ -143,9 +162,9 @@ export default {
   .back-to-top-btn {
     bottom: 20px;
     right: 20px;
-    width: 45px;
-    height: 45px;
-    font-size: 1.1rem;
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
   }
 }
 
@@ -153,9 +172,9 @@ export default {
   .back-to-top-btn {
     bottom: 15px;
     right: 15px;
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
   }
 }
 

@@ -63,6 +63,7 @@ import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import notificationService from '../../utils/notificationService.js';
 import '../../assets/css/color.css';
+import { gsap } from 'gsap';
 
 export default {
   name: 'MessageBoardPage',
@@ -293,6 +294,16 @@ export default {
     }
   },
   async mounted() {
+    // 立即执行入场动画 - 与RoleCard保持一致，不等待数据加载
+    this.$nextTick(() => {
+      gsap.from(this.$el.querySelector('.message-board-inner'), {
+        duration: 0.4,
+        y: 50,
+        opacity: 0,
+        ease: 'power2.out'
+      });
+    });
+    
     await this.loadIssues();
   }
 };

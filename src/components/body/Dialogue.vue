@@ -97,12 +97,12 @@ export default {
   position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 20px;
+  padding: 80px 20px;
   background: var(--card-bg, rgba(255, 255, 255, 0.8));
   background-size: 400% 400%;
   transition: background 0.3s ease; /* 添加背景过渡效果 */
   box-sizing: border-box;
+  min-height: 60vh;
 }
 
 /* 桌面端：固定高度 + 内部滚动 */

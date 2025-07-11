@@ -40,6 +40,7 @@
 <script>
 import friendLinksData from '../../assets/data/friendLinks.json';
 import '../../assets/css/color.css';
+import { gsap } from 'gsap';
 
 export default {
   name: 'FriendLinksPage',
@@ -47,6 +48,17 @@ export default {
     return {
       friendLinks: friendLinksData
     };
+  },
+  mounted() {
+    // 立即执行入场动画 - 与RoleCard保持一致
+    this.$nextTick(() => {
+      gsap.from(this.$el.querySelector('.friend-links-inner'), {
+        duration: 0.4,
+        y: 50,
+        opacity: 0,
+        ease: 'power2.out'
+      });
+    });
   }
 };
 </script>
