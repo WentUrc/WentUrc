@@ -43,12 +43,12 @@ export default {
   name: 'ProfileCard',
   data() {
     return {
-      avatar: 'https://avatars.githubusercontent.com/u/74816859?v=4',
+      avatar: 'https://avatars.githubusercontent.com/u/59095086?v=4',
       name: '冰苷晶',
       bio: '路很长，梦还在',
       socialLinks: [
         {
-          url: 'https://github.com/IGCrystal',
+          url: 'https://github.com/IGCrystal-NEO',
           title: 'GitHub',
           iconClass: 'fab fa-github'
         },
