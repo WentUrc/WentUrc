@@ -148,12 +148,9 @@ export default {
   }
 }
 
-
-
 /* 基础样式 */
 .content-container > * {
   box-sizing: border-box;
 }
-
 
 </style>
