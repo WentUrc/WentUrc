@@ -49,7 +49,6 @@ body:
         - 低 - 轻微不便
         - 中 - 影响某些功能
         - 高 - 阻止正常使用
-        - 关键 - 系统崩溃或数据丢失
     validations:
       required: false
 
