@@ -1,0 +1,201 @@
+name: Auto Submit PR to Upstream
+
+on:
+  push:
+    branches:
+      - main
+      # 可以根据需要添加其他分支
+
+env:
+  UPSTREAM_REPO: 'WentUrc/WentUrc'  # 上游仓库，格式：owner/repo
+  UPSTREAM_BRANCH: 'main'  # 上游仓库的目标分支
+  PR_BRANCH_PREFIX: 'sync-from-fork'  # PR分支前缀
+
+jobs:
+  auto-upstream-pr:
+    runs-on: ubuntu-latest
+    if: github.event.pusher.name != 'IGCrystal-G'  # 避免bot触发的循环
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 获取完整历史记录
+        token: ${{ secrets.UPSTREAM_TOKEN }}
+
+    - name: Setup Git
+      run: |
+        git config --global user.name "IGCrystal-G"
+        git config --global user.email "cacheigcrystal@gmail.com"
+
+    - name: Add upstream remote
+      run: |
+        git remote add upstream https://github.com/${{ env.UPSTREAM_REPO }}.git
+        git fetch upstream
+
+    - name: Check if upstream is ahead
+      id: check_upstream
+      run: |
+        # 检查上游是否有新的提交
+        UPSTREAM_COMMITS=$(git rev-list --count HEAD..upstream/${{ env.UPSTREAM_BRANCH }})
+        echo "upstream_commits=$UPSTREAM_COMMITS" >> $GITHUB_OUTPUT
+        
+        if [ "$UPSTREAM_COMMITS" -gt 0 ]; then
+          echo "Upstream has $UPSTREAM_COMMITS new commits. Merging upstream changes first."
+          git merge upstream/${{ env.UPSTREAM_BRANCH }} --no-edit || {
+            echo "Merge conflict detected. Please resolve manually."
+            exit 1
+          }
+          git push origin ${{ github.ref_name }}
+        fi
+
+    - name: Generate branch name
+      id: branch_name
+      run: |
+        TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+        BRANCH_NAME="${{ env.PR_BRANCH_PREFIX }}-${{ github.ref_name }}-${TIMESTAMP}"
+        echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+
+    - name: Create and push feature branch
+      run: |
+        # 检查是否有UPSTREAM_TOKEN
+        if [ -z "${{ secrets.UPSTREAM_TOKEN }}" ]; then
+          echo "❌ UPSTREAM_TOKEN secret not found. Please add it to repository secrets."
+          exit 1
+        fi
+        
+        # 基于当前分支创建新分支
+        git checkout -b ${{ steps.branch_name.outputs.branch_name }}
+        
+        # 使用UPSTREAM_TOKEN推送到上游仓库
+        git remote remove upstream
+        git remote add upstream https://${{ secrets.UPSTREAM_TOKEN }}@github.com/${{ env.UPSTREAM_REPO }}.git
+        git push upstream ${{ steps.branch_name.outputs.branch_name }}
+
+    - name: Get commit information
+      id: commit_info
+      run: |
+        # 获取最近的提交信息
+        git fetch upstream ${{ env.UPSTREAM_BRANCH }}
+
+        LAST_COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+        LAST_COMMIT_AUTHOR=$(git log -1 --pretty=format:"%an")
+        COMMIT_COUNT=$(git rev-list --count upstream/${{ env.UPSTREAM_BRANCH }}..${{ github.ref_name }})
+        
+        echo "last_commit_msg=$LAST_COMMIT_MSG" >> $GITHUB_OUTPUT
+        echo "last_commit_author=$LAST_COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+        echo "commit_count=$COMMIT_COUNT" >> $GITHUB_OUTPUT
+
+    - name: Create Pull Request
+      id: create_pr
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.UPSTREAM_TOKEN }}
+        script: |
+          const { owner, repo } = context.repo;
+          const upstreamRepo = '${{ env.UPSTREAM_REPO }}'.split('/');
+          const upstreamOwner = upstreamRepo[0];
+          const upstreamRepoName = upstreamRepo[1];
+          
+          // 构建PR标题和描述
+          const commitCount = '${{ steps.commit_info.outputs.commit_count }}';
+          const lastCommitMsg = '${{ steps.commit_info.outputs.last_commit_msg }}';
+          const lastCommitAuthor = '${{ steps.commit_info.outputs.last_commit_author }}';
+          const sourceBranch = '${{ github.ref_name }}';
+          const branchName = '${{ steps.branch_name.outputs.branch_name }}';
+          
+          let title, body;
+          
+          if (commitCount === '1') {
+            title = `${lastCommitMsg}`;
+          } else {
+            title = `Sync ${commitCount} commits from ${owner}/${repo}:${sourceBranch}`;
+          }
+          
+          body = `## 🔄 自动同步 PR
+          
+          **源仓库**: ${owner}/${repo}
+          **源分支**: ${sourceBranch}
+          **同步分支**: ${branchName}
+          **提交数量**: ${commitCount}
+          **最新提交**: ${lastCommitMsg}
+          **最新作者**: ${lastCommitAuthor}
+          
+          ### 📝 变更说明
+          此PR自动同步了来自fork仓库的${commitCount}个提交。
+          
+          ### 🔍 验证清单
+          - [ ] 代码审查通过
+          - [ ] 测试通过
+          - [ ] 文档更新（如需要）
+          - [ ] 无破坏性变更
+          
+          ### 📊 提交历史
+          `;
+          
+          // 添加提交历史
+          const commits = await github.rest.repos.compareCommits({
+            owner: upstreamOwner,
+            repo: upstreamRepoName,
+            base: '${{ env.UPSTREAM_BRANCH }}',
+            head: branchName
+          });
+          
+          commits.data.commits.forEach(commit => {
+            const shortSha = commit.sha.substring(0, 7);
+            const message = commit.commit.message.split('\n')[0];
+            const author = commit.commit.author.name;
+            body += `\n- \`${shortSha}\` ${message} (@${author})`;
+          });
+          
+          body += `\n\n---
+          *此PR由GitHub Actions自动创建于 ${new Date().toISOString()}*`;
+          
+          // 创建PR
+          try {
+            const pr = await github.rest.pulls.create({
+              owner: upstreamOwner,
+              repo: upstreamRepoName,
+              title: title,
+              head: branchName,
+              base: '${{ env.UPSTREAM_BRANCH }}',
+              body: body,
+              maintainer_can_modify: true
+            });
+            
+            console.log(`✅ PR created successfully: ${pr.data.html_url}`);
+            core.setOutput('pr_url', pr.data.html_url);
+            core.setOutput('pr_number', pr.data.number);
+            
+            // 添加标签（可选）
+            try {
+              await github.rest.issues.addLabels({
+                owner: upstreamOwner,
+                repo: upstreamRepoName,
+                issue_number: pr.data.number,
+                labels: ['auto-sync', 'from-fork']
+              });
+            } catch (error) {
+              console.log('⚠️ Could not add labels:', error.message);
+            }
+            
+          } catch (error) {
+            console.error('❌ Error creating PR:', error);
+            core.setFailed(`Failed to create PR: ${error.message}`);
+          }
+
+    - name: Comment on original commit
+      if: steps.create_pr.outputs.pr_url
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const prUrl = '${{ steps.create_pr.outputs.pr_url }}';
+          const prNumber = '${{ steps.create_pr.outputs.pr_number }}';
+          
+          // 在最新提交上添加评论
+          await github.rest.repos.createCommitComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            commit_sha: context.sha,
+            body: `🚀 自动向上游仓库提交了PR: [#${prNumber}](${prUrl})`
+          });
