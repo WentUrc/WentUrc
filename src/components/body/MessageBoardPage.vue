@@ -92,7 +92,7 @@ export default {
     // 创建预填充模板的Issue URL
     createIssueUrl() {
       // 使用已存在的模板文件
-      return `${this.repoBaseUrl}/issues/new?template=message_board.md`;
+      return `${this.repoBaseUrl}/issues/new?template=message_board.yml`;
     }
   },
   methods: {
@@ -138,24 +138,45 @@ export default {
     },
     
     // 解析留言板模板
+    // 替换原来的 parseMessageTemplate 方法
     parseMessageTemplate(body) {
-      // 检查是否符合留言模板格式
-      if (!body.includes('**✨ 留言内容**') && !body.includes('**💡 是否想收到回复？**')) {
-        return null; // 不符合模板格式
+      // 支持两种格式：
+      // 1. YAML模板格式：### ✨ 留言内容
+      // 2. 旧Markdown格式：**✨ 留言内容**
+      
+      // 检查是否符合任一模板格式
+      const isYamlFormat = body.includes('### ✨ 留言内容') || body.includes('### 💡 是否想收到回复？');
+      const isMarkdownFormat = body.includes('**✨ 留言内容**') || body.includes('**💡 是否想收到回复？**');
+      
+      if (!isYamlFormat && !isMarkdownFormat) {
+        return null; // 不符合任何模板格式
       }
       
       try {
-        // 提取留言内容，去除模板文本
+        // 提取留言内容 - 支持两种格式
         let message = '';
-        const messageMatch = body.match(/\*\*✨ 留言内容\*\*([\s\S]*?)(?:\*\*💡|---|$)/);
-        if (messageMatch && messageMatch[1]) {
-          // 移除模板说明文本
-          message = messageMatch[1].trim()
-            .replace(/请在这里写下你想说的话喵～本猫会偷偷看一眼的！/, '')
-            .replace(/^[\s\n]+/, ''); // 移除开头的空白行
+        let messageMatch;
+        
+        if (isYamlFormat) {
+          // YAML格式：### ✨ 留言内容
+          messageMatch = body.match(/### ✨ 留言内容\s*\n([\s\S]*?)(?:### 💡|$)/);
+        } else {
+          // Markdown格式：**✨ 留言内容**
+          messageMatch = body.match(/\*\*✨ 留言内容\*\*([\s\S]*?)(?:\*\*💡|---|$)/);
         }
         
-        // 提取回复选项
+        if (messageMatch && messageMatch[1]) {
+          message = messageMatch[1].trim();
+          
+          // 如果是Markdown格式，还需要移除模板说明文本
+          if (isMarkdownFormat) {
+            message = message
+              .replace(/请在这里写下你想说的话喵～本猫会偷偷看一眼的！/, '')
+              .replace(/^[\s\n]+/, ''); // 移除开头的空白行
+          }
+        }
+        
+        // 提取回复选项 - 两种格式都一样
         let wantsReply = null;
         if (body.includes('- [x] 是喵～') || body.includes('- [X] 是喵～')) {
           wantsReply = true;
@@ -167,16 +188,18 @@ export default {
         let html = `<div class="message-content">`;
         
         // 处理留言内容
-        if (message) {
-          // 进一步清理模板相关的文本和指令
-          const cleanedMessage = message
-            .replace(/^-\s*\[\s*[xX\s]?\s*\].*$/gm, '')  // 移除勾选框
-            .replace(/^\s*\*\*.*?\*\*\s*$/gm, '')        // 移除加粗标题
-            .replace(/^---.*$/gm, '');                   // 移除分隔线
-            
+        if (message && message.trim()) {
+          // 如果是Markdown格式，进一步清理模板相关的文本和指令
+          if (isMarkdownFormat) {
+            message = message
+              .replace(/^-\s*\[\s*[xX\s]?\s*\].*$/gm, '')  // 移除勾选框
+              .replace(/^\s*\*\*.*?\*\*\s*$/gm, '')        // 移除加粗标题
+              .replace(/^---.*$/gm, '');                   // 移除分隔线
+          }
+          
           // 确保内容不为空
-          if (cleanedMessage.trim()) {
-            const messageHtml = marked(cleanedMessage);
+          if (message.trim()) {
+            const messageHtml = marked(message);
             html += `<div class="message-text">${DOMPurify.sanitize(messageHtml)}</div>`;
           }
         }
