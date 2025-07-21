@@ -21,26 +21,11 @@ body:
   - type: textarea
     id: problem
     attributes:
-      label: 问题背景
+      label: 要啥功能
       description: 描述您遇到的问题或需求场景
       placeholder: |
         请描述：
-        - 您在什么情况下需要这个功能？
-        - 当前的解决方案有什么不足？
-        - 这个问题对您的工作流程有什么影响？
-    validations:
-      required: false
-
-  - type: textarea
-    id: solution
-    attributes:
-      label: 建议的解决方案
-      description: 详细描述您希望实现的功能
-      placeholder: |
-        请详细描述：
-        - 这个功能应该如何工作？
-        - 用户应该如何使用它？
-        - 预期的用户体验是什么样的？
+        - 你想要干啥呢？
     validations:
       required: false
 
