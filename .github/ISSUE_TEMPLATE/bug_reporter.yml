@@ -25,7 +25,7 @@ body:
       description: 简洁清晰地描述遇到的问题
       placeholder: 详细描述您遇到的问题...
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: steps
@@ -38,7 +38,7 @@ body:
         3. 输入...
         4. 看到错误...
     validations:
-      required: true
+      required: false
 
   - type: dropdown
     id: severity
@@ -51,7 +51,7 @@ body:
         - 高 - 阻止正常使用
         - 关键 - 系统崩溃或数据丢失
     validations:
-      required: true
+      required: false
 
   - type: input
     id: browser
