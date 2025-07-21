@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - develop
       # 可以根据需要添加其他分支
 
 env:
@@ -77,6 +76,8 @@ jobs:
       id: commit_info
       run: |
         # 获取最近的提交信息
+        git fetch upstream ${{ env.UPSTREAM_BRANCH }}
+
         LAST_COMMIT_MSG=$(git log -1 --pretty=format:"%s")
         LAST_COMMIT_AUTHOR=$(git log -1 --pretty=format:"%an")
         COMMIT_COUNT=$(git rev-list --count upstream/${{ env.UPSTREAM_BRANCH }}..${{ github.ref_name }})
