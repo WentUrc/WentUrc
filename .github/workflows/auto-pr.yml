@@ -4,13 +4,11 @@ on:
   push:
     branches:
       - main
-      - develop
       # 可以根据需要添加其他分支
 
 env:
   UPSTREAM_REPO: 'WentUrc/WentUrc'  # 上游仓库，格式：owner/repo
   UPSTREAM_BRANCH: 'main'  # 上游仓库的目标分支
-  PR_BRANCH_PREFIX: 'sync-from-fork'  # PR分支前缀
 
 jobs:
   auto-upstream-pr:
@@ -34,7 +32,7 @@ jobs:
         git remote add upstream https://github.com/${{ env.UPSTREAM_REPO }}.git
         git fetch upstream
 
-    - name: Check if upstream is ahead
+    - name: Check if upstream is ahead and sync
       id: check_upstream
       run: |
         # 检查上游是否有新的提交
@@ -50,14 +48,22 @@ jobs:
           git push origin ${{ github.ref_name }}
         fi
 
-    - name: Generate branch name
-      id: branch_name
+    - name: Check for changes to submit
+      id: check_changes
       run: |
-        TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-        BRANCH_NAME="${{ env.PR_BRANCH_PREFIX }}-${{ github.ref_name }}-${TIMESTAMP}"
-        echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+        # 检查当前分支相对于上游分支的提交
+        AHEAD_COMMITS=$(git rev-list --count upstream/${{ env.UPSTREAM_BRANCH }}..${{ github.ref_name }})
+        echo "ahead_commits=$AHEAD_COMMITS" >> $GITHUB_OUTPUT
+        
+        if [ "$AHEAD_COMMITS" -eq 0 ]; then
+          echo "No new commits to submit to upstream."
+          exit 0
+        fi
+        
+        echo "Found $AHEAD_COMMITS commits ahead of upstream."
 
-    - name: Create and push feature branch
+    - name: Push current branch to upstream
+      if: steps.check_changes.outputs.ahead_commits > 0
       run: |
         # 检查是否有UPSTREAM_TOKEN
         if [ -z "${{ secrets.UPSTREAM_TOKEN }}" ]; then
@@ -65,27 +71,26 @@ jobs:
           exit 1
         fi
         
-        # 基于当前分支创建新分支
-        git checkout -b ${{ steps.branch_name.outputs.branch_name }}
-        
-        # 使用UPSTREAM_TOKEN推送到上游仓库
+        # 使用UPSTREAM_TOKEN推送当前分支到上游仓库
         git remote remove upstream
         git remote add upstream https://${{ secrets.UPSTREAM_TOKEN }}@github.com/${{ env.UPSTREAM_REPO }}.git
-        git push upstream ${{ steps.branch_name.outputs.branch_name }}
+        git push upstream ${{ github.ref_name }}
 
     - name: Get commit information
+      if: steps.check_changes.outputs.ahead_commits > 0
       id: commit_info
       run: |
         # 获取最近的提交信息
         LAST_COMMIT_MSG=$(git log -1 --pretty=format:"%s")
         LAST_COMMIT_AUTHOR=$(git log -1 --pretty=format:"%an")
-        COMMIT_COUNT=$(git rev-list --count upstream/${{ env.UPSTREAM_BRANCH }}..${{ github.ref_name }})
+        COMMIT_COUNT=${{ steps.check_changes.outputs.ahead_commits }}
         
         echo "last_commit_msg=$LAST_COMMIT_MSG" >> $GITHUB_OUTPUT
         echo "last_commit_author=$LAST_COMMIT_AUTHOR" >> $GITHUB_OUTPUT
         echo "commit_count=$COMMIT_COUNT" >> $GITHUB_OUTPUT
 
     - name: Create Pull Request
+      if: steps.check_changes.outputs.ahead_commits > 0
       id: create_pr
       uses: actions/github-script@v7
       with:
@@ -101,7 +106,6 @@ jobs:
           const lastCommitMsg = '${{ steps.commit_info.outputs.last_commit_msg }}';
           const lastCommitAuthor = '${{ steps.commit_info.outputs.last_commit_author }}';
           const sourceBranch = '${{ github.ref_name }}';
-          const branchName = '${{ steps.branch_name.outputs.branch_name }}';
           
           let title, body;
           
@@ -115,7 +119,7 @@ jobs:
           
           **源仓库**: ${owner}/${repo}
           **源分支**: ${sourceBranch}
-          **同步分支**: ${branchName}
+          **目标分支**: ${{ env.UPSTREAM_BRANCH }}
           **提交数量**: ${commitCount}
           **最新提交**: ${lastCommitMsg}
           **最新作者**: ${lastCommitAuthor}
@@ -132,20 +136,41 @@ jobs:
           ### 📊 提交历史
           `;
           
-          // 添加提交历史
-          const commits = await github.rest.repos.compareCommits({
+          // 检查是否已存在相同的PR
+          const existingPRs = await github.rest.pulls.list({
             owner: upstreamOwner,
             repo: upstreamRepoName,
-            base: '${{ env.UPSTREAM_BRANCH }}',
-            head: branchName
+            state: 'open',
+            head: `${owner}:${sourceBranch}`,
+            base: '${{ env.UPSTREAM_BRANCH }}'
           });
           
-          commits.data.commits.forEach(commit => {
-            const shortSha = commit.sha.substring(0, 7);
-            const message = commit.commit.message.split('\n')[0];
-            const author = commit.commit.author.name;
-            body += `\n- \`${shortSha}\` ${message} (@${author})`;
-          });
+          if (existingPRs.data.length > 0) {
+            console.log(`ℹ️ PR already exists: ${existingPRs.data[0].html_url}`);
+            core.setOutput('pr_url', existingPRs.data[0].html_url);
+            core.setOutput('pr_number', existingPRs.data[0].number);
+            core.setOutput('pr_existed', 'true');
+            return;
+          }
+          
+          // 添加提交历史
+          try {
+            const commits = await github.rest.repos.compareCommits({
+              owner: upstreamOwner,
+              repo: upstreamRepoName,
+              base: '${{ env.UPSTREAM_BRANCH }}',
+              head: `${owner}:${sourceBranch}`
+            });
+            
+            commits.data.commits.forEach(commit => {
+              const shortSha = commit.sha.substring(0, 7);
+              const message = commit.commit.message.split('\n')[0];
+              const author = commit.commit.author.name;
+              body += `\n- \`${shortSha}\` ${message} (@${author})`;
+            });
+          } catch (error) {
+            console.log('⚠️ Could not fetch commit history:', error.message);
+          }
           
           body += `\n\n---
           *此PR由GitHub Actions自动创建于 ${new Date().toISOString()}*`;
@@ -156,7 +181,7 @@ jobs:
               owner: upstreamOwner,
               repo: upstreamRepoName,
               title: title,
-              head: branchName,
+              head: `${owner}:${sourceBranch}`,
               base: '${{ env.UPSTREAM_BRANCH }}',
               body: body,
               maintainer_can_modify: true
@@ -165,6 +190,7 @@ jobs:
             console.log(`✅ PR created successfully: ${pr.data.html_url}`);
             core.setOutput('pr_url', pr.data.html_url);
             core.setOutput('pr_number', pr.data.number);
+            core.setOutput('pr_existed', 'false');
             
             // 添加标签（可选）
             try {
@@ -184,7 +210,7 @@ jobs:
           }
 
     - name: Comment on original commit
-      if: steps.create_pr.outputs.pr_url
+      if: steps.create_pr.outputs.pr_url && steps.create_pr.outputs.pr_existed != 'true'
       uses: actions/github-script@v7
       with:
         script: |
@@ -198,3 +224,16 @@ jobs:
             commit_sha: context.sha,
             body: `🚀 自动向上游仓库提交了PR: [#${prNumber}](${prUrl})`
           });
+
+    - name: Summary
+      if: always()
+      run: |
+        if [ "${{ steps.check_changes.outputs.ahead_commits }}" -eq 0 ]; then
+          echo "✅ 没有新的提交需要同步到上游仓库"
+        elif [ "${{ steps.create_pr.outputs.pr_existed }}" == "true" ]; then
+          echo "ℹ️ PR已存在: ${{ steps.create_pr.outputs.pr_url }}"
+        elif [ -n "${{ steps.create_pr.outputs.pr_url }}" ]; then
+          echo "✅ 成功创建PR: ${{ steps.create_pr.outputs.pr_url }}"
+        else
+          echo "❌ PR创建失败"
+        fi
