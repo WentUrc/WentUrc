@@ -6,16 +6,21 @@ on:
       - main
       - develop
       # 可以根据需要添加其他分支
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      - '.gitignore'
+      # 忽略不需要同步的文件
 
 env:
-  UPSTREAM_REPO: 'WentUrc/WentUrc'  # 上游仓库，格式：owner/repo
+  UPSTREAM_REPO: 'upstream-owner/upstream-repo'  # 上游仓库，格式：owner/repo
   UPSTREAM_BRANCH: 'main'  # 上游仓库的目标分支
   PR_BRANCH_PREFIX: 'sync-from-fork'  # PR分支前缀
 
 jobs:
   auto-upstream-pr:
     runs-on: ubuntu-latest
-    if: github.event.pusher.name != 'IGCrystal-G'  # 避免bot触发的循环
+    if: github.event.pusher.name != 'github-actions[bot]'  # 避免bot触发的循环
     
     steps:
     - name: Checkout repository
@@ -26,8 +31,8 @@ jobs:
 
     - name: Setup Git
       run: |
-        git config --global user.name "IGCrystal-G"
-        git config --global user.email "cacheigcrystal@gmail.com"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
     - name: Add upstream remote
       run: |
@@ -59,11 +64,18 @@ jobs:
 
     - name: Create and push feature branch
       run: |
+        # 检查是否有UPSTREAM_TOKEN
+        if [ -z "${{ secrets.UPSTREAM_TOKEN }}" ]; then
+          echo "❌ UPSTREAM_TOKEN secret not found. Please add it to repository secrets."
+          exit 1
+        fi
+        
         # 基于当前分支创建新分支
         git checkout -b ${{ steps.branch_name.outputs.branch_name }}
         
-        # 推送到上游仓库（需要有写权限的token）
-        git remote set-url upstream https://x-access-token:${{ secrets.UPSTREAM_TOKEN }}@github.com/${{ env.UPSTREAM_REPO }}.git
+        # 使用UPSTREAM_TOKEN推送到上游仓库
+        git remote remove upstream
+        git remote add upstream https://${{ secrets.UPSTREAM_TOKEN }}@github.com/${{ env.UPSTREAM_REPO }}.git
         git push upstream ${{ steps.branch_name.outputs.branch_name }}
 
     - name: Get commit information
