@@ -453,6 +453,9 @@ export default {
   width: 80%; /* 设置为80%宽度 */
   margin-left: auto; /* 水平居中 */
   margin-right: auto; /* 水平居中 */
+  max-height: 40vh; /* 设置最大高度 */
+  overflow-y: auto; /* 启用垂直滚动 */
+  padding-right: 10px; /* 为滚动条预留空间 */
 }
 
 .issue-item {
@@ -462,6 +465,9 @@ export default {
   box-shadow: 0 4px 12px var(--card-shadow, rgba(91, 81, 200, 0.1));
   text-align: left;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 10px;
+  margin-left: 20px;
+  margin-bottom: 20px;
 }
 
 .issue-item:hover {
