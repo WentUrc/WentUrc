@@ -1,0 +1,100 @@
+name: ✨ Feature Request
+description: 提出一个新功能或改进建议
+title: "[Feature]: "
+labels: ["enhancement"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您的功能建议！请详细描述您希望添加的功能，这将帮助我们更好地理解和评估您的需求。
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 确认事项
+      description: 在提交之前，请确认以下事项
+      options:
+        - label: 我已经搜索过现有的issues，确认没有相同或类似的功能请求
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 问题背景
+      description: 描述您遇到的问题或需求场景
+      placeholder: |
+        请描述：
+        - 您在什么情况下需要这个功能？
+        - 当前的解决方案有什么不足？
+        - 这个问题对您的工作流程有什么影响？
+    validations:
+      required: false
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 建议的解决方案
+      description: 详细描述您希望实现的功能
+      placeholder: |
+        请详细描述：
+        - 这个功能应该如何工作？
+        - 用户应该如何使用它？
+        - 预期的用户体验是什么样的？
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 优先级
+      description: 这个功能对您有多重要？
+      options:
+        - 低 - 锦上添花，有了更好
+        - 中 - 对工作流程有帮助
+        - 高 - 显著提升效率或体验
+        - 关键 - 阻碍了重要用例
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: feature_type
+    attributes:
+      label: 功能类型
+      description: 这个功能属于哪个类别？（可多选）
+      options:
+        - label: 🔧 核心功能增强
+        - label: 🎨 用户界面改进
+        - label: ⚡ 性能优化
+        - label: 🛡️ 安全性增强
+        - label: 📱 移动端支持
+        - label: 🔌 API/集成功能
+        - label: 📊 数据分析/报告
+        - label: 🌐 国际化/本地化
+        - label: ♿ 可访问性改进
+        - label: 🔍 搜索功能
+        - label: 📁 文件处理
+        - label: 🔔 通知系统
+        - label: 其他
+
+  - type: textarea
+    id: references
+    attributes:
+      label: 参考资料
+      description: 相关的链接、文档或类似功能的例子
+      placeholder: |
+        - 相关的GitHub issues或PRs
+        - 外部文档或规范
+        - 其他项目中类似功能的例子
+        - 用户反馈或讨论链接
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 附加信息
+      description: 其他任何相关的信息或上下文
+      placeholder: |
+        - 实现建议或技术考虑
+        - 潜在的风险或挑战
+        - 与现有功能的关系
+        - 其他值得注意的点...
