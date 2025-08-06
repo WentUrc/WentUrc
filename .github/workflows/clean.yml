@@ -1,7 +1,7 @@
 name: Clean Git History
 
 on:
-  workflow_dispatch:  # 手动触发清理喵
+  workflow_dispatch:
 
 jobs:
   clean:
@@ -11,7 +11,7 @@ jobs:
       - name: Checkout full repo history
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 一定要完整历史！
+          fetch-depth: 0
 
       - name: Install git-filter-repo
         run: |
@@ -23,5 +23,6 @@ jobs:
 
       - name: Force push cleaned history
         run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git push origin --force --all
           git push origin --force --tags
