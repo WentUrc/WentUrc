@@ -10,7 +10,7 @@
     <div class="background-layer image-bg" :style="imageBackground"></div>
     
     <!-- 个人资料卡片 -->
-    <div class="profile-card">
+    <div class="profile-card" @click="handleCardClick">
       <img :src="avatar" :alt="`用户 ${name} 的头像`" class="avatar" />
       <h2 class="name">{{ name }}</h2>
       <p class="bio">{{ bio }}</p>
@@ -70,6 +70,7 @@ export default {
       loadingProgress: 0, 
       loadingTimer: null,
       navBarHeight: 60, // 导航栏高度
+      musicPlayed: false, // 标记音乐是否已播放
     };
   },
   computed: {
@@ -110,15 +111,32 @@ export default {
         top: elementBottom - this.navBarHeight,
         behavior: 'smooth'
       });
+    },
+    handleCardClick(event) {
+      // 如果点击的是社交链接，不处理音乐播放
+      if (event.target.closest('.social-links a')) {
+        return;
+      }
       
-      // 触发音乐自动播放
+      // 如果音乐已经播放过，不重复播放
+      if (this.musicPlayed) {
+        return;
+      }
+      
+      // 尝试播放音乐
+      this.tryPlayMusic();
+    },
+    tryPlayMusic() {
       try {
         if (audioService && !audioService.getState().isPlaying) {
-          console.log('🎵 用户点击箭头，触发音乐自动播放');
           audioService.togglePlay();
+          this.musicPlayed = true; // 标记已播放
+          notificationService.info('交响之音已然绽放');
         }
       } catch (error) {
-        console.warn('⚠️ 音乐自动播放失败:', error);
+        console.warn('⚠️ 音乐播放失败:', error);
+        // 即使失败也标记，避免重复尝试
+        this.musicPlayed = true;
       }
     },
     simulateLoadingProgress() {
@@ -176,6 +194,7 @@ export default {
   background-size: auto, 300% 100%;
   animation: moveGradient 8s ease infinite;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer; /* 添加手型光标提示可点击 */
 }
 
 .profile-card:hover {

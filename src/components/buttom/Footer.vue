@@ -17,6 +17,23 @@ export default {
 </script>
 
 <style scoped>
+/* Lexend 字体定义 */
+@font-face {
+  font-family: "Lexend";
+  src: url('/fonts/lexend.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lexend";
+  src: url('/fonts/lexend-v25-latin-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 .app-footer {
   position: relative;
   color: var(--text-color, #f1f1f1);
@@ -27,7 +44,7 @@ export default {
   animation: gradientShift 15s ease infinite;
   position: relative;
   z-index: 1;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-family: "Lexend", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 /* 添加一个背景调整层 - 默认为浅色模式 */
@@ -73,12 +90,14 @@ export default {
   font-size: 16px;
   display: inline-block;
   background: var(--primary-gradient, linear-gradient(to right, #4facfe, #00f2fe, #f77062, #fe5196));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 400%;
   background-position: 0% 50%;
   transition: background-position 0.5s ease-in-out;
-  font-family: inherit; /* 确保继承父元素字体 */
+  font-family: "Lexend", inherit; /* 使用 Lexend 字体 */
+  font-weight: 600; /* 使用加粗版本 */
 }
 
 /* 深色模式下调整文字亮度 */

@@ -550,6 +550,7 @@ class AudioService {
       playlistLoaded: this.playlistLoaded,
       loadingError: this.loadingError,
       currentTrackName: this.getCurrentTrackName(),
+      currentTrack: this.getCurrentTrack(),
       playlist: this.playlist
     };
   }

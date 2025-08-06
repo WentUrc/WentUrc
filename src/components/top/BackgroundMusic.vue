@@ -122,6 +122,9 @@ export default {
     currentTrackName() {
       return this.audioState.currentTrackName;
     },
+    currentTrack() {
+      return this.audioState.currentTrack;
+    },
     currentTime() {
       return this.audioState.currentTime;
     },
@@ -455,6 +458,10 @@ export default {
 .play-mode:hover .play-mode-icon,
 .play-mode:hover .play-mode-text {
   color: var(--icon-primary, #5e60ce);
+}
+.time {
+  font-size: 12px;
+  color: var(--text-color, #666);
 }
 .time-info {
   display: flex;
