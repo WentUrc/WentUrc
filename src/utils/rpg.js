@@ -1,7 +1,7 @@
 export const roles = [
   {
     id: 1,
-    name: '文档喵~',
+    name: '博客喵~',
     description: '这里是我的主要活动场地',
     image: new URL('../assets/characters/swordsman.webp', import.meta.url).href,
     route: 'https://docs.wenturc.com/'

@@ -74,8 +74,8 @@ export default {
       issuesError: null,
       issuesCacheTime: 0,
       issuesCacheDuration: 5 * 60 * 1000, // 5分钟缓存
-      repoOwner: 'IGCyukira',  // 修正为正确的用户名
-      repoName: 'WentUrc',
+      repoOwner: 'Wenturc',  // 修正为正确的用户名
+      repoName: 'WentUrc-v2-site',
     };
   },
   computed: {

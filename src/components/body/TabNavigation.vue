@@ -60,12 +60,6 @@ export default {
           external: false
         },
         {
-          to: '/records',
-          label: '记录',
-          icon: 'fas fa-book',
-          external: false
-        },
-        {
           to: '/message-board',
           label: '留言板',
           icon: 'fas fa-comments',

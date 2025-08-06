@@ -38,6 +38,7 @@
 
 <script>
 import notificationService from '../../utils/notificationService.js';
+import audioService from '../../services/audioService.js';
 
 export default {
   name: 'ProfileCard',
@@ -109,6 +110,16 @@ export default {
         top: elementBottom - this.navBarHeight,
         behavior: 'smooth'
       });
+      
+      // 触发音乐自动播放
+      try {
+        if (audioService && !audioService.getState().isPlaying) {
+          console.log('🎵 用户点击箭头，触发音乐自动播放');
+          audioService.togglePlay();
+        }
+      } catch (error) {
+        console.warn('⚠️ 音乐自动播放失败:', error);
+      }
     },
     simulateLoadingProgress() {
       this.loadingTimer = setInterval(() => {
