@@ -12,6 +12,8 @@
     <EasterEgg />
     <Achievements />
     <BackToTop />
+    <Analytics />
+    <SpeedInsights />
   </div>
 </template>
 
@@ -27,6 +29,8 @@ import newYearTracker from './components/other/achievements/easter-eggs/NewYearT
 import midnightTracker from './components/other/achievements/easter-eggs/MidnightTracker.js';
 import achievementHunterTracker from './components/other/achievements/easter-eggs/AchievementHunterTracker.js';
 import achievementMasterTracker from './components/other/achievements/easter-eggs/AchievementMasterTracker.js';
+import { Analytics } from '@vercel/analytics/vue';
+import { SpeedInsights } from "@vercel/speed-insights/vue"
 
 export default {
   name: 'App',
