@@ -10,7 +10,7 @@
     <div class="background-layer image-bg" :style="imageBackground"></div>
     
     <!-- 个人资料卡片 -->
-    <div class="profile-card" @click="handleCardClick">
+    <div class="profile-card" @click="handleCardClick" ref="profileCard">
       <img :src="avatar" :alt="`用户 ${name} 的头像`" class="avatar" />
       <h2 class="name">{{ name }}</h2>
       <p class="bio">{{ bio }}</p>
@@ -113,10 +113,13 @@ export default {
       });
     },
     handleCardClick(event) {
-      // 如果点击的是社交链接，不处理音乐播放
+      // 如果点击的是社交链接，不处理音乐播放和纸片动画
       if (event.target.closest('.social-links a')) {
         return;
       }
+      
+      // 触发纸片飘散动画
+      this.createPaperScatterEffect(event);
       
       // 如果音乐已经播放过，不重复播放
       if (this.musicPlayed) {
@@ -125,6 +128,100 @@ export default {
       
       // 尝试播放音乐
       this.tryPlayMusic();
+    },
+    createPaperScatterEffect(event) {
+      // 获取点击位置相对于视口的绝对坐标
+      const clickX = event.clientX;
+      const clickY = event.clientY;
+      
+      // 获取当前主题色
+      const rootStyles = getComputedStyle(document.documentElement);
+      const cardStyles = getComputedStyle(this.$refs.profileCard);
+      
+      // 动态获取主题色，如果获取不到则使用默认值
+      const themeColors = [
+        rootStyles.getPropertyValue('--icon-primary').trim() || '#5e60ce',
+        rootStyles.getPropertyValue('--icon-accent').trim() || '#6930c3',
+        cardStyles.getPropertyValue('--border-gradient').trim() || '#dcbff8',
+        rootStyles.getPropertyValue('--text-color').trim() || '#333',
+        '#dcbff8', // 渐变紫
+        '#d1ecf9', // 渐变蓝
+        '#c6e2ff', // 浅蓝
+        '#f9d1dc', // 浅粉
+        '#e8f5e8'  // 浅绿
+      ].filter(color => color); // 过滤掉空值
+      
+      // 创建纸片容器，覆盖整个视口
+      const container = document.createElement('div');
+      container.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 9999;
+        overflow: hidden;
+      `;
+      
+      document.body.appendChild(container);
+      
+      // 创建纸片
+      const paperCount = 25;
+      const shapes = ['●', '■', '▲', '♥', '★', '◆'];
+      
+      for (let i = 0; i < paperCount; i++) {
+        const paper = document.createElement('div');
+        
+        // 随机纸片属性
+        const size = Math.random() * 12 + 8; // 8-20px
+        const color = themeColors[Math.floor(Math.random() * themeColors.length)];
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        
+        // 关键：计算真正的四面八方飞散
+        const angle = (i / paperCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.5; // 均匀分布 + 随机偏移
+        const velocity = 200 + Math.random() * 300; // 200-500px 飞行距离
+        const gravity = 100 + Math.random() * 200; // 重力下坠距离
+        
+        const targetX = clickX + Math.cos(angle) * velocity;
+        const targetY = clickY + Math.sin(angle) * velocity + gravity; // 加入重力
+        
+        // 设置纸片样式和动画
+        paper.style.cssText = `
+          position: absolute;
+          left: ${clickX - size/2}px;
+          top: ${clickY - size/2}px;
+          width: ${size}px;
+          height: ${size}px;
+          color: ${color};
+          font-size: ${size}px;
+          font-weight: bold;
+          line-height: 1;
+          text-align: center;
+          opacity: 1;
+          transform: rotate(0deg);
+          transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          z-index: 10000;
+        `;
+        
+        paper.innerHTML = shape;
+        container.appendChild(paper);
+        
+        // 延迟触发动画，让每个纸片有不同的启动时间
+        setTimeout(() => {
+          if (paper.parentNode) {
+            paper.style.transform = `translate(${targetX - clickX}px, ${targetY - clickY}px) rotate(${Math.random() * 720 - 360}deg) scale(0.3)`;
+            paper.style.opacity = '0';
+          }
+        }, Math.random() * 100); // 0-100ms 随机延迟
+      }
+      
+      // 3秒后清除容器
+      setTimeout(() => {
+        if (container.parentNode) {
+          container.parentNode.removeChild(container);
+        }
+      }, 3000);
     },
     tryPlayMusic() {
       try {
@@ -175,7 +272,7 @@ export default {
   overflow: hidden;
 }
 
-/* 个人资料卡片样式 */
+/* 移除卡片的overflow限制，让纸片能飞出边界 */
 .profile-card {
   position: relative;
   z-index: 2;
@@ -195,6 +292,10 @@ export default {
   animation: moveGradient 8s ease infinite;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer; /* 添加手型光标提示可点击 */
+  user-select: none; /* 禁用文字选中 */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
 }
 
 .profile-card:hover {
@@ -215,12 +316,25 @@ export default {
     linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
   background-size: auto, 300% 100%;
   animation: moveGradient 8s ease infinite;
+  -webkit-user-drag: none; /* Safari */
+  -khtml-user-drag: none; /* Konqueror */
+  -moz-user-drag: none; /* Firefox */
+  -o-user-drag: none; /* Opera */
+  user-select: none; /* 禁用选中 */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  pointer-events: none; /* 禁用所有鼠标事件，包括拖动 */
 }
 
 .name {
   font-size: 1.8rem;
   color: var(--text-color, #333);
   margin-bottom: 10px;
+  user-select: none; /* 禁用文字选中 */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
 }
 
 .bio {
@@ -228,6 +342,10 @@ export default {
   color: var(--text-color, #666);
   line-height: 1.5;
   margin-bottom: 20px;
+  user-select: none; /* 禁用文字选中 */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
 }
 
 .social-links a {
@@ -253,7 +371,11 @@ export default {
   z-index: 4;
 }
 
-/* 保留现有样式 */
+@keyframes moveGradient {
+  0% { background-position: 0% 0%, 0% 50%; }
+  50% { background-position: 0% 0%, 100% 50%; }
+  100% { background-position: 0% 0%, 0% 50%; }
+}
 .github-progress-container {
   position: fixed;
   top: 0;
