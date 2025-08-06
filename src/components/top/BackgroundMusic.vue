@@ -88,74 +88,65 @@
 </template>
 
 <script>
-// 直接导入播放列表数据
-import playlistData from '../../assets/data/playlist.json';
+// 导入全局音频服务
+import audioService from '../../services/audioService.js';
 import eventBus from '../../utils/eventBus.js';
-import silentBrowsingTracker from '../other/achievements/easter-eggs/SilentBrowsingTracker.js';
+import silentBrowsingTracker from '../../components/other/achievements/easter-eggs/SilentBrowsingTracker.js';
 
 export default {
   name: 'BackgroundMusic',
   data() {
     return {
-      isPlaying: false,
-      isMuted: false,
-      volume: 50,
-      playlist: [], 
-      playlistInfo: [],
-      currentTrackIndex: 0,
-      isHovered: false, 
-      randomMode: false,
-      isCollapsed: true, 
-      currentTime: 0,
-      duration: 0,
-      progress: 0,
-      visualizerData: [],
-
-      achievementTriggered: false,
-      
-      // 追踪已完整播放的不同歌曲
-      completedTracks: new Set(),
-      musicConnoisseurUnlocked: false
+      isCollapsed: false,
+      isHovered: false,
+      visualizerData: Array(12).fill(0),
+      audioState: audioService.getState(),
+      audioStateHandler: null
     };
   },
-  created() {
-    // 从导入的JSON文件初始化播放列表
-    this.playlist = playlistData;
-    this.playlistInfo = this.playlist.map(path => {
-      const fileName = path.split('/').pop();
-      const parts = fileName.replace('.mp3', '').split('-');
-      
-      if (parts.length >= 2) {
-        return {
-          name: parts[0].trim(),
-          artist: parts[1].trim()
-        };
-      } else {
-        return {
-          name: fileName.replace('.mp3', ''),
-          artist: '未知艺术家'
-        };
-      }
-    });
-    
-    // 随机选择一首歌作为初始歌曲
-    if (this.playlist.length > 0) {
-      this.currentTrackIndex = Math.floor(Math.random() * this.playlist.length);
-    }
-  },
   computed: {
-    currentTrack() {
-      return this.playlist[this.currentTrackIndex];
+    isPlaying() {
+      return this.audioState.isPlaying;
+    },
+    isMuted() {
+      return this.audioState.isMuted;
+    },
+    volume: {
+      get() {
+        return this.audioState.volume;
+      },
+      set(value) {
+        audioService.setVolume(value);
+      }
     },
     currentTrackName() {
-      const info = this.playlistInfo[this.currentTrackIndex];
-      if (!info) return '未知歌曲';
-      return `${info.name} - ${info.artist}`;
+      return this.audioState.currentTrackName;
+    },
+    currentTime() {
+      return this.audioState.currentTime;
+    },
+    duration() {
+      return this.audioState.duration;
+    },
+    progress() {
+      return this.audioState.progress;
+    },
+    randomMode() {
+      return this.audioState.randomMode;
+    },
+    playlistLoaded() {
+      return this.audioState.playlistLoaded;
+    },
+    loadingError() {
+      return this.audioState.loadingError;
     }
   },
   mounted() {
-    this.audio = this.$refs.bgMusic;
-    this.audio.volume = this.volume / 100;
+    // 监听音频状态变化
+    this.audioStateHandler = (state) => {
+      this.audioState = state;
+    };
+    eventBus.on('audio-state-changed', this.audioStateHandler);
     
     // 安全地初始化音量控制
     this.$nextTick(() => {
@@ -167,17 +158,11 @@ export default {
       this.updateVisualizer();
     }, 100);
     
-    // 加载已完成的歌曲数据
-    this.loadCompletedTracks();
-    
-    // 检查是否已满足成就条件
-    this.checkMusicConnoisseurAchievement();
-    
     // 初始化静音浏览跟踪器
     silentBrowsingTracker.initialize();
     
     // 设置初始静音状态
-    silentBrowsingTracker.setMuteStatus(this.isMuted);
+    silentBrowsingTracker.setMuteStatus(this.audioState.isMuted);
   },
   methods: {
     // 初始化音量控制，安全处理
@@ -189,71 +174,48 @@ export default {
         }, { passive: false });
       }
     },
+    
+    // 播放/暂停 - 委托给全局音频服务
     togglePlay() {
-      if (window.innerWidth <= 1024 && !this.isHovered) return;
-      if (this.isPlaying) {
-        this.audio.pause();
-        this.isPlaying = false;
-      } else {
-        this.audio.play()
-          .then(() => { 
-            this.isPlaying = true;
-            
-            // 添加成就触发代码喵～
-            if (!this.achievementTriggered) {
-              eventBus.emit('music-played');
-              this.achievementTriggered = true;
-            }
-          })
-          .catch(err => { console.error('播放失败:', err); });
-      }
+      audioService.togglePlay();
     },
+    
+    // 静音/取消静音 - 委托给全局音频服务
     toggleMute() {
-      if (window.innerWidth <= 1024 && !this.isHovered) return;
-      this.isMuted = !this.isMuted;
-      this.audio.muted = this.isMuted;
-      
-      // 通知静音浏览跟踪器
-      silentBrowsingTracker.setMuteStatus(this.isMuted);
+      audioService.toggleMute();
+      silentBrowsingTracker.setMuteStatus(audioService.getState().isMuted);
     },
+    
+    // 调整音量 - 委托给全局音频服务
     changeVolume() {
-      this.audio.volume = this.volume / 100;
-      if (this.isMuted && this.volume > 0) {
-        this.isMuted = false;
-        this.audio.muted = false;
-        
-        // 通知静音浏览跟踪器
+      // 音量已经通过 v-model 和计算属性的 setter 处理
+      if (this.audioState.isMuted && this.audioState.volume > 0) {
+        audioService.toggleMute();
         silentBrowsingTracker.setMuteStatus(false);
       }
     },
+    
+    // 下一首 - 委托给全局音频服务
     nextTrack() {
-      if (this.randomMode) {
-        this.currentTrackIndex = this.getRandomTrack();
-      } else {
-        this.currentTrackIndex = (this.currentTrackIndex + 1) % this.playlist.length;
-      }
-      this.reloadAudio();
+      audioService.nextTrack();
     },
+    
+    // 上一首 - 委托给全局音频服务
     prevTrack() {
-      if (this.randomMode) {
-        this.currentTrackIndex = this.getRandomTrack();
-      } else {
-        this.currentTrackIndex = (this.currentTrackIndex - 1 + this.playlist.length) % this.playlist.length;
-      }
-      this.reloadAudio();
+      audioService.prevTrack();
     },
-    getRandomTrack() {
-      if (this.playlist.length <= 1) return 0;
-      const availableTracks = Array.from(
-        {length: this.playlist.length},
-        (_, i) => i
-      ).filter(i => i !== this.currentTrackIndex);
-      
-      return availableTracks[Math.floor(Math.random() * availableTracks.length)];
-    },
+    
+    // 切换随机模式 - 委托给全局音频服务
     toggleRandomMode() {
-      this.randomMode = !this.randomMode;
+      audioService.toggleRandomMode();
+      
+      // 可以添加一个简单的视觉反馈
+      if (typeof window !== 'undefined' && window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate(50); // 轻微震动反馈（移动设备）
+      }
     },
+    
+    // 折叠/展开
     toggleCollapse() {
       this.isCollapsed = !this.isCollapsed;
       if (!this.isCollapsed) {
@@ -262,80 +224,24 @@ export default {
         });
       }
     },
-    reloadAudio() {
-      this.audio.src = this.currentTrack;
-      if (this.isPlaying) {
-        this.audio.play().catch(err => { console.error('播放失败:', err); });
-      }
-    },
-    updateProgress() {
-      this.currentTime = this.audio.currentTime;
-      this.progress = (this.currentTime / this.duration) * 100 || 0;
-    },
-    loadMetadata() {
-      if (this.audio && !isNaN(this.audio.duration)) {
-        this.duration = this.audio.duration;
-      } else {
-        this.duration = 0;
-      }
-    },
+    
+    // 格式化时间
     formatTime(seconds) {
-      if (!seconds || isNaN(seconds)) return '0:00';
-      const mins = Math.floor(seconds / 60);
-      const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
-      return `${mins}:${secs}`;
+      return audioService.formatTime(seconds);
     },
+    
+    // 跳转 - 委托给全局音频服务
     seek(event) {
       const progressBar = event.currentTarget;
       const rect = progressBar.getBoundingClientRect();
       const offsetX = event.clientX - rect.left;
       const newProgress = (offsetX / rect.width) * 100;
-      const newTime = (newProgress / 100) * this.duration;
-      
-      if (this.audio) {
-        this.audio.currentTime = newTime;
-        this.updateProgress();
-      }
+      audioService.seek(newProgress);
     },
-    handleTrackEnded() {
-      // 当歌曲自然播放结束时，记录为已完成播放
-      if (!this.completedTracks.has(this.currentTrackIndex)) {
-        this.completedTracks.add(this.currentTrackIndex);
-        this.checkMusicConnoisseurAchievement();
-        
-        // 保存已完成的歌曲到本地存储
-        this.saveCompletedTracks();
-      }
-      
-      this.nextTrack();
-    },
-    checkMusicConnoisseurAchievement() {
-      if (this.completedTracks.size >= 5 && !this.musicConnoisseurUnlocked) {
-        this.musicConnoisseurUnlocked = true;
-        eventBus.emit('achievement-unlocked', 'music-connoisseur');
-        // 保存成就状态
-        localStorage.setItem('music-connoisseur-unlocked', 'true');
-      }
-    },
-    saveCompletedTracks() {
-      localStorage.setItem('music-completed-tracks', JSON.stringify(Array.from(this.completedTracks)));
-    },
-    loadCompletedTracks() {
-      try {
-        const saved = localStorage.getItem('music-completed-tracks');
-        if (saved) {
-          const tracks = JSON.parse(saved);
-          this.completedTracks = new Set(tracks);
-        }
-        
-        const achievementUnlocked = localStorage.getItem('music-connoisseur-unlocked') === 'true';
-        this.musicConnoisseurUnlocked = achievementUnlocked;
-      } catch (e) {
-        console.error('加载已完成的歌曲数据失败:', e);
-      }
-    },
+    
+    // 可视化相关
     getVisualizerHeight(index) {
-      if (this.isPlaying) {
+      if (this.audioState.isPlaying) {
         return Math.floor(Math.random() * 30) + 5;
       } 
       else {
@@ -343,16 +249,23 @@ export default {
         return heights[index % heights.length];
       }
     },
+    
     getRandomHeight() {
       return this.getVisualizerHeight(0);
     },
+    
     updateVisualizer() {
-      if (this.isPlaying) {
+      if (this.audioState.isPlaying) {
         this.visualizerData = Array(12).fill().map(() => Math.floor(Math.random() * 30) + 5);
       }
     }
   },
   beforeDestroy() {
+    // 取消监听音频状态变化
+    if (this.audioStateHandler) {
+      eventBus.off('audio-state-changed', this.audioStateHandler);
+    }
+    
     // 清理静音浏览跟踪器
     silentBrowsingTracker.cleanup();
   }
@@ -378,7 +291,6 @@ export default {
   box-sizing: border-box;
   margin-bottom: 20px;
 }
-
 .background-music:hover {
   transform: translateX(0) scale(1.02);
   border: 4px solid transparent;
@@ -389,18 +301,15 @@ export default {
   box-shadow: 0 8px 20px var(--card-shadow, rgba(91, 81, 200, 0.1));
   opacity: 1;
 }
-
 .background-music.collapsed {
   height: 150px;
 }
-
 .content {
   height: 100%;
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
-
 /* 第一行：标题和折叠按钮 */
 .header-row {
   display: flex;
@@ -409,14 +318,12 @@ export default {
   width: 100%;
   margin-bottom: 5px;
 }
-
 .card-title {
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--icon-primary, #5e60ce);
   text-align: left;
 }
-
 .collapse-btn {
   background: transparent;
   border: 1px solid var(--icon-primary, #5e60ce);
@@ -430,19 +337,16 @@ export default {
   cursor: pointer;
   transition: background 0.3s ease;
 }
-
 .collapse-btn:hover {
   background: var(--icon-primary, #5e60ce);
   color: white;
 }
-
 /* 展开内容区域 */
 .expanded-content {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
-
 /* 第二行：音乐控制区域 */
 .music-control-row {
   display: flex;
@@ -452,42 +356,35 @@ export default {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-
 .track-info {
   width: 100%;
 }
-
 .now-playing {
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-bottom: 12px; 
+  margin-bottom: 12px;
 }
-
 .now-playing-indicator {
   display: flex;
   gap: 2px;
   height: 16px;
   align-items: flex-end;
 }
-
 .now-playing-bar {
   width: 3px;
   background: var(--icon-primary, #5e60ce);
   animation: sound-wave 0.5s infinite alternate;
   transform-origin: bottom;
 }
-
 .now-playing-bar:nth-child(1) { height: 60%; animation-delay: 0.0s; }
 .now-playing-bar:nth-child(2) { height: 80%; animation-delay: 0.1s; }
 .now-playing-bar:nth-child(3) { height: 40%; animation-delay: 0.2s; }
 .now-playing-bar:nth-child(4) { height: 100%; animation-delay: 0.3s; }
-
 .not-playing {
   color: var(--icon-primary, #5e60ce);
   font-size: 14px;
 }
-
 .track-name {
   font-size: 14px;
   color: var(--text-color, #333);
@@ -497,12 +394,17 @@ export default {
   max-width: 170px;
   margin-left: auto;
 }
-
+.loading, .error {
+  color: var(--text-color, #666);
+  font-style: italic;
+}
+.error {
+  color: #ff6b6b;
+}
 .progress-container {
   width: 100%;
   position: relative;
 }
-
 .progress-bar {
   width: 100%;
   height: 5px;
@@ -510,16 +412,14 @@ export default {
   border-radius: 3px;
   overflow: visible;
   cursor: pointer;
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
   position: relative;
 }
-
-.progress {
+.progress-fill {
   height: 100%;
   background: var(--primary-gradient, linear-gradient(to right, #5e60ce, #6930c3));
   border-radius: 3px;
 }
-
 .progress-thumb {
   position: absolute;
   top: 50%;
@@ -531,43 +431,38 @@ export default {
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   z-index: 2;
 }
-
 .progress-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .play-mode {
   display: flex;
   align-items: center;
   gap: 4px;
   cursor: pointer;
 }
-
 .play-mode-icon {
   font-size: 12px;
   color: var(--text-color, #666);
   transition: color 0.2s ease;
 }
-
 .play-mode-text {
   font-size: 12px;
   color: var(--text-color, #666);
   transition: color 0.2s ease;
 }
-
 .play-mode:hover .play-mode-icon,
 .play-mode:hover .play-mode-text {
   color: var(--icon-primary, #5e60ce);
 }
-
-.time {
+.time-info {
+  display: flex;
+  justify-content: space-between;
   font-size: 12px;
   color: var(--text-color, #666);
-  text-align: right;
+  margin-bottom: 8px;
 }
-
 /* 第三行：音量控制 */
 .volume-control {
   display: flex;
@@ -581,9 +476,16 @@ export default {
   cursor: pointer;
   color: var(--icon-primary, #5e60ce);
 }
-
+.volume-btn {
+  cursor: pointer;
+  color: var(--icon-primary, #5e60ce);
+  background: none;
+  border: none;
+  font-size: 16px;
+}
 .volume-control input[type="range"] {
   -webkit-appearance: none;
+  appearance: none;
   flex-grow: 1;
   height: 5px;
   background: var(--divider-color, #ddd);
@@ -591,40 +493,67 @@ export default {
   outline: none;
   cursor: pointer;
 }
-
 .volume-control input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
+  appearance: none;
   width: 16px;
   height: 16px;
   background: var(--icon-primary, #5e60ce);
   border-radius: 50%;
+  cursor: pointer;
 }
-
+.volume-value {
+  font-size: 11px;
+  color: var(--text-color, #666);
+  min-width: 30px;
+  text-align: right;
+}
+.additional-controls {
+  display: flex;
+  gap: 8px;
+}
+.shuffle-btn {
+  background: transparent;
+  border: 1px solid var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #5e60ce);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.shuffle-btn.active {
+  background: var(--icon-primary, #5e60ce);
+  color: white;
+}
+.shuffle-btn:hover {
+  background: var(--icon-primary, #5e60ce);
+  color: white;
+}
 /* 第四行：媒体控制按钮 */
 .media-controls {
-  margin-top: auto; 
+  margin-top: auto;
 }
-
 .expanded-controls {
-  margin-top: -5px; 
+  margin-top: -5px;
 }
-
 .collapsed-controls {
-  margin-top: 5px; 
+  margin-top: 5px;
 }
-
 .primary-controls {
   display: flex;
   width: 100%;
   justify-content: space-between;
 }
-
 .control-btn {
   background: var(--button-hover, #f0f0f0);
   border: none;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -632,12 +561,10 @@ export default {
   transition: all 0.2s ease;
   color: var(--icon-primary, #5e60ce);
 }
-
 .play-btn {
   width: 48px;
   height: 48px;
   background: var(--icon-primary, #5e60ce);
-  color: white;
   border: none;
   border-radius: 50%;
   display: flex;
@@ -645,13 +572,13 @@ export default {
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  color: white;
 }
-
 .control-btn:hover, .play-btn:hover {
   transform: scale(1.1);
   box-shadow: 0 0 10px var(--card-shadow, rgba(94, 96, 206, 0.3));
 }
-
+/* 可视化器 */
 .visualizer {
   display: flex;
   align-items: flex-end;
@@ -661,26 +588,22 @@ export default {
   margin-top: auto;
   margin-bottom: 5px;
 }
-
 .visualizer-bar {
   flex: 1;
   background: var(--primary-gradient, linear-gradient(to top, #5e60ce, #d1ecf9));
   border-radius: 2px;
   min-height: 2px;
   transform-origin: bottom;
-  transition: height 0.5s ease; 
+  transition: height 0.5s ease;
 }
-
 .visualizer-bar.animated {
-  transition: height 0.1s ease; 
+  transition: height 0.1s ease;
   animation: sound-wave 0.5s infinite alternate;
 }
-
 @keyframes sound-wave {
   from { transform: scaleY(0.8); }
   to { transform: scaleY(1.2); }
 }
-
 @media (max-width: 1024px) {
   .background-music {
     opacity: 1;
@@ -695,10 +618,9 @@ export default {
     pointer-events: auto;
   }
 }
-
 @media (max-width: 768px) {
   .background-music {
-    display: block; 
+    display: block;
   }
 }
 </style>

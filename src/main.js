@@ -4,11 +4,11 @@ import router from './router'
 
 import "./assets/css/reset.css"
 import "./assets/css/color.css"
-import playlistData from "./assets/data/playlist.json"
 import notificationService from './utils/notificationService'
 import devToolsDetector from './utils/devToolsDetector'
 import seasonTracker from './components/other/achievements/easter-eggs/SeasonTracker'
 import silentBrowsingTracker from './components/other/achievements/easter-eggs/SilentBrowsingTracker.js';
+import audioService from './services/audioService.js';
 
 import { initializeTheme } from './utils/root'
 initializeTheme()
@@ -22,13 +22,15 @@ seasonTracker.enable();
 // 初始化静音浏览跟踪器
 silentBrowsingTracker.initialize();
 
+// 初始化全局音频服务
+audioService.init();
+
 // 注册页面卸载事件，清理资源
 window.addEventListener('beforeunload', () => {
   silentBrowsingTracker.cleanup();
 });
 
 const app = createApp(App)
-app.config.globalProperties.$playlistData = playlistData
 app.config.globalProperties.$notify = notificationService
 app.use(router).mount('#app')
 

@@ -9,6 +9,7 @@
     "dependencies": {
         "dompurify": "^3.2.5",
         "gsap": "^3.11.0",
+        "hls.js": "^1.6.8",
         "marked": "^15.0.11",
         "mitt": "^3.0.1",
         "three": "^0.150.0",
