@@ -4,6 +4,8 @@ import router from './router'
 
 import "./assets/css/reset.css"
 import "./assets/css/color.css"
+// 导入本地 Font Awesome，避免第三方 Cookie
+import "@fortawesome/fontawesome-free/css/all.min.css"
 import notificationService from './utils/notificationService'
 import devToolsDetector from './utils/devToolsDetector'
 import seasonTracker from './components/other/achievements/easter-eggs/SeasonTracker'
