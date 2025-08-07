@@ -11,7 +11,16 @@
     
     <!-- 个人资料卡片 -->
     <div class="profile-card" @click="handleCardClick" ref="profileCard">
-      <img :src="avatar" :alt="`用户 ${name} 的头像`" class="avatar" />
+      <img 
+        :src="avatar" 
+        :alt="`用户 ${name} 的头像`" 
+        class="avatar" 
+        fetchpriority="high" 
+        loading="eager"
+        width="120"
+        height="120"
+        decoding="sync"
+      />
       <h2 class="name">{{ name }}</h2>
       <p class="bio">{{ bio }}</p>
       <div class="social-links">
@@ -44,7 +53,7 @@ export default {
   name: 'ProfileCard',
   data() {
     return {
-      avatar: 'https://avatars.githubusercontent.com/u/59095086?v=4',
+      avatar: 'https://avatars.githubusercontent.com/u/59095086?v=4&s=240', // 添加尺寸参数提升加载效率
       name: '冰苷晶',
       bio: '路很长，梦还在',
       socialLinks: [
@@ -243,7 +252,25 @@ export default {
           this.loadingProgress += increment;
         }
       }, 200);
+    },
+    preloadAvatar() {
+      // 主动预加载头像，提升LCP性能
+      const avatarImg = new Image();
+      avatarImg.src = this.avatar;
+      
+      // 预加载完成后的处理
+      avatarImg.onload = () => {
+        console.log('📸 头像预加载完成');
+      };
+      
+      avatarImg.onerror = () => {
+        console.warn('⚠️ 头像预加载失败');
+      };
     }
+  },
+  created() {
+    // 在组件创建阶段就开始预加载头像
+    this.preloadAvatar();
   },
   mounted() {
     this.simulateLoadingProgress();
