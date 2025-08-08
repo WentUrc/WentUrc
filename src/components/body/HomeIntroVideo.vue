@@ -53,7 +53,7 @@ import eventBus from '../../utils/eventBus.js'
 export default {
   name: 'HomeIntroVideo',
   props: {
-    videoSrc: { type: String, default: '/video/Xaleid◆scopiX xi [maimai でらっくす].mp4' },
+    videoSrc: { type: String, default: 'https://hls.wenturc.com/video/Xaleid◆scopiX-xi[maimai].mp4' },
     poster: { type: String, default: '' },
     title: { type: String, default: '' }
   },
