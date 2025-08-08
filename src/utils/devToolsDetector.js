@@ -39,7 +39,7 @@ class DevToolsUnlocker {
 
     
     // 先显示一个加载提示，避免长时间白屏
-    console.log('%c正在加载WentUrc字符画...', 'font-size: 14px; color: #38d9a9;');
+    console.log('%c正在加载字符画...', 'font-size: 14px; color: #38d9a9;');
     
     try {
       // 异步加载字符画，选择mono版本，它在大多数控制台中显示良好
@@ -52,7 +52,7 @@ class DevToolsUnlocker {
 %c✨✨✨ 欢迎来到开发者世界! ✨✨✨%c
 
 %c🔮 发现隐藏成就 🔮%c
-你发现了WentUrc的开发者模式！作为一名探索者，
+你发现了开发者模式！作为一名探索者，
 你可以解锁"开发好奇喵"成就来记录这一发现。
 
 %c📝 解锁方法 📝%c
@@ -65,9 +65,9 @@ class DevToolsUnlocker {
 • 试着在网站各处搜寻其他隐藏成就吧！
 
 %c🌈 Happy Coding! 🐱`,
-        'color: #6b90ff; font-family: monospace; font-size: 14px; font-weight: bold; text-shadow: 0 1px 0 #38d9a9;',
-        'background: linear-gradient(90deg, #5e60ce, #6b90ff); color: white; font-size: 16px; font-weight: bold; padding: 8px; border-radius: 8px; text-shadow: 0 1px 0 rgba(0,0,0,0.3);',
-        '',
+  'color: #1e90ff; font-family: monospace; font-size: 14px; font-weight: bold; text-shadow: 0 1px 0 #38d9a9;',
+  'background: linear-gradient(90deg, #73c2fb, #1e90ff); color: white; font-size: 16px; font-weight: bold; padding: 8px; border-radius: 8px; text-shadow: 0 1px 0 rgba(0,0,0,0.3);',
+  '',
         'background: #38d9a9; color: white; font-size: 14px; font-weight: bold; padding: 6px 12px; border-radius: 25px 25px 25px 5px; margin: 6px 0;',
         'color: #333; font-size: 14px;',
         'background: #f1b944; color: white; font-size: 14px; font-weight: bold; padding: 6px 12px; border-radius: 25px 25px 25px 5px; margin: 6px 0;',
@@ -76,7 +76,7 @@ class DevToolsUnlocker {
         '',
         'background: #ff6b6b; color: white; font-size: 14px; font-weight: bold; padding: 6px 12px; border-radius: 25px 25px 25px 5px; margin: 6px 0;',
         'color: #333; font-size: 14px; line-height: 1.5;',
-        'color: #6b90ff; font-size: 18px; font-weight: bold; background: linear-gradient(45deg, #6b90ff, #ff6b6b, #38d9a9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; padding: 10px 0; text-shadow: 0 1px 2px rgba(0,0,0,0.1);'
+  'color: #1e90ff; font-size: 18px; font-weight: bold; background: linear-gradient(45deg, #73c2fb, #ff6b6b, #38d9a9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; padding: 10px 0; text-shadow: 0 1px 2px rgba(0,0,0,0.1);'
       );
     } catch (error) {
       // 如果加载失败，使用同步的后备方案
@@ -90,7 +90,7 @@ class DevToolsUnlocker {
 
 在控制台输入以下命令解锁"开发好奇喵"成就:
 %c> unlockDevToolsAchievement()`,
-        'color: #6b90ff; font-family: monospace; font-size: 14px;',
+  'color: #1e90ff; font-family: monospace; font-size: 14px;',
         'color: #38d9a9; font-size: 16px; font-weight: bold;',
         'color: #333;',
         'background: #242424; color: #38d9a9; padding: 4px 8px; border-radius: 4px; font-family: monospace;'

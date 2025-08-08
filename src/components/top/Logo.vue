@@ -2,7 +2,7 @@
   <div class="logo-banner" :class="{ 'scrolled': !isAtTop }">
     <a href="/" @click.prevent="handleLogoClick" class="logo-link">
       <img ref="logoImg" src="/favicon.webp" alt="Logo" draggable="false" @contextmenu.prevent />
-      <span class="logo-text">WentUrc</span>
+      <span class="logo-text">IGCrystal</span>
     </a>
     
     <div class="theme-toggle">
@@ -29,7 +29,7 @@
         <div v-if="!isMobile" class="resize-handle" @mousedown="startResize" @touchstart="startResize"></div>
         <div class="sidebar-layout">
           <div class="sidebar-header">
-            <h2>你好喵 ~ </h2>
+            <h2>你好 </h2>
             <button class="close-btn" @click="closeSidebar">
               <i class="fas fa-times"></i>
             </button>
@@ -39,7 +39,6 @@
             <TimeWidget />
             <BackgroundMusic />
             <BlackLightWidget ref="blackLight" @theme-changed="onThemeChanged" />
-            <IframeWidget />
             <NeoLife />
             <!-- 添加底部间隔占位元素 -->
             <div class="bottom-spacer"></div>
@@ -56,7 +55,6 @@ import TimeWidget from './Time.vue'
 import BlackLightWidget from './BlackLight.vue'
 import { applyThemeVariables } from '../../utils/root'
 import NeoLife from './NeoLife.vue'
-import IframeWidget from '../other/IframeWidget.vue'
 import logoGame from '../other/achievements/easter-eggs/LogoGame.js'
 
 export default {
@@ -66,7 +64,6 @@ export default {
     TimeWidget,
     BlackLightWidget,
     NeoLife,
-    IframeWidget
   },
   data() {
     return {
@@ -376,7 +373,7 @@ export default {
   padding: 0 20px;
   background: var(--card-bg, rgba(255, 255, 255, 0.8));
   border-bottom: 4px solid transparent;
-  border-image: linear-gradient(-45deg, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) 1;
+  border-image: linear-gradient(-45deg, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) 1;
   z-index: 90;
   transition: box-shadow 0.3s ease;
   opacity: 1;
@@ -412,7 +409,7 @@ export default {
   font-weight: bold;
   font-size: 2rem;
   font-family: "SHOECARD GOTHIC", sans-serif;
-  background: var(--primary-gradient, linear-gradient(45deg, #6b90ff, #531cf8, #505ce3));
+  background: var(--primary-gradient, linear-gradient(45deg, #73c2fb, #1e90ff));
   background-size: 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -448,8 +445,8 @@ export default {
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   box-shadow: 
-    0 4px 10px var(--card-shadow, rgba(0, 0, 0, 0.1)),
-    0 0 0 2px var(--divider-color, rgba(94, 96, 206, 0.15));
+  0 4px 10px var(--card-shadow, rgba(0, 0, 0, 0.1)),
+  0 0 0 2px var(--divider-color, rgba(30, 144, 255, 0.15));
   position: relative;
   overflow: hidden;
   border: none;
@@ -460,7 +457,7 @@ export default {
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--primary-gradient, linear-gradient(135deg, #dcbff8, #d1ecf9));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 0;
@@ -469,8 +466,8 @@ export default {
 .theme-toggle-btn:hover {
   transform: translateY(-2px);
   box-shadow: 
-    0 8px 16px var(--card-shadow, rgba(0, 0, 0, 0.15)),
-    0 0 0 2px var(--icon-primary, rgba(94, 96, 206, 0.5));
+  0 8px 16px var(--card-shadow, rgba(0, 0, 0, 0.15)),
+  0 0 0 2px var(--icon-primary, rgba(30, 144, 255, 0.5));
 }
 
 .theme-toggle-btn:hover::before {
@@ -478,7 +475,7 @@ export default {
 }
 
 .theme-toggle-btn:hover i {
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
   transform: scale(1.2) rotate(5deg);
 }
 
@@ -489,7 +486,7 @@ export default {
 .theme-toggle-btn i {
   position: relative; 
   z-index: 1;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   font-size: 20px;
   transition: all 0.3s ease;
 }
@@ -509,8 +506,8 @@ export default {
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   box-shadow: 
-    0 4px 10px var(--card-shadow, rgba(0, 0, 0, 0.1)),
-    0 0 0 2px var(--divider-color, rgba(94, 96, 206, 0.15));
+  0 4px 10px var(--card-shadow, rgba(0, 0, 0, 0.1)),
+  0 0 0 2px var(--divider-color, rgba(30, 144, 255, 0.15));
   position: relative;
   overflow: hidden;
   border: none;
@@ -520,7 +517,7 @@ export default {
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--primary-gradient, linear-gradient(135deg, #dcbff8, #d1ecf9));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 0;
@@ -539,8 +536,8 @@ export default {
 .sidebar-button:hover {
   transform: translateY(-2px);
   box-shadow: 
-    0 8px 16px var(--card-shadow, rgba(0, 0, 0, 0.15)),
-    0 0 0 2px var(--icon-primary, rgba(94, 96, 206, 0.5));
+  0 8px 16px var(--card-shadow, rgba(0, 0, 0, 0.15)),
+  0 0 0 2px var(--icon-primary, rgba(30, 144, 255, 0.5));
 }
 
 .sidebar-button:hover::before {
@@ -548,13 +545,13 @@ export default {
 }
 
 .sidebar-button i {
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   font-size: 18px;
   transition: all 0.3s ease;
 }
 
 .sidebar-button:hover i {
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
   transform: scale(1.2);
 }
 
@@ -613,7 +610,7 @@ export default {
   top: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(to bottom, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
+  background: linear-gradient(to bottom, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff));
   border-radius: 2px;
 }
 
@@ -641,8 +638,8 @@ export default {
   height: 40px;
   background: repeating-linear-gradient(
     to bottom,
-    var(--icon-primary, rgba(94, 96, 206, 0.2)) 0px,
-    var(--icon-primary, rgba(94, 96, 206, 0.2)) 2px,
+  var(--icon-primary, rgba(30, 144, 255, 0.2)) 0px,
+  var(--icon-primary, rgba(30, 144, 255, 0.2)) 2px,
     transparent 2px,
     transparent 4px
   );
@@ -695,11 +692,11 @@ export default {
 }
 
 .sidebar-header h2 {
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   font-size: 24px;
   margin: 0;
   font-weight: 600;
-  background: var(--primary-gradient, linear-gradient(45deg, #6b90ff, #5e60ce));
+  background: var(--primary-gradient, linear-gradient(45deg, #73c2fb, #1e90ff));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 1px 2px var(--card-shadow, rgba(0,0,0,0.05));
@@ -707,7 +704,7 @@ export default {
 
 .close-btn {
   background: var(--card-bg, rgba(255, 255, 255, 0.1));
-  border: 1px solid var(--button-border, rgba(94, 96, 206, 0.2));
+  border: 1px solid var(--button-border, rgba(30, 144, 255, 0.2));
   width: 36px;
   height: 36px;
   border-radius: 10px;
@@ -716,19 +713,19 @@ export default {
   justify-content: center;
   font-size: 18px;
   cursor: pointer;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   transition: all 0.3s ease;
   outline: none;
 }
 
 .close-btn:hover {
-  background: var(--button-hover, rgba(94, 96, 206, 0.1));
+  background: var(--button-hover, rgba(30, 144, 255, 0.1));
   transform: scale(1.1);
 }
 
 .close-btn:active {
   transform: scale(0.95);
-  background: var(--button-active, rgba(94, 96, 206, 0.2));
+  background: var(--button-active, rgba(30, 144, 255, 0.2));
 }
 
 .sidebar-content {
@@ -747,12 +744,12 @@ export default {
 }
 
 .sidebar-content::-webkit-scrollbar-thumb {
-  background: var(--button-border, rgba(94, 96, 206, 0.3));
+  background: var(--button-border, rgba(30, 144, 255, 0.3));
   border-radius: 3px;
 }
 
 .sidebar-content::-webkit-scrollbar-thumb:hover {
-  background: var(--button-active, rgba(94, 96, 206, 0.5));
+  background: var(--button-active, rgba(30, 144, 255, 0.5));
 }
 
 /* 添加明显的底部间隔元素 - 默认为0高度（桌面端） */
@@ -771,7 +768,7 @@ export default {
 
 .logo-link img.game-active {
   animation: logoGameAnimation 0.5s ease-in-out 4;
-  border-color: var(--icon-accent, #6b90ff);
+  border-color: var(--icon-accent, #73c2fb);
 }
 
 
@@ -811,7 +808,7 @@ export default {
     top: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
+  background: linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff));
   }
   
   /* 调整底部间隔在移动端的高度 */

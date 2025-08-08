@@ -12,7 +12,7 @@
           animationDuration: durations[rowIndex]
         }">
         <!-- 每行显示10个文字 -->
-        <span v-for="n in 10" :key="n">{{ 'WentUrc' }}</span>
+        <span v-for="n in 10" :key="n">{{ 'ViaLonga Somniviva' }}</span>
       </div>
     </div>
     <div class="dialogue-box">
@@ -148,7 +148,7 @@ export default {
   flex-wrap: nowrap;
   gap: 20px;
   transform: rotate(-15deg);
-  color: var(--icon-primary, #6a73c9);
+  color: var(--icon-primary, #1e90ff);
   font-weight: bold;
   white-space: nowrap;
   letter-spacing: -1px;
@@ -185,7 +185,7 @@ export default {
   z-index: 3;
   background: 
     linear-gradient(var(--card-bg-hover, rgba(255, 255, 255, 0.95)), var(--card-bg-hover, rgba(255, 255, 255, 0.95))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
+  linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
   padding: 28px 30px;
   border-radius: 18px;
   border: 2px solid transparent;
@@ -213,7 +213,7 @@ export default {
   position: absolute;
   width: 150px;
   height: 150px;
-  background: var(--primary-gradient, linear-gradient(135deg, #5e60ce, #6b90ff));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
   border-radius: 50%;
   top: -75px;
   right: -75px;
@@ -229,7 +229,7 @@ export default {
   left: -10%;
   width: 120%;
   height: 60px;
-  background: var(--primary-gradient, linear-gradient(135deg, #5e60ce, #6b90ff));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
   opacity: 0.07;
   border-radius: 50%;
   transform: scale(1, 0.2);
@@ -241,7 +241,7 @@ export default {
   transform: translateY(-46px); /* 在基础-40px基础上再向上6px */
   background: 
     linear-gradient(var(--card-bg-hover, rgba(255, 255, 255, 0.98)), var(--card-bg-hover, rgba(255, 255, 255, 0.98))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #6a73c9, #5e60ce, #5e60ce, #6a73c9)) border-box;
+  linear-gradient(to right, var(--border-gradient, #9fd6ff, #73c2fb, #1e90ff, #9fd6ff)) border-box;
   box-shadow: 
     0 15px 30px -10px var(--card-shadow, rgba(0, 0, 0, 0.15)),
     0 8px 15px -5px var(--card-shadow, rgba(0, 0, 0, 0.1));
@@ -262,7 +262,7 @@ export default {
 :root[data-theme="dark"] .dialogue-box {
   background: 
     linear-gradient(var(--card-bg-hover, rgba(40, 40, 40, 0.95)), var(--card-bg-hover, rgba(40, 40, 40, 0.95))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #9b8dda, #6b90ff, #7294d5, #b98db6)) border-box;
+  linear-gradient(to right, var(--border-gradient, #4aa3e0, #73c2fb, #4da3ff, #5aa9f6)) border-box;
 }
 
 :root[data-theme="dark"] .dialogue-box:hover {
@@ -289,7 +289,7 @@ export default {
   left: 10%;
   width: 80%;
   height: 3px;
-  background: var(--primary-gradient, linear-gradient(to right, #6b90ff, #5e60ce));
+  background: var(--primary-gradient, linear-gradient(to right, #73c2fb, #1e90ff));
   border-radius: 3px;
   opacity: 0.7;
 }
@@ -316,7 +316,7 @@ export default {
   bottom: 8px;
   right: 10px;
   font-size: 20px;
-  color: var(--icon-primary, #6a73c9);
+  color: var(--icon-primary, #1e90ff);
   opacity: 0.3;
 }
 
@@ -330,7 +330,7 @@ export default {
 }
 
 .dialogue-content::-webkit-scrollbar-thumb {
-  background-color: var(--icon-primary, #6a73c9);
+  background-color: var(--icon-primary, #1e90ff);
   border-radius: 10px;
 }
 
@@ -365,7 +365,7 @@ export default {
   gap: 10px;
   padding: 14px 28px;
   /* 使用主题系统的变量，而不是硬编码的颜色 */
-  background: var(--primary-gradient, linear-gradient(135deg, var(--icon-primary, #5e60ce) 0%, var(--icon-accent, #6b90ff) 100%));
+  background: var(--primary-gradient, linear-gradient(135deg, var(--icon-primary, #1e90ff) 0%, var(--icon-accent, #73c2fb) 100%));
   border-radius: 30px;
   color: white;
   font-weight: 600;
@@ -379,15 +379,15 @@ export default {
 
 /* 移除特定颜色设置，使用主题变量 */
 .dialogue-button.adventure {
-  background: var(--primary-gradient, linear-gradient(135deg, var(--icon-primary, #5e60ce) 0%, var(--icon-accent, #6b90ff) 100%));
+  background: var(--primary-gradient, linear-gradient(135deg, var(--icon-primary, #1e90ff) 0%, var(--icon-accent, #73c2fb) 100%));
 }
 
 /* 修改返回按钮样式，使用主题系统变量 */
 .dialogue-button.back {
   /* 使用同样的主题渐变变量，但调整方向和透明度使其看起来不同 */
   background: var(--primary-gradient-alt, linear-gradient(135deg, 
-    var(--icon-accent, #6b90ff) 0%, 
-    var(--icon-primary, #5e60ce) 100%));
+    var(--icon-accent, #73c2fb) 0%, 
+    var(--icon-primary, #1e90ff) 100%));
 }
 
 .dialogue-button i {
@@ -396,12 +396,12 @@ export default {
 
 .dialogue-button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px var(--card-shadow, rgba(91, 81, 200, 0.4));
+  box-shadow: 0 6px 20px var(--card-shadow, rgba(30, 144, 255, 0.4));
 }
 
 .dialogue-button:active {
   transform: translateY(-1px);
-  box-shadow: 0 4px 15px var(--card-shadow, rgba(91, 81, 200, 0.25));
+  box-shadow: 0 4px 15px var(--card-shadow, rgba(30, 144, 255, 0.25));
 }
 
 /* 适配暗色主题 */
@@ -414,10 +414,7 @@ export default {
 }
 
 /* 移除特定颜色的暗色主题设置，完全依赖CSS变量 */
-:root[data-theme="dark"] .dialogue-button.adventure,
-:root[data-theme="dark"] .dialogue-button.back {
-  /* 不再指定具体颜色，完全依靠主题系统变量 */
-}
+
 
 /* 响应式调整 */
 @media (max-width: 768px) {

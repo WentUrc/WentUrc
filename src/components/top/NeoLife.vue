@@ -386,7 +386,7 @@ export default {
   box-sizing: border-box;
   background: 
     linear-gradient(var(--card-bg, rgba(255, 255, 255, 0.8)), var(--card-bg, rgba(255, 255, 255, 0.8))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
+  linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
   border: 4px solid transparent;
   border-radius: 16px;
   transition: all 0.4s ease;
@@ -398,8 +398,8 @@ export default {
   transform: translateX(0) scale(1.02);
   background:
     linear-gradient(var(--card-bg-hover, rgba(255, 255, 255, 0.95)), var(--card-bg-hover, rgba(255, 255, 255, 0.95))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
-  box-shadow: 0 8px 20px var(--card-shadow, rgba(91, 81, 200, 0.25));
+    linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
+  box-shadow: 0 8px 20px var(--card-shadow, rgba(30, 144, 255, 0.25));
 }
 
 /* 标题栏 */
@@ -413,13 +413,13 @@ export default {
 .card-title {
   font-size: 1.2rem;
   font-weight: bold;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
 }
 
 .inspire-icon {
   width: 32px;
   height: 32px;
-  background: var(--primary-gradient, linear-gradient(135deg, #5e60ce, #6b90ff));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -440,7 +440,7 @@ export default {
   border-radius: 12px;
   padding: 25px 15px;
   margin-bottom: 20px;
-  box-shadow: 0 3px 10px var(--card-shadow, rgba(91, 81, 200, 0.1));
+  box-shadow: 0 3px 10px var(--card-shadow, rgba(30, 144, 255, 0.1));
   display: flex;
   align-items: center;
   min-height: 100px;
@@ -448,7 +448,7 @@ export default {
 
 .quote-decorator {
   font-size: 24px;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   opacity: 0.5;
   position: absolute;
 }
@@ -479,7 +479,7 @@ export default {
 
 .quote-author {
   font-size: 14px;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   margin: 0;
   font-weight: 500;
 }
@@ -504,30 +504,30 @@ export default {
   transition: all 0.3s ease;
   background-color: var(--card-bg, rgba(255, 255, 255, 0.8));
   box-shadow: 
-    0 2px 5px var(--card-shadow, rgba(91, 81, 200, 0.15)),
-    0 0 0 2px var(--divider-color, rgba(94, 96, 206, 0.15));
+  0 2px 5px var(--card-shadow, rgba(30, 144, 255, 0.15)),
+  0 0 0 2px var(--divider-color, rgba(30, 144, 255, 0.15));
 }
 
 .action-btn i {
   font-size: 16px;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   transition: all 0.3s ease;
 }
 
 .action-btn:hover {
   transform: translateY(-3px);
   box-shadow: 
-    0 5px 12px var(--card-shadow, rgba(91, 81, 200, 0.25)),
-    0 0 0 2px var(--button-border, rgba(94, 96, 206, 0.3));
+  0 5px 12px var(--card-shadow, rgba(30, 144, 255, 0.25)),
+  0 0 0 2px var(--button-border, rgba(30, 144, 255, 0.3));
 }
 
 .action-btn:hover i {
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
   transform: scale(1.2);
 }
 
 .like-btn.active {
-  background: var(--primary-gradient, linear-gradient(135deg, #5e60ce, #6b90ff));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
 }
 
 .like-btn.active i {
@@ -540,7 +540,7 @@ export default {
   border-radius: 10px;
   padding: 12px;
   margin-top: 5px;
-  box-shadow: 0 2px 8px var(--card-shadow, rgba(91, 81, 200, 0.1)) inset;
+  box-shadow: 0 2px 8px var(--card-shadow, rgba(30, 144, 255, 0.1)) inset;
 }
 
 .favorites-header {
@@ -553,7 +553,7 @@ export default {
 .favorites-header h4 {
   margin: 0;
   font-size: 14px;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
 }
 
 .close-favorites {
@@ -593,7 +593,7 @@ export default {
 }
 
 .favorites-list::-webkit-scrollbar-thumb {
-  background: var(--button-border, rgba(94, 96, 206, 0.3));
+  background: var(--button-border, rgba(30, 144, 255, 0.3));
   border-radius: 2px;
 }
 
@@ -601,7 +601,7 @@ export default {
   padding: 8px;
   border-radius: 8px;
   margin-bottom: 8px;
-  background: var(--button-hover, rgba(94, 96, 206, 0.05));
+  background: var(--button-hover, rgba(30, 144, 255, 0.05));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -614,6 +614,7 @@ export default {
   line-height: 1.4;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+  line-clamp: 1;
   -webkit-line-clamp: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -638,12 +639,12 @@ export default {
 }
 
 .fav-actions button:hover {
-  background: var(--button-active, rgba(94, 96, 206, 0.1));
+  background: var(--button-active, rgba(30, 144, 255, 0.1));
 }
 
 .fav-actions button i {
   font-size: 12px;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
 }
 
 .no-favorites {
@@ -674,7 +675,7 @@ export default {
   background: transparent;
   border: none;
   font-size: 13px;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 15px;
@@ -682,7 +683,7 @@ export default {
 }
 
 .view-favorites-btn:hover {
-  background: var(--button-hover, rgba(94, 96, 206, 0.05));
+  background: var(--button-hover, rgba(30, 144, 255, 0.05));
 }
 
 /* 成就提示样式 */
@@ -691,11 +692,11 @@ export default {
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  background: var(--button-hover, rgba(94, 96, 206, 0.05));
+  background: var(--button-hover, rgba(30, 144, 255, 0.05));
   border-radius: 8px;
   font-size: 13px;
-  color: var(--icon-primary, #5e60ce);
-  border: 1px dashed var(--button-border, rgba(94, 96, 206, 0.3));
+  color: var(--icon-primary, #1e90ff);
+  border: 1px dashed var(--button-border, rgba(30, 144, 255, 0.3));
   margin-top: 10px;
   animation: pulse-hint 2s infinite alternate;
 }

@@ -116,7 +116,7 @@ export default {
   height: 160px;
   background: 
     linear-gradient(var(--card-bg, rgba(255, 255, 255, 0.8)), var(--card-bg, rgba(255, 255, 255, 0.8))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
+  linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
   border: 4px solid transparent;
   border-radius: 16px;
   transform: none;
@@ -127,8 +127,8 @@ export default {
   transform: translateX(0) scale(1.02);
   background:
     linear-gradient(var(--card-bg-hover, rgba(255, 255, 255, 0.95)), var(--card-bg-hover, rgba(255, 255, 255, 0.95))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
-  box-shadow: 0 8px 20px var(--card-shadow, rgba(91, 81, 200, 0.25));
+    linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
+  box-shadow: 0 8px 20px var(--card-shadow, rgba(30, 144, 255, 0.25));
 }
 
 /* 标题行 */
@@ -142,13 +142,13 @@ export default {
 .card-title {
   font-size: 1.2rem;
   font-weight: bold;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
 }
 
 .time-icon {
   width: 32px;
   height: 32px;
-  background: var(--primary-gradient, linear-gradient(135deg, #5e60ce, #6b90ff));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -174,12 +174,13 @@ export default {
 .current-time {
   font-size: 42px;
   font-weight: 700;
-  background: var(--primary-gradient, linear-gradient(45deg, #5e60ce, #6b90ff));
+  background: var(--primary-gradient, linear-gradient(45deg, #73c2fb, #1e90ff));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: 1px;
   margin-bottom: 8px;
-  text-shadow: 0 2px 10px var(--card-shadow, rgba(91, 81, 200, 0.2));
+  text-shadow: 0 2px 10px var(--card-shadow, rgba(30, 144, 255, 0.2));
 }
 
 .date-container {
@@ -196,7 +197,7 @@ export default {
 
 .day-of-week {
   font-size: 16px;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   font-weight: 500;
 }
 
@@ -207,7 +208,7 @@ export default {
   right: 20px;
   width: 60px;
   height: 60px;
-  border: 2px solid var(--divider-color, rgba(94, 96, 206, 0.2));
+  border: 2px solid var(--divider-color, rgba(30, 144, 255, 0.2));
   border-radius: 50%;
   transform: translateY(-50%);
   opacity: 0.25;
@@ -220,7 +221,7 @@ export default {
 
 .hand {
   position: absolute;
-  background: var(--icon-primary, #5e60ce);
+  background: var(--icon-primary, #1e90ff);
   transform-origin: bottom center;
   border-radius: 4px;
   left: 50%;
@@ -250,7 +251,7 @@ export default {
 
 .center-point {
   position: absolute;
-  background: var(--icon-primary, #5e60ce);
+  background: var(--icon-primary, #1e90ff);
   width: 6px;
   height: 6px;
   border-radius: 50%;

@@ -2,7 +2,7 @@
   <div class="friend-links-container">
     <div class="friend-links-inner">
       <div class="section-header">
-        <h2 class="section-title">友情链接喵～</h2>
+        <h2 class="section-title">友情链接</h2>
       </div>
       
       <div class="friends-grid">
@@ -23,7 +23,7 @@
       </div>
       
       <div class="exchange-note">
-        <p>欢迎交换友链喵～</p>
+        <p>欢迎交换友链</p>
       </div>
     </div>
   </div>
@@ -69,7 +69,8 @@ export default {
   transform: translate(-50%, -50%) rotate(-15deg);
   font-size: 20rem;
   font-weight: bold;
-  background: var(--primary-gradient, linear-gradient(135deg, #5e60ce, #6930c3));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   opacity: 0.1;
@@ -84,7 +85,7 @@ export default {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
+  background: linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff));
   z-index: 1;
 }
 
@@ -102,16 +103,16 @@ export default {
   padding: 40px; /* 增加内边距 */
   background: 
     linear-gradient(var(--card-bg, white), var(--card-bg, white)) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
+  linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
   border: 2px solid transparent;
   border-radius: 16px;
-  box-shadow: 0 8px 20px var(--card-shadow, rgba(91, 81, 200, 0.1));
+  box-shadow: 0 8px 20px var(--card-shadow, rgba(30, 144, 255, 0.1));
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 
 .friend-links-inner:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 25px var(--card-shadow, rgba(91, 81, 200, 0.2));
+  box-shadow: 0 12px 25px var(--card-shadow, rgba(30, 144, 255, 0.2));
 }
 
 /* 适配暗色主题内部容器背景 */
@@ -133,8 +134,9 @@ export default {
 
 .section-title {
   font-size: 2rem;
-  color: var(--icon-primary, #5e60ce);
-  background: var(--primary-gradient, linear-gradient(90deg, #5e60ce, #6b90ff));
+  color: var(--icon-primary, #1e90ff);
+  background: var(--primary-gradient, linear-gradient(90deg, #73c2fb, #1e90ff));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   position: relative;
@@ -150,7 +152,7 @@ export default {
   transform: translateX(-50%);
   height: 3px;
   width: 60%;
-  background: var(--primary-gradient, linear-gradient(90deg, #5e60ce, #6b90ff));
+  background: var(--primary-gradient, linear-gradient(90deg, #73c2fb, #1e90ff));
   border-radius: 2px;
 }
 
@@ -170,13 +172,13 @@ export default {
   border-radius: 12px;
   background: var(--card-bg-hover, rgba(255, 255, 255, 0.8));
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px var(--card-shadow, rgba(91, 81, 200, 0.1));
+  box-shadow: 0 2px 8px var(--card-shadow, rgba(30, 144, 255, 0.1));
 }
 
 .friend-link:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px var(--card-shadow, rgba(91, 81, 200, 0.15));
-  background: var(--button-hover, rgba(94, 96, 206, 0.05));
+  box-shadow: 0 8px 16px var(--card-shadow, rgba(30, 144, 255, 0.15));
+  background: var(--button-hover, rgba(30, 144, 255, 0.05));
 }
 
 .friend-avatar {
@@ -188,7 +190,7 @@ export default {
   border: 2px solid transparent;
   background: 
     var(--card-bg, white) padding-box,
-    var(--primary-gradient, linear-gradient(90deg, #5e60ce, #6b90ff)) border-box;
+  var(--primary-gradient, linear-gradient(90deg, #73c2fb, #1e90ff)) border-box;
 }
 
 .friend-info {
@@ -200,7 +202,7 @@ export default {
 
 .friend-name {
   font-weight: 600;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   margin-bottom: 5px;
   font-size: 1rem;
 }
@@ -219,12 +221,12 @@ export default {
   text-align: center;
   margin-top: 20px;
   padding-top: 20px;
-  border-top: 1px dashed var(--divider-color, rgba(94, 96, 206, 0.2));
+  border-top: 1px dashed var(--divider-color, rgba(30, 144, 255, 0.2));
 }
 
 .exchange-note p {
   font-style: italic;
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
   font-size: 1rem;
 }
 

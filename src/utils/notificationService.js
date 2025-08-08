@@ -33,7 +33,7 @@ const defaultOptions = {
 const typeConfig = {
   info: {
     icon: 'fa-info-circle',
-    color: 'var(--icon-primary, #5e60ce)'
+  color: 'var(--icon-primary, #1e90ff)'
   },
   success: {
     icon: 'fa-check-circle',
@@ -160,7 +160,7 @@ const createNotificationElement = (options) => {
       });
       
       closeBtn.addEventListener('mouseover', function() {
-        this.style.color = 'var(--icon-primary, #5e60ce)';
+        this.style.color = 'var(--icon-primary, #1e90ff)';
         this.style.transform = 'scale(1.2)';
       });
       
@@ -396,7 +396,7 @@ const addStyles = () => {
     
     .notification {
       background: linear-gradient(var(--card-bg, rgba(255, 255, 255, 0.95)), var(--card-bg, rgba(255, 255, 255, 0.95))) padding-box,
-                 linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box !important;
+                 linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box !important;
       box-shadow: 0 5px 15px var(--card-shadow, rgba(0, 0, 0, 0.15)) !important;
       border: 3px solid transparent !important;
       border-radius: 12px !important;
@@ -410,17 +410,17 @@ const addStyles = () => {
     
     .notification-success {
       background: linear-gradient(var(--card-bg, rgba(255, 255, 255, 0.95)), var(--card-bg, rgba(255, 255, 255, 0.95))) padding-box,
-                 linear-gradient(45deg, var(--icon-accent, #38d9a9), var(--icon-primary, #5e60ce)) border-box !important;
+                 linear-gradient(45deg, var(--icon-accent, #38d9a9), var(--icon-primary, #1e90ff)) border-box !important;
     }
     
     .notification-error {
       background: linear-gradient(var(--card-bg, rgba(255, 255, 255, 0.95)), var(--card-bg, rgba(255, 255, 255, 0.95))) padding-box,
-                 linear-gradient(45deg, var(--icon-accent, #ff6b6b), var(--icon-primary, #5e60ce)) border-box !important;
+                 linear-gradient(45deg, var(--icon-accent, #ff6b6b), var(--icon-primary, #1e90ff)) border-box !important;
     }
     
     .notification-achievement {
       background: linear-gradient(var(--card-bg, rgba(255, 255, 255, 0.95)), var(--card-bg, rgba(255, 255, 255, 0.95))) padding-box,
-                 linear-gradient(45deg, gold, var(--icon-accent, #ff6b6b), var(--icon-primary, #5e60ce)) border-box !important;
+                 linear-gradient(45deg, gold, var(--icon-accent, #ff6b6b), var(--icon-primary, #1e90ff)) border-box !important;
       box-shadow: 0 5px 15px var(--card-shadow, rgba(255, 215, 0, 0.3)) !important;
     }
     
@@ -438,7 +438,7 @@ const addStyles = () => {
     }
     
     .notification-title {
-      color: var(--icon-primary, #5e60ce) !important;
+      color: var(--icon-primary, #1e90ff) !important;
       font-weight: 600;
       margin-bottom: 4px !important;
     }

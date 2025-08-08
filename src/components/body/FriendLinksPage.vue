@@ -7,7 +7,7 @@
           <i class="fas fa-link"></i>
           友情链接
         </h1>
-        <p class="section-subtitle">这里是我的朋友们喵～</p>
+        <p class="section-subtitle">这里是我的朋友们</p>
       </div>
       
       <!-- 直接渲染友链内容，不使用组件的容器 -->
@@ -30,7 +30,7 @@
         </div>
         
         <div class="exchange-note">
-          <p>欢迎交换友链喵～</p>
+          <p>欢迎交换友链</p>
         </div>
       </div>
     </div>
@@ -102,7 +102,8 @@ export default {
   transform: translate(-50%, -50%) rotate(-15deg);
   font-size: 20rem;
   font-weight: bold;
-  background: var(--primary-gradient, linear-gradient(135deg, #5e60ce, #6930c3));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   opacity: 0.1;
@@ -121,16 +122,16 @@ export default {
   padding: 40px;
   background: 
     linear-gradient(var(--card-bg, white), var(--card-bg, white)) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
+  linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
   border: 2px solid transparent;
   border-radius: 16px;
-  box-shadow: 0 8px 20px var(--card-shadow, rgba(91, 81, 200, 0.1));
+  box-shadow: 0 8px 20px var(--card-shadow, rgba(30, 144, 255, 0.1));
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 
 .friend-links-inner:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 25px var(--card-shadow, rgba(91, 81, 200, 0.2));
+  box-shadow: 0 12px 25px var(--card-shadow, rgba(30, 144, 255, 0.2));
 }
 
 /* 标题样式 */
@@ -141,8 +142,9 @@ export default {
 
 .section-title {
   font-size: 2rem;
-  color: var(--icon-primary, #5e60ce);
-  background: var(--primary-gradient, linear-gradient(90deg, #5e60ce, #6b90ff));
+  color: var(--icon-primary, #1e90ff);
+  background: var(--primary-gradient, linear-gradient(90deg, #73c2fb, #1e90ff));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   position: relative;
@@ -159,7 +161,7 @@ export default {
   transform: translateX(-50%);
   height: 3px;
   width: 60%;
-  background: var(--primary-gradient, linear-gradient(90deg, #5e60ce, #6b90ff));
+  background: var(--primary-gradient, linear-gradient(90deg, #73c2fb, #1e90ff));
   border-radius: 2px;
 }
 
@@ -194,13 +196,13 @@ export default {
   border-radius: 12px;
   background: var(--card-bg-hover, rgba(255, 255, 255, 0.8));
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px var(--card-shadow, rgba(91, 81, 200, 0.1));
+  box-shadow: 0 2px 8px var(--card-shadow, rgba(30, 144, 255, 0.1));
 }
 
 .friend-link:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px var(--card-shadow, rgba(91, 81, 200, 0.15));
-  background: var(--button-hover, rgba(94, 96, 206, 0.05));
+  box-shadow: 0 8px 16px var(--card-shadow, rgba(30, 144, 255, 0.15));
+  background: var(--button-hover, rgba(30, 144, 255, 0.05));
 }
 
 .friend-avatar {
@@ -212,7 +214,7 @@ export default {
   border: 2px solid transparent;
   background: 
     var(--card-bg, white) padding-box,
-    var(--primary-gradient, linear-gradient(90deg, #5e60ce, #6b90ff)) border-box;
+  var(--primary-gradient, linear-gradient(90deg, #73c2fb, #1e90ff)) border-box;
 }
 
 .friend-info {
@@ -238,6 +240,7 @@ export default {
   color: var(--text-secondary, #666);
   line-height: 1.3;
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -251,7 +254,7 @@ export default {
   padding: 20px;
   background: var(--card-bg-hover, rgba(255, 255, 255, 0.6));
   border-radius: 12px;
-  border: 1px solid var(--border-color, rgba(94, 96, 206, 0.2));
+  border: 1px solid var(--border-color, rgba(30, 144, 255, 0.2));
 }
 
 .exchange-note p {

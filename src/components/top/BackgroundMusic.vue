@@ -282,7 +282,7 @@ export default {
   transform-origin: top center;
   background: 
     linear-gradient(var(--card-bg, rgba(255, 255, 255, 0.8)), var(--card-bg, rgba(255, 255, 255, 0.8))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
+  linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
   padding: 15px;
   border: 4px solid transparent;
   border-radius: 16px;
@@ -300,8 +300,8 @@ export default {
   border-radius: 16px;
   background:
     linear-gradient(var(--card-bg-hover, rgba(255, 255, 255, 0.95)), var(--card-bg-hover, rgba(255, 255, 255, 0.95))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
-  box-shadow: 0 8px 20px var(--card-shadow, rgba(91, 81, 200, 0.1));
+    linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
+  box-shadow: 0 8px 20px var(--card-shadow, rgba(30, 144, 255, 0.1));
   opacity: 1;
 }
 .background-music.collapsed {
@@ -324,13 +324,13 @@ export default {
 .card-title {
   font-size: 1.2rem;
   font-weight: bold;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   text-align: left;
 }
 .collapse-btn {
   background: transparent;
-  border: 1px solid var(--icon-primary, #5e60ce);
-  color: var(--icon-primary, #5e60ce);
+  border: 1px solid var(--icon-primary, #1e90ff);
+  color: var(--icon-primary, #1e90ff);
   border-radius: 50%;
   width: 24px;
   height: 24px;
@@ -341,7 +341,7 @@ export default {
   transition: background 0.3s ease;
 }
 .collapse-btn:hover {
-  background: var(--icon-primary, #5e60ce);
+  background: var(--icon-primary, #1e90ff);
   color: white;
 }
 /* 展开内容区域 */
@@ -376,7 +376,7 @@ export default {
 }
 .now-playing-bar {
   width: 3px;
-  background: var(--icon-primary, #5e60ce);
+  background: var(--icon-primary, #1e90ff);
   animation: sound-wave 0.5s infinite alternate;
   transform-origin: bottom;
 }
@@ -385,7 +385,7 @@ export default {
 .now-playing-bar:nth-child(3) { height: 40%; animation-delay: 0.2s; }
 .now-playing-bar:nth-child(4) { height: 100%; animation-delay: 0.3s; }
 .not-playing {
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   font-size: 14px;
 }
 .track-name {
@@ -420,7 +420,7 @@ export default {
 }
 .progress-fill {
   height: 100%;
-  background: var(--primary-gradient, linear-gradient(to right, #5e60ce, #6930c3));
+  background: var(--primary-gradient, linear-gradient(to right, #73c2fb, #1e90ff));
   border-radius: 3px;
 }
 .progress-thumb {
@@ -428,7 +428,7 @@ export default {
   top: 50%;
   width: 12px;
   height: 12px;
-  background: var(--icon-primary, #5e60ce);
+  background: var(--icon-primary, #1e90ff);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
@@ -457,7 +457,7 @@ export default {
 }
 .play-mode:hover .play-mode-icon,
 .play-mode:hover .play-mode-text {
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
 }
 .time {
   font-size: 12px;
@@ -481,11 +481,11 @@ export default {
 
 .volume-icon {
   cursor: pointer;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
 }
 .volume-btn {
   cursor: pointer;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   background: none;
   border: none;
   font-size: 16px;
@@ -505,7 +505,7 @@ export default {
   appearance: none;
   width: 16px;
   height: 16px;
-  background: var(--icon-primary, #5e60ce);
+  background: var(--icon-primary, #1e90ff);
   border-radius: 50%;
   cursor: pointer;
 }
@@ -521,8 +521,8 @@ export default {
 }
 .shuffle-btn {
   background: transparent;
-  border: 1px solid var(--icon-primary, #5e60ce);
-  color: var(--icon-primary, #5e60ce);
+  border: 1px solid var(--icon-primary, #1e90ff);
+  color: var(--icon-primary, #1e90ff);
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -533,11 +533,11 @@ export default {
   transition: all 0.2s ease;
 }
 .shuffle-btn.active {
-  background: var(--icon-primary, #5e60ce);
+  background: var(--icon-primary, #1e90ff);
   color: white;
 }
 .shuffle-btn:hover {
-  background: var(--icon-primary, #5e60ce);
+  background: var(--icon-primary, #1e90ff);
   color: white;
 }
 /* 第四行：媒体控制按钮 */
@@ -566,12 +566,12 @@ export default {
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
 }
 .play-btn {
   width: 48px;
   height: 48px;
-  background: var(--icon-primary, #5e60ce);
+  background: var(--icon-primary, #1e90ff);
   border: none;
   border-radius: 50%;
   display: flex;
@@ -583,7 +583,7 @@ export default {
 }
 .control-btn:hover, .play-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 10px var(--card-shadow, rgba(94, 96, 206, 0.3));
+  box-shadow: 0 0 10px var(--card-shadow, rgba(30, 144, 255, 0.3));
 }
 /* 可视化器 */
 .visualizer {
@@ -597,7 +597,7 @@ export default {
 }
 .visualizer-bar {
   flex: 1;
-  background: var(--primary-gradient, linear-gradient(to top, #5e60ce, #d1ecf9));
+  background: var(--primary-gradient, linear-gradient(to top, #73c2fb, #1e90ff));
   border-radius: 2px;
   min-height: 2px;
   transform-origin: bottom;

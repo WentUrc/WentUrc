@@ -189,7 +189,7 @@ watch(() => manager.unlockedCount, (newVal) => {
   border: none;
   box-shadow: 
     0 4px 10px var(--card-shadow, rgba(0, 0, 0, 0.1)),
-    0 0 0 2px var(--divider-color, rgba(94, 96, 206, 0.15));
+  0 0 0 2px var(--divider-color, rgba(30, 144, 255, 0.15));
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 1000;
@@ -200,7 +200,8 @@ watch(() => manager.unlockedCount, (newVal) => {
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--primary-gradient, linear-gradient(135deg, #dcbff8, #d1ecf9));
+  background: var(--primary-gradient, linear-gradient(135deg, #cfefff, #d6f3ff));
+  
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 0;
@@ -209,7 +210,7 @@ watch(() => manager.unlockedCount, (newVal) => {
 .achievements-button i {
   position: relative;
   z-index: 1;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   font-size: 20px;
   transition: all 0.3s ease;
 }
@@ -218,7 +219,7 @@ watch(() => manager.unlockedCount, (newVal) => {
   transform: translateY(-3px) scale(1.05);
   box-shadow: 
     0 8px 16px var(--card-shadow, rgba(0, 0, 0, 0.15)),
-    0 0 0 2px var(--icon-primary, rgba(94, 96, 206, 0.5));
+  0 0 0 2px var(--icon-primary, rgba(30, 144, 255, 0.5));
 }
 
 .achievements-button:hover::before {
@@ -226,7 +227,7 @@ watch(() => manager.unlockedCount, (newVal) => {
 }
 
 .achievements-button:hover i {
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
   transform: rotate(15deg);
 }
 
@@ -251,7 +252,8 @@ watch(() => manager.unlockedCount, (newVal) => {
   min-width: 18px;
   height: 18px;
   border-radius: 9px;
-  background: var(--icon-primary, #5e60ce);
+  background: var(--icon-primary, #1e90ff);
+  
   color: white;
   font-size: 10px;
   display: flex;
@@ -313,7 +315,7 @@ watch(() => manager.unlockedCount, (newVal) => {
   border: 4px solid transparent;
   background: 
     linear-gradient(var(--card-bg, rgba(255, 255, 255, 0.95)), var(--card-bg, rgba(255, 255, 255, 0.95))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
+  linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
   overflow: hidden;
   transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -323,20 +325,20 @@ watch(() => manager.unlockedCount, (newVal) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid var(--divider-color, rgba(94, 96, 206, 0.15));
+  border-bottom: 2px solid var(--divider-color, rgba(30, 144, 255, 0.15));
 }
 
 .panel-header h2 {
   font-size: 24px;
   margin: 0;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
 .panel-header h2 i {
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
 }
 
 .close-button {
@@ -346,13 +348,13 @@ watch(() => manager.unlockedCount, (newVal) => {
   height: 30px;
   font-size: 20px;
   cursor: pointer;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   transition: all 0.3s ease;
 }
 
 .close-button:hover {
   transform: scale(1.2) rotate(90deg);
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
 }
 
 /* 成就统计区域喵～ */
@@ -360,7 +362,7 @@ watch(() => manager.unlockedCount, (newVal) => {
   display: flex;
   justify-content: space-around;
   padding: 15px 0;
-  background: linear-gradient(to right, transparent, var(--divider-color, rgba(94, 96, 206, 0.05)), transparent);
+  background: linear-gradient(to right, transparent, var(--divider-color, rgba(30, 144, 255, 0.05)), transparent);
   margin-bottom: 10px;
 }
 
@@ -374,7 +376,7 @@ watch(() => manager.unlockedCount, (newVal) => {
 .stats-value {
   font-size: 24px;
   font-weight: bold;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
 }
 
 .stats-label {
@@ -416,12 +418,12 @@ watch(() => manager.unlockedCount, (newVal) => {
 }
 
 .panel-content::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb, rgba(94, 96, 206, 0.3));
+  background: var(--scrollbar-thumb, rgba(30, 144, 255, 0.3));
   border-radius: 3px;
 }
 
 .panel-content::-webkit-scrollbar-thumb:hover {
-  background: var(--scrollbar-thumb-hover, rgba(94, 96, 206, 0.5));
+  background: var(--scrollbar-thumb-hover, rgba(30, 144, 255, 0.5));
 }
 
 .achievement-item {
@@ -434,7 +436,7 @@ watch(() => manager.unlockedCount, (newVal) => {
   border-radius: 12px;
   box-shadow: 0 2px 8px var(--card-shadow, rgba(0, 0, 0, 0.05));
   transition: all 0.3s ease;
-  border: 1px solid var(--divider-color, rgba(94, 96, 206, 0.15));
+  border: 1px solid var(--divider-color, rgba(30, 144, 255, 0.15));
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -447,7 +449,7 @@ watch(() => manager.unlockedCount, (newVal) => {
   left: 0;
   width: 4px;
   height: 100%;
-  background: var(--primary-gradient, linear-gradient(to bottom, #6b90ff, #5e60ce));
+  background: var(--primary-gradient, linear-gradient(to bottom, #73c2fb, #1e90ff));
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -462,7 +464,7 @@ watch(() => manager.unlockedCount, (newVal) => {
 }
 
 .achievement-item.unlocked {
-  border-color: var(--icon-primary, rgba(94, 96, 206, 0.3));
+  border-color: var(--icon-primary, rgba(30, 144, 255, 0.3));
 }
 
 .achievement-item.unlocked::before {
@@ -471,19 +473,19 @@ watch(() => manager.unlockedCount, (newVal) => {
 
 .achievement-item.new {
   background: linear-gradient(to right, var(--card-bg, rgba(255, 255, 255, 0.8)), var(--card-bg-hover, rgba(255, 255, 255, 0.95)));
-  border-color: var(--icon-accent, #6b90ff);
+  border-color: var(--icon-accent, #73c2fb);
   animation: glowing 2s infinite alternate;
 }
 
 .achievement-item.secret {
-  background: var(--card-bg, rgba(255, 255, 255, 0.8)) url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%235e60ce' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+  background: var(--card-bg, rgba(255, 255, 255, 0.8)) url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%231e90ff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
   border-style: dashed;
-  border-color: var(--divider-color, rgba(94, 96, 206, 0.2));
+  border-color: var(--divider-color, rgba(30, 144, 255, 0.2));
 }
 
 .achievement-item.secret .achievement-name {
   font-style: italic;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
 }
 
 .achievement-item.secret .achievement-description {
@@ -494,16 +496,16 @@ watch(() => manager.unlockedCount, (newVal) => {
 .achievement-item.secret .achievement-icon {
   background: repeating-linear-gradient(
     45deg,
-    var(--divider-color, rgba(94, 96, 206, 0.1)),
-    var(--divider-color, rgba(94, 96, 206, 0.1)) 10px,
-    var(--divider-color, rgba(94, 96, 206, 0.2)) 10px,
-    var(--divider-color, rgba(94, 96, 206, 0.2)) 20px
+    var(--divider-color, rgba(30, 144, 255, 0.1)),
+    var(--divider-color, rgba(30, 144, 255, 0.1)) 10px,
+    var(--divider-color, rgba(30, 144, 255, 0.2)) 10px,
+    var(--divider-color, rgba(30, 144, 255, 0.2)) 20px
   );
 }
 
 .achievement-item.secret:hover {
   border-style: dashed;
-  border-color: var(--icon-accent, #6b90ff);
+  border-color: var(--icon-accent, #73c2fb);
   box-shadow: 0 5px 15px var(--card-shadow, rgba(0, 0, 0, 0.08));
 }
 
@@ -512,7 +514,7 @@ watch(() => manager.unlockedCount, (newVal) => {
   height: 50px;
   min-width: 50px;
   border-radius: 50%;
-  background: var(--divider-color, rgba(94, 96, 206, 0.1));
+  background: var(--divider-color, rgba(30, 144, 255, 0.1));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -524,7 +526,7 @@ watch(() => manager.unlockedCount, (newVal) => {
 }
 
 .unlocked .achievement-icon {
-  background: var(--primary-gradient, linear-gradient(135deg, #6b90ff, #5e60ce));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
   color: white;
   transform: scale(1.05);
 }
@@ -546,7 +548,7 @@ watch(() => manager.unlockedCount, (newVal) => {
 }
 
 .unlocked .achievement-name {
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
 }
 
 .achievement-description {
@@ -557,7 +559,7 @@ watch(() => manager.unlockedCount, (newVal) => {
 
 .achievement-date {
   font-size: 11px;
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
   margin: 5px 0 0;
 }
 
@@ -570,11 +572,11 @@ watch(() => manager.unlockedCount, (newVal) => {
 }
 
 .unlocked .achievement-status i {
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
 }
 
 .achievement-status .fa-lock {
-  color: var(--divider-color, rgba(94, 96, 206, 0.3));
+  color: var(--divider-color, rgba(30, 144, 255, 0.3));
 }
 
 /* 面板底部喵～ */
@@ -585,12 +587,12 @@ watch(() => manager.unlockedCount, (newVal) => {
   justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
-  border-top: 1px solid var(--divider-color, rgba(94, 96, 206, 0.1));
+  border-top: 1px solid var(--divider-color, rgba(30, 144, 255, 0.1));
 }
 
 .secret-hint {
   font-size: 14px;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   font-style: italic;
   margin: 0;
 }
@@ -603,8 +605,8 @@ watch(() => manager.unlockedCount, (newVal) => {
 }
 
 @keyframes glowing {
-  from { box-shadow: 0 0 5px var(--card-shadow, rgba(94, 96, 206, 0.3)); }
-  to { box-shadow: 0 0 15px var(--icon-accent, rgba(107, 144, 255, 0.6)); }
+  from { box-shadow: 0 0 5px var(--card-shadow, rgba(30, 144, 255, 0.3)); }
+  to { box-shadow: 0 0 15px var(--icon-accent, rgba(115, 194, 251, 0.6)); }
 }
 
 @keyframes achievementUnlock {

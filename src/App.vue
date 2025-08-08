@@ -128,13 +128,13 @@ export default {
   }
   
   .content-container > *::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb, rgba(94, 96, 206, 0.3));
+  background: var(--scrollbar-thumb, rgba(30, 144, 255, 0.3));
     border-radius: 4px;
     transition: background 0.3s ease;
   }
   
   .content-container > *::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover, rgba(94, 96, 206, 0.5));
+  background: var(--scrollbar-thumb-hover, rgba(30, 144, 255, 0.5));
   }
 }
 

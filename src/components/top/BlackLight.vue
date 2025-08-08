@@ -41,7 +41,7 @@
         
         <!-- 颜色方案 -->
         <div class="color-schemes">
-          <h4>配色方案</h4>
+          <h4>配色板</h4>
           <div class="scheme-options">
             <button 
               v-for="scheme in colorSchemes" 
@@ -83,17 +83,17 @@ export default {
       colorSchemes: [
         {
           id: 'default',
-          name: '默认紫蓝',
-          primary: 'linear-gradient(45deg, #6b90ff, #5e60ce)',
+          name: '自由天蓝',
+          primary: 'linear-gradient(45deg, #73c2fb, #1e90ff)',
           light: {
             bg: '#ffffff',
             text: '#333333',
-            border: '#dcbff8, #d1ecf9, #c6e2ff, #f9d1dc'
+            border: '#cfefff, #d6f3ff, #bfe4ff, #e0f7ff'
           },
           dark: {
             bg: '#212121',
             text: '#f1f1f1',
-            border: '#9b8dda, #6b90ff, #7294d5, #b98db6'
+            border: '#4aa3e0, #73c2fb, #4da3ff, #5aa9f6'
           }
         },
         {
@@ -256,7 +256,7 @@ export default {
   box-sizing: border-box;
   background: 
     linear-gradient(var(--card-bg, rgba(255, 255, 255, 0.8)), var(--card-bg, rgba(255, 255, 255, 0.8))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
+  linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
   border: 4px solid transparent;
   border-radius: 16px;
   transition: all 0.4s ease;
@@ -268,8 +268,8 @@ export default {
   transform: translateX(0) scale(1.02);
   background:
     linear-gradient(var(--card-bg-hover, rgba(255, 255, 255, 0.95)), var(--card-bg-hover, rgba(255, 255, 255, 0.95))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
-  box-shadow: 0 8px 20px var(--card-shadow, rgba(91, 81, 200, 0.25));
+    linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
+  box-shadow: 0 8px 20px var(--card-shadow, rgba(30, 144, 255, 0.25));
 }
 
 /* 标题栏 */
@@ -283,13 +283,13 @@ export default {
 .card-title {
   font-size: 1.2rem;
   font-weight: bold;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
 }
 
 .theme-icon {
   width: 32px;
   height: 32px;
-  background: var(--primary-gradient, linear-gradient(135deg, #5e60ce, #6b90ff));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -334,7 +334,7 @@ export default {
 }
 
 .mode-label:last-child i {
-  color: #6b90ff;
+  color: #1e90ff;
 }
 
 /* 开关样式 */
@@ -377,7 +377,7 @@ export default {
 }
 
 input:checked + .slider {
-  background: var(--primary-gradient, linear-gradient(135deg, #5e60ce, #6b90ff));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
 }
 
 input:checked + .slider:before {
@@ -413,12 +413,12 @@ input:checked + .slider:before {
 
 .preview-header {
   height: 20px;
-  background: linear-gradient(to right, #dcbff8, #d1ecf9);
+  background: linear-gradient(to right, #cfefff, #d6f3ff);
   transition: all 0.3s ease;
 }
 
 .theme-preview.dark .preview-header {
-  background: linear-gradient(to right, #5e60ce, #6b90ff);
+  background: linear-gradient(to right, #73c2fb, #1e90ff);
 }
 
 .preview-content {
@@ -460,7 +460,7 @@ input:checked + .slider:before {
   align-items: center;
   gap: 10px;
   background: transparent;
-  border: 1px solid var(--button-border, rgba(94, 96, 206, 0.2));
+  border: 1px solid var(--button-border, rgba(30, 144, 255, 0.2));
   padding: 6px 12px;
   border-radius: 8px;
   cursor: pointer;
@@ -469,13 +469,13 @@ input:checked + .slider:before {
 }
 
 .scheme-btn:hover {
-  background: var(--button-hover, rgba(94, 96, 206, 0.05));
+  background: var(--button-hover, rgba(30, 144, 255, 0.05));
   transform: translateX(3px);
 }
 
 .scheme-btn.active {
-  background: var(--button-active, rgba(94, 96, 206, 0.1));
-  border-color: var(--button-border, rgba(94, 96, 206, 0.4));
+  background: var(--button-active, rgba(30, 144, 255, 0.1));
+  border-color: var(--button-border, rgba(30, 144, 255, 0.4));
 }
 
 .color-dot {
@@ -496,11 +496,11 @@ input:checked + .slider:before {
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  background: var(--button-hover, rgba(94, 96, 206, 0.05));
+  background: var(--button-hover, rgba(30, 144, 255, 0.05));
   border-radius: 8px;
   font-size: 13px;
-  color: var(--icon-primary, #5e60ce);
-  border: 1px dashed var(--button-border, rgba(94, 96, 206, 0.3));
+  color: var(--icon-primary, #1e90ff);
+  border: 1px dashed var(--button-border, rgba(30, 144, 255, 0.3));
   margin-top: 5px;
   animation: pulse-hint 2s infinite alternate;
 }

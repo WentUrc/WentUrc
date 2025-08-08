@@ -1,6 +1,5 @@
 <template>
   <div class="role-selection">
-    <h1>一起去前往不同的世界喵 ~ </h1>
     <div class="roles">
       <div class="roles-grid">
         <RoleCard 
@@ -115,7 +114,7 @@ export default {
 
 /* 添加超大渐变文字背景 */
 .role-selection::before {
-  content: "WentUrc";
+  content: "Roles";
   position: absolute;
   top: 50%;
   left: 50%;

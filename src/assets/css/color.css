@@ -1,27 +1,27 @@
-/* 基础变量设置 - 默认使用紫蓝方案 */
+/* 基础变量设置 - 默认使用天蓝方案 */
 :root {
-  /* 默认亮色主题变量 - 紫蓝 */
-  --primary-gradient: linear-gradient(45deg, #6b90ff, #5e60ce);
+  /* 默认亮色主题变量 - 天蓝 */
+  --primary-gradient: linear-gradient(45deg, #73c2fb, #1e90ff);
   --background-color: #ffffff;
   --text-color: #333333;
-  --border-gradient: #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc;
+  --border-gradient: #cfefff, #d6f3ff, #bfe4ff, #e0f7ff;
   --card-bg: rgba(255, 255, 255, 0.8);
   --card-bg-hover: rgba(255, 255, 255, 0.95);
-  --card-shadow: rgba(91, 81, 200, 0.25);
-  --divider-color: rgba(94, 96, 206, 0.2);
+  --card-shadow: rgba(30, 144, 255, 0.25);
+  --divider-color: rgba(30, 144, 255, 0.2);
   
   /* 按钮和交互元素 */
-  --button-hover: rgba(94, 96, 206, 0.05);
-  --button-active: rgba(94, 96, 206, 0.1);
-  --button-border: rgba(94, 96, 206, 0.3);
+  --button-hover: rgba(30, 144, 255, 0.05);
+  --button-active: rgba(30, 144, 255, 0.1);
+  --button-border: rgba(30, 144, 255, 0.3);
   
   /* 特殊元素颜色 */
-  --icon-primary: #5e60ce;
-  --icon-accent: #6b90ff;
+  --icon-primary: #1e90ff;
+  --icon-accent: #73c2fb;
   
   /* 滚动条样式 - 添加新变量喵～ */
-  --scrollbar-thumb: rgba(94, 96, 206, 0.5);
-  --scrollbar-thumb-hover: rgba(94, 96, 206, 0.8);
+  --scrollbar-thumb: rgba(30, 144, 255, 0.5);
+  --scrollbar-thumb-hover: rgba(30, 144, 255, 0.8);
   
   /* 记录页面专用变量 */
   --page-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -32,37 +32,37 @@
   --border-color: #e9ecef;
   --border-light: #f1f3f4;
   --hover-bg: #e9ecef;
-  --primary-light: #e8e9ff;
+  --primary-light: #d6f3ff;
   --error-color: #dc3545;
-  --primary-dark: #4c4fd4;
+  --primary-dark: #1e90ff;
   --code-bg: #f8f9fa;
-  --code-color: #d63384;
+  --code-color: #1e90ff;
   --quote-bg: #f8f9fa;
   --table-stripe: #f8f9fa;
   --table-hover: #e9ecef;
 }
 
-/* 暗色模式 - 紫蓝 */
+/* 暗色模式 - 天蓝 */
 [data-theme="dark"] {
-  --primary-gradient: linear-gradient(45deg, #6b90ff, #5e60ce);
+  --primary-gradient: linear-gradient(45deg, #73c2fb, #1e90ff);
   --background-color: #212121;
   --text-color: #f1f1f1;
-  --border-gradient: #9b8dda, #6b90ff, #7294d5, #b98db6;
+  --border-gradient: #4aa3e0, #73c2fb, #4da3ff, #5aa9f6;
   --card-bg: rgba(40, 40, 40, 0.85);
   --card-bg-hover: rgba(50, 50, 50, 0.95);
   --card-shadow: rgba(0, 0, 0, 0.4);
-  --divider-color: rgba(150, 150, 255, 0.2);
+  --divider-color: rgba(30, 144, 255, 0.25);
   
-  --button-hover: rgba(94, 96, 206, 0.15);
-  --button-active: rgba(94, 96, 206, 0.25);
-  --button-border: rgba(94, 96, 206, 0.4);
+  --button-hover: rgba(30, 144, 255, 0.15);
+  --button-active: rgba(30, 144, 255, 0.25);
+  --button-border: rgba(30, 144, 255, 0.4);
   
-  --icon-primary: #8a8cff;
-  --icon-accent: #9fb4ff;
+  --icon-primary: #8fd3ff;
+  --icon-accent: #b3e5ff;
   
   /* 暗色模式滚动条样式喵～ */
-  --scrollbar-thumb: rgba(107, 144, 255, 0.5);
-  --scrollbar-thumb-hover: rgba(138, 140, 255, 0.8);
+  --scrollbar-thumb: rgba(115, 194, 251, 0.5);
+  --scrollbar-thumb-hover: rgba(179, 229, 255, 0.8);
   
   /* 记录页面暗色模式专用变量 */
   --page-bg: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
@@ -73,11 +73,11 @@
   --border-color: #444444;
   --border-light: #3a3a3a;
   --hover-bg: #3a3a3a;
-  --primary-light: #4a4c7a;
+  --primary-light: #3b82f6;
   --error-color: #ff6b6b;
-  --primary-dark: #7a7cff;
+  --primary-dark: #73c2fb;
   --code-bg: #2a2a2a;
-  --code-color: #ff7eb3;
+  --code-color: #73c2fb;
   --quote-bg: #2a2a2a;
   --table-stripe: #2a2a2a;
   --table-hover: #3a3a3a;

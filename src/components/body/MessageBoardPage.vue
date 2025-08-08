@@ -7,7 +7,7 @@
           <i class="fas fa-comments"></i>
           留言板
         </h1>
-        <p class="section-subtitle">在这里留下你的足迹喵～</p>
+        <p class="section-subtitle">在这里留下你的足迹</p>
       </div>
       
       <!-- 直接渲染留言板内容，不使用组件的容器 -->
@@ -15,7 +15,7 @@
         <!-- 留言加载状态 -->
         <div v-if="isLoadingIssues" class="loading-issues">
           <i class="fas fa-spinner fa-spin"></i>
-          <span>正在加载留言喵～</span>
+          <span>正在加载留言</span>
         </div>
         
         <!-- 留言内容展示 -->
@@ -37,14 +37,14 @@
         
         <!-- 无留言或加载失败状态 -->
         <div v-else class="no-issues">
-          <p>{{ issuesError ? '加载留言失败了喵～' : '暂时没有留言喵～' }}</p>
+          <p>{{ issuesError ? '加载留言失败了' : '暂时没有留言' }}</p>
         </div>
         
         <!-- 留言操作区域 -->
         <div class="message-actions">
           <a :href="createIssueUrl" target="_blank" rel="noopener noreferrer" class="message-board-link">
             <i class="fas fa-comments"></i>
-            <span>{{ issues.length > 0 ? '写下新留言喵～' : '成为第一个留言的人喵～' }}</span>
+            <span>{{ issues.length > 0 ? '写下新留言' : '成为第一个留言的人' }}</span>
           </a>
           
           <a v-if="issues.length > 0" :href="repoIssuesUrl" target="_blank" rel="noopener noreferrer" class="view-all-link">
@@ -171,14 +171,14 @@ export default {
           // 如果是Markdown格式，还需要移除模板说明文本
           if (isMarkdownFormat) {
             message = message
-              .replace(/请在这里写下你想说的话喵～本猫会偷偷看一眼的！/, '')
+              .replace(/请在这里写下你想说的话本猫会偷偷看一眼的！/, '')
               .replace(/^[\s\n]+/, ''); // 移除开头的空白行
           }
         }
         
         // 提取回复选项 - 两种格式都一样
         let wantsReply = null;
-        if (body.includes('- [x] 是喵～') || body.includes('- [X] 是喵～')) {
+        if (body.includes('- [x] 是') || body.includes('- [X] 是')) {
           wantsReply = true;
         } else if (body.includes('- [x] 不用了') || body.includes('- [X] 不用了')) {
           wantsReply = false;
@@ -261,11 +261,11 @@ export default {
           
           if (response.status === 403) {
             const resetDate = resetTime ? new Date(resetTime * 1000).toLocaleTimeString() : '未知';
-            throw new Error(`GitHub API 限制已达到喵～ 剩余请求: ${remainingRequests}, 重置时间: ${resetDate}`);
+            throw new Error(`GitHub API 限制已达到 剩余请求: ${remainingRequests}, 重置时间: ${resetDate}`);
           } else if (response.status === 401) {
-            throw new Error('GitHub Token 无效或权限不足喵～ 请检查 Token 配置');
+            throw new Error('GitHub Token 无效或权限不足 请检查 Token 配置');
           } else if (response.status === 404) {
-            throw new Error('找不到指定的仓库或无权限访问喵～');
+            throw new Error('找不到指定的仓库或无权限访问');
           }
           
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -306,13 +306,13 @@ export default {
     // 获取用户友好的错误信息
     getFriendlyErrorMessage(error) {
       if (error.message.includes('403')) {
-        return 'GitHub API 访问受限，请稍后重试喵～';
+        return 'GitHub API 访问受限，请稍后重试';
       } else if (error.message.includes('404')) {
-        return '找不到指定的仓库或Issues，请检查配置喵～';
+        return '找不到指定的仓库或Issues，请检查配置';
       } else if (error.message.includes('Network')) {
-        return '网络连接失败，请检查网络后重试喵～';
+        return '网络连接失败，请检查网络后重试';
       } else {
-        return '未知错误，请稍后重试喵～';
+        return '未知错误，请稍后重试';
       }
     }
   },

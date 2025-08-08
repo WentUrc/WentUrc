@@ -363,7 +363,7 @@ export default {
   border: 4px solid transparent;
   background: 
     linear-gradient(var(--card-bg, rgba(255, 255, 255, 0.95)), var(--card-bg, rgba(255, 255, 255, 0.95))) padding-box,
-    linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc)) border-box;
+  linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
 }
 
 .close-button {
@@ -376,13 +376,13 @@ export default {
   height: 30px;
   font-size: 20px;
   cursor: pointer;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   transition: all 0.3s ease;
 }
 
 .close-button:hover {
   transform: scale(1.2) rotate(90deg);
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
 }
 
 /* 小游戏样式 */
@@ -394,8 +394,9 @@ export default {
 .mini-game h3 {
   margin-bottom: 25px;
   font-size: 24px;
-  color: var(--icon-primary, #5e60ce);
-  background: var(--primary-gradient, linear-gradient(45deg, #6b90ff, #5e60ce));
+  color: var(--icon-primary, #1e90ff);
+  background: var(--primary-gradient, linear-gradient(45deg, #73c2fb, #1e90ff));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -439,7 +440,7 @@ export default {
 .game-timer {
   font-size: 18px;
   font-weight: bold;
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
 }
 
 /* 游戏结果样式 */
@@ -460,7 +461,7 @@ export default {
 
 .result-title {
   font-size: 22px;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   margin: 0;
 }
 
@@ -474,7 +475,7 @@ export default {
 .result-score span {
   font-size: 30px;
   font-weight: bold;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
 }
 
 .high-score-info {
@@ -509,13 +510,13 @@ export default {
 
 .high-score-display span {
   font-weight: bold;
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
 }
 
 .restart-button {
   margin-top: 20px;
   padding: 10px 20px;
-  background: var(--primary-gradient, linear-gradient(135deg, #5e60ce, #6b90ff));
+  background: var(--primary-gradient, linear-gradient(135deg, #73c2fb, #1e90ff));
   border: none;
   border-radius: 30px;
   color: white;
@@ -523,12 +524,12 @@ export default {
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(107, 144, 255, 0.3);
+  box-shadow: 0 5px 15px rgba(30, 144, 255, 0.3);
 }
 
 .restart-button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(107, 144, 255, 0.4);
+  box-shadow: 0 8px 20px rgba(30, 144, 255, 0.4);
 }
 
 .restart-button:active {

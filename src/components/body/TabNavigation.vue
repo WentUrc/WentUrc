@@ -116,7 +116,7 @@ export default {
   left: 0;
   right: 0;
   height: 5px;
-  background: linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
+  background: linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff));
   z-index: 1;
 }
 
@@ -181,7 +181,6 @@ export default {
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
-  user-drag: none;
 }
 
 .tab-content {
@@ -211,7 +210,7 @@ export default {
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--primary-gradient, linear-gradient(90deg, #6b90ff, #5e60ce));
+  background: var(--primary-gradient, linear-gradient(90deg, #73c2fb, #1e90ff));
   border-radius: 3px 3px 0 0;
   transform: scaleX(0);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -220,8 +219,8 @@ export default {
 
 /* 悬停效果 */
 .tab-item:hover {
-  color: var(--icon-primary, #5e60ce);
-  background: var(--button-hover, rgba(94, 96, 206, 0.08));
+  color: var(--icon-primary, #1e90ff);
+  background: var(--button-hover, rgba(30, 144, 255, 0.08));
   transform: translateY(-2px);
 }
 
@@ -235,11 +234,11 @@ export default {
 
 /* 激活状态 */
 .tab-item.active {
-  color: var(--icon-primary, #5e60ce);
-  background: var(--button-active, rgba(94, 96, 206, 0.15));
+  color: var(--icon-primary, #1e90ff);
+  background: var(--button-active, rgba(30, 144, 255, 0.15));
   box-shadow: 
-    0 4px 12px var(--card-shadow, rgba(94, 96, 206, 0.2)),
-    0 0 0 1px var(--divider-color, rgba(94, 96, 206, 0.3)) inset;
+    0 4px 12px var(--card-shadow, rgba(30, 144, 255, 0.2)),
+    0 0 0 1px var(--divider-color, rgba(30, 144, 255, 0.3)) inset;
 }
 
 .tab-item.active .tab-indicator {
@@ -262,7 +261,7 @@ export default {
   right: 8px;
   width: 6px;
   height: 6px;
-  background: var(--icon-primary, #5e60ce);
+  background: var(--icon-primary, #1e90ff);
   border-radius: 50%;
   opacity: 0.6;
   transition: all 0.3s ease;
@@ -270,12 +269,12 @@ export default {
 
 .tab-item.external:hover::after {
   opacity: 1;
-  background: var(--icon-accent, #6b90ff);
+  background: var(--icon-accent, #73c2fb);
   transform: scale(1.2);
 }
 
 .tab-item.external:hover {
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
 }
 
 /* 桌面端和平板端居中对齐 */

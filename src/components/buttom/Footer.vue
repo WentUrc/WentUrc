@@ -3,7 +3,7 @@
     <div class="footer-content">
       <p>
         &copy; 2024 - present 
-        <span class="gradient-text">WentUrc. 冰苷晶</span>
+        <span class="gradient-text">IGCrystal. 冰苷晶</span>
       </p>
       <p class="gradient-text">All Rights Reserved.</p>
     </div>
@@ -39,7 +39,7 @@ export default {
   color: var(--text-color, #f1f1f1);
   padding: 20px;
   text-align: center;
-  background: linear-gradient(-45deg, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
+  background: linear-gradient(-45deg, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff));
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
   position: relative;
@@ -73,7 +73,7 @@ export default {
   left: 0;
   right: 0;
   height: 5px;
-  background: linear-gradient(to right, var(--border-gradient, #dcbff8, #d1ecf9, #c6e2ff, #f9d1dc));
+  background: linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff));
   z-index: 2;
 }
 

@@ -101,7 +101,7 @@ export default {
   border: none;
   box-shadow: 
     0 4px 10px var(--card-shadow, rgba(0, 0, 0, 0.1)),
-    0 0 0 2px var(--divider-color, rgba(94, 96, 206, 0.15));
+  0 0 0 2px var(--divider-color, rgba(30, 144, 255, 0.15));
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 1000;
@@ -113,6 +113,7 @@ export default {
   position: absolute;
   inset: 0;
   background: var(--primary-gradient, linear-gradient(135deg, #dcbff8, #d1ecf9));
+  
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 0;
@@ -121,7 +122,7 @@ export default {
 .back-to-top-btn i {
   position: relative;
   z-index: 1;
-  color: var(--icon-primary, #5e60ce);
+  color: var(--icon-primary, #1e90ff);
   font-size: 1.2rem;
   transition: all 0.3s ease;
 }
@@ -130,7 +131,7 @@ export default {
   transform: translateY(-3px) scale(1.05);
   box-shadow: 
     0 8px 16px var(--card-shadow, rgba(0, 0, 0, 0.15)),
-    0 0 0 2px var(--icon-primary, rgba(94, 96, 206, 0.5));
+  0 0 0 2px var(--icon-primary, rgba(30, 144, 255, 0.5));
 }
 
 .back-to-top-btn:hover::before {
@@ -138,7 +139,7 @@ export default {
 }
 
 .back-to-top-btn:hover i {
-  color: var(--icon-accent, #6b90ff);
+  color: var(--icon-accent, #73c2fb);
   transform: scale(1.1);
 }
 

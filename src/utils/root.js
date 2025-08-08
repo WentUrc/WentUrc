@@ -33,16 +33,16 @@ export function applyThemeVariables(mode, scheme) {
   // 定义各种颜色方案，要和 BlackLight.vue 保持一致喵！
   const colorSchemes = {
     default: {
-      primary: 'linear-gradient(45deg, #6b90ff, #5e60ce)',
+      primary: 'linear-gradient(45deg, #73c2fb, #1e90ff)',
       light: {
         bg: '#ffffff',
         text: '#333333',
-        border: '#dcbff8, #d1ecf9, #c6e2ff, #f9d1dc'
+        border: '#cfefff, #d6f3ff, #bfe4ff, #e0f7ff'
       },
       dark: {
         bg: '#212121',
         text: '#f1f1f1',
-        border: '#9b8dda, #6b90ff, #7294d5, #b98db6'
+        border: '#4aa3e0, #73c2fb, #4da3ff, #5aa9f6'
       }
     },
     pink: {

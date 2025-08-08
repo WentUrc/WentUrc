@@ -113,8 +113,8 @@ const logger = {
   group(title, collapsed = false) {
     if (!isDev) return;
     
-    const method = collapsed ? 'groupCollapsed' : 'group';
-    console[method](`%c${title}`, 'font-weight: bold; color: #6b90ff;');
+  const method = collapsed ? 'groupCollapsed' : 'group';
+  console[method](`%c${title}`, 'font-weight: bold; color: #1e90ff;');
     
     return {
       end: () => console.groupEnd()
