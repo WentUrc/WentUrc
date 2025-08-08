@@ -42,6 +42,8 @@ export default {
     EasterEgg,
     Achievements,
     BackToTop,
+    Analytics,
+    SpeedInsights
   },
   mounted() {
     // 初始化新年跟踪器
