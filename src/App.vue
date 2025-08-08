@@ -1,17 +1,22 @@
 <template>
   <div id="app">
-    <ProfileCard />
-    <div class="app-layout">
-      <TabNavigation />
-      <div class="content-container">
-        <router-view />
+    <div class="content-container">
+      <div class="section">
+        <ProfileCard />
+      </div>
+      <div class="section">
+        <HomeIntroVideo />
+      </div>
+      <div class="section">
+        <AboutMe />
+      </div>
+      <div class="section section-footer">
+        <Footer />
       </div>
     </div>
-    <Footer />
     <Logo />
     <EasterEgg />
     <Achievements />
-    <BackToTop />
     <Analytics />
     <SpeedInsights />
   </div>
@@ -19,12 +24,12 @@
 
 <script>
 import ProfileCard from './components/body/ProfileCard.vue';
-import TabNavigation from './components/body/TabNavigation.vue';
+import HomeIntroVideo from './components/body/HomeIntroVideo.vue';
+import AboutMe from './components/body/AboutMe.vue';
 import Footer from './components/buttom/Footer.vue';
 import Logo from './components/top/Logo.vue';
 import EasterEgg from './components/other/EasterEgg.vue';
 import Achievements from './components/other/Achievements.vue';
-import BackToTop from './components/other/BackToTop.vue';
 import newYearTracker from './components/other/achievements/easter-eggs/NewYearTracker.js';
 import midnightTracker from './components/other/achievements/easter-eggs/MidnightTracker.js';
 import achievementHunterTracker from './components/other/achievements/easter-eggs/AchievementHunterTracker.js';
@@ -36,12 +41,12 @@ export default {
   name: 'App',
   components: {
     ProfileCard,
-    TabNavigation,
+    HomeIntroVideo,
+    AboutMe,
     Footer,
     Logo,
     EasterEgg,
     Achievements,
-    BackToTop,
     Analytics,
     SpeedInsights
   },
@@ -79,78 +84,43 @@ export default {
   color: #2c3e50;
 }
 
-/* 固定视口布局 */
-.app-layout {
-  display: flex;
-  flex-direction: column;
-}
-
-/* 桌面端：固定视口布局 */
-@media (min-width: 769px) {
-  .app-layout {
-    height: 100vh;
-    overflow: hidden;
-  }
-}
-
-/* 移动端：自适应布局 */
-@media (max-width: 768px) {
-  .app-layout {
-    min-height: 100vh;
-    overflow: visible;
-  }
-}
-
+/* 内容容器（开启纵向滚动吸附） */
 .content-container {
-  flex: 1;
+  width: 100%;
+  height: 100vh; /* 作为独立滚动容器 */
   overflow-y: auto;
   overflow-x: hidden;
+  scroll-snap-type: y mandatory; /* 开启吸附 */
 }
 
-/* 桌面端：固定视口布局 */
+/* 通用全屏段落样式，便于扩展多个区块 */
+.section {
+  height: 100vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  /* 使用 scroll-margin 顶部对齐，避免减少区块高度 */
+  scroll-margin-top: var(--topbar-height, 60px);
+}
+
+/* 让 footer 段为自适应高度，并吸附到视口底部 */
+.section-footer {
+  height: auto;
+  min-height: auto;
+  scroll-snap-align: end;
+  scroll-snap-stop: normal;
+  display: block;
+}
+
+/* 桌面端与移动端统一为自适应布局 */
 @media (min-width: 769px) {
   .content-container {
-    height: calc(100vh - 130px); /* 减去TabNavigation高度 */
-    overflow: hidden; /* 禁止容器滚动 */
-  }
-  
-  .content-container > * {
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-  
-  /* 桌面端滚动条美化 */
-  .content-container > *::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  .content-container > *::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  .content-container > *::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb, rgba(30, 144, 255, 0.3));
-    border-radius: 4px;
-    transition: background 0.3s ease;
-  }
-  
-  .content-container > *::-webkit-scrollbar-thumb:hover {
-  background: var(--scrollbar-thumb-hover, rgba(30, 144, 255, 0.5));
+    height: 100vh;
   }
 }
 
-/* 移动端：传统自适应布局 */
 @media (max-width: 768px) {
   .content-container {
-    height: auto;
-    overflow: visible;
-  }
-  
-  .content-container > * {
-    height: auto;
-    min-height: auto;
-    overflow: visible;
+    height: 100vh;
   }
 }
 
@@ -158,5 +128,4 @@ export default {
 .content-container > * {
   box-sizing: border-box;
 }
-
 </style>

@@ -114,12 +114,20 @@ export default {
       }
     },
     scrollToBottom() {
-      const profileElement = this.$el;
-      const elementBottom = profileElement.offsetTop + profileElement.offsetHeight;
-      window.scrollTo({
-        top: elementBottom - this.navBarHeight,
-        behavior: 'smooth'
-      });
+      const currentSection = this.$el.closest('.section');
+      const scrollContainer = document.querySelector('.content-container');
+      if (currentSection && currentSection.nextElementSibling && scrollContainer) {
+        const nextSection = currentSection.nextElementSibling;
+        // 使用滚动吸附容器滚动到下一屏
+        nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      if (scrollContainer) {
+        scrollContainer.scrollBy({ top: scrollContainer.clientHeight, behavior: 'smooth' });
+        return;
+      }
+      // 兜底：回退到窗口滚动
+      window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
     },
     handleCardClick(event) {
       // 如果点击的是社交链接，不处理音乐播放和纸片动画
@@ -196,6 +204,7 @@ export default {
         const targetY = clickY + Math.sin(angle) * velocity + gravity; // 加入重力
         
         // 设置纸片样式和动画
+        const shadow = '0 6px 20px rgba(0,0,0,0.25)';
         paper.style.cssText = `
           position: absolute;
           left: ${clickX - size/2}px;
@@ -211,6 +220,7 @@ export default {
           transform: rotate(0deg);
           transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
           z-index: 10000;
+          text-shadow: ${shadow};
         `;
         
         paper.innerHTML = shape;
@@ -237,7 +247,7 @@ export default {
         if (audioService && !audioService.getState().isPlaying) {
           audioService.togglePlay();
           this.musicPlayed = true; // 标记已播放
-          notificationService.info('交响之音已然绽放');
+          notificationService.info('music已经开始播放啦');
         }
       } catch (error) {
         console.warn('⚠️ 音乐播放失败:', error);

@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'
 
 import "./assets/css/reset.css"
 import "./assets/css/color.css"
@@ -34,7 +33,7 @@ window.addEventListener('beforeunload', () => {
 
 const app = createApp(App)
 app.config.globalProperties.$notify = notificationService
-app.use(router).mount('#app')
+app.mount('#app')
 
 // 开发环境调试
 if (import.meta.env.DEV) {

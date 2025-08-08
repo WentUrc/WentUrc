@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "ConsolasLocal";
+  src: url('/fonts/Consolas.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* 基础变量设置 - 默认使用天蓝方案 */
 :root {
   /* 默认亮色主题变量 - 天蓝 */
@@ -40,6 +48,9 @@
   --quote-bg: #f8f9fa;
   --table-stripe: #f8f9fa;
   --table-hover: #e9ecef;
+
+  /* 固定顶部栏高度（供各区块计算高度与对齐使用） */
+  --topbar-height: 60px;
 }
 
 /* 暗色模式 - 天蓝 */
@@ -48,7 +59,7 @@
   --background-color: #212121;
   --text-color: #f1f1f1;
   --border-gradient: #4aa3e0, #73c2fb, #4da3ff, #5aa9f6;
-  --card-bg: rgba(40, 40, 40, 0.85);
+  --card-bg: rgba(9, 9, 9, 0.85);
   --card-bg-hover: rgba(50, 50, 50, 0.95);
   --card-shadow: rgba(0, 0, 0, 0.4);
   --divider-color: rgba(30, 144, 255, 0.25);
@@ -81,6 +92,9 @@
   --quote-bg: #2a2a2a;
   --table-stripe: #2a2a2a;
   --table-hover: #3a3a3a;
+
+  /* 固定顶部栏高度（暗色下相同） */
+  --topbar-height: 60px;
 }
 
 /* ===== 粉色少女主题 ===== */

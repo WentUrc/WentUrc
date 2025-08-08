@@ -5,16 +5,28 @@
       <span class="logo-text">IGCrystal</span>
     </a>
     
-    <div class="theme-toggle">
-      <button class="theme-toggle-btn" @click="toggleTheme">
-        <i :class="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
-      </button>
-    </div>
-    
-    <div class="music-control">
-      <div class="sidebar-button" @click="toggleMusicSidebar">
-        <div class="button-inner">
-          <i class="fas fa-bars"></i>
+    <div class="header-right">
+      <nav class="desktop-nav" v-if="!isMobile">
+        <a href="https://note.wenturc.com" target="_blank" rel="noopener noreferrer" class="nav-link">
+          <i class="fas fa-sticky-note"></i><span>Note</span>
+        </a>
+        <a href="https://docs.wenturc.com" target="_blank" rel="noopener noreferrer" class="nav-link">
+          <i class="fas fa-book-open"></i><span>Blog</span>
+        </a>
+        <a href="https://caht.wenturc.com" target="_blank" rel="noopener noreferrer" class="nav-link">
+          <i class="fas fa-comments"></i><span>Chat</span>
+        </a>
+      </nav>
+      <div class="theme-toggle">
+        <button class="theme-toggle-btn" @click="toggleTheme">
+          <i :class="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+        </button>
+      </div>
+      <div class="music-control">
+        <div class="sidebar-button" @click="toggleMusicSidebar">
+          <div class="button-inner">
+            <i class="fas fa-bars"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -56,6 +68,7 @@ import BlackLightWidget from './BlackLight.vue'
 import { applyThemeVariables } from '../../utils/root'
 import NeoLife from './NeoLife.vue'
 import logoGame from '../other/achievements/easter-eggs/LogoGame.js'
+import eventBus from '../../utils/eventBus.js'
 
 export default {
   name: 'Logo',
@@ -173,7 +186,7 @@ export default {
     },
 
     checkScreenSize() {
-      this.isMobile = window.innerWidth <= 425; // 425px及以下为移动端
+      this.isMobile = window.innerWidth <= 900; // 900px及以下隐藏导航，仅显示在桌面端
     },
     
     toggleTheme() {
@@ -219,6 +232,8 @@ export default {
     toggleMusicSidebar() {
       this.musicSidebarVisible = !this.musicSidebarVisible;
       this.toggleBodyScroll();
+      // 广播侧边栏状态，供其他组件响应主题策略
+      eventBus.emit(this.musicSidebarVisible ? 'sidebar:open' : 'sidebar:close');
     },
     
     closeSidebar() {
@@ -226,6 +241,8 @@ export default {
       this.enableScroll(); 
       
       this.syncThemeFromStorage();
+      // 广播侧边栏关闭
+      eventBus.emit('sidebar:close');
     },
     
     syncThemeFromStorage() {
@@ -428,10 +445,58 @@ export default {
   }
 }
 
+/* 桌面端导航样式 - 简洁设计 */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-left: auto;
+  margin-right: 24px;
+}
+
+.nav-link {
+  color: var(--text-color, #666);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: "SHOECARD GOTHIC", sans-serif;
+  position: relative;
+  transition: color 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.nav-link:hover {
+  color: var(--icon-primary, #1e90ff);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary-gradient, linear-gradient(90deg, #73c2fb, #1e90ff));
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
 .theme-toggle {
   position: relative;
-  margin-left: auto; 
+  margin-left: auto;
   margin-right: 15px;
+}
+
+/* 移动端时恢复theme-toggle的margin-left */
+@media (max-width: 900px) {
+  .theme-toggle {
+    margin-left: auto;
+  }
 }
 
 .theme-toggle-btn {
@@ -771,8 +836,66 @@ export default {
   border-color: var(--icon-accent, #73c2fb);
 }
 
+/* 右侧容器：靠右对齐，内部横向排列 */
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
+/* 桌面端导航样式 - 简洁设计（放进右侧容器） */
+.header-right .desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 0 8px 0 24px; /* 与Logo留间距，贴近右侧控件 */
+}
 
+.header-right .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-color, #666);
+  text-decoration: none;
+  font-size: 25px; /* 放大字号 */
+  font-weight: 500;
+  font-family: "SHOECARD GOTHIC", sans-serif;
+  position: relative;
+  transition: color 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.header-right .nav-link i {
+  font-size: 16px;
+  color: var(--icon-primary, #1e90ff);
+  transition: transform .25s ease, color .25s ease;
+}
+
+.header-right .nav-link:hover { color: var(--icon-primary, #1e90ff); }
+.header-right .nav-link:hover i { color: var(--icon-accent, #73c2fb); transform: translateY(-1px); }
+
+.header-right .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary-gradient, linear-gradient(90deg, #73c2fb, #1e90ff));
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+.header-right .nav-link:hover::after { width: 100%; }
+
+/* 覆盖先前的margin，使移动端不出现多余空隙 */
+.header-right .theme-toggle { margin-left: 0 !important; }
+
+@media (max-width: 900px) {
+  .header-right { gap: 10px; }
+  .header-right .desktop-nav { display: none; }
+}
 
 
 @media (max-width: 768px) {
