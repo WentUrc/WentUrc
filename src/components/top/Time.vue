@@ -17,6 +17,8 @@
           <div class="day-of-week">{{ dayOfWeek }}</div>
         </div>
       </div>
+  <!-- 明确的底部留白，占位使日期与底部边框有稳定距离 -->
+  <div class="bottom-spacer" aria-hidden="true"></div>
       
       <!-- 装饰性时钟指针 -->
       <div class="clock-hands">
@@ -111,6 +113,7 @@ export default {
   width: 100%;
   margin-top: 5px;
   padding: 15px;
+  padding-bottom: 28px; /* 增加内部底部留白 */
   box-sizing: border-box;
   overflow: hidden;
   height: 160px;
@@ -129,6 +132,11 @@ export default {
     linear-gradient(var(--card-bg-hover, rgba(255, 255, 255, 0.95)), var(--card-bg-hover, rgba(255, 255, 255, 0.95))) padding-box,
     linear-gradient(to right, var(--border-gradient, #cfefff, #d6f3ff, #bfe4ff, #e0f7ff)) border-box;
   box-shadow: 0 8px 20px var(--card-shadow, rgba(30, 144, 255, 0.25));
+}
+
+/* 底部占位留白，确保日期与边框的间距稳定可见 */
+.bottom-spacer {
+  height: 14px;
 }
 
 /* 标题行 */
@@ -166,7 +174,8 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 16px; /* 增大与下方边框的外间距 */
+  padding-bottom: 8px; /* 增加内部底部留白 */
   position: relative;
   z-index: 2;
 }
@@ -266,6 +275,11 @@ export default {
     height: 150px;
   }
   
+  .time-display {
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+  }
+  
   .current-time {
     font-size: 36px;
   }
@@ -274,6 +288,10 @@ export default {
     width: 50px;
     height: 50px;
     right: 15px;
+  }
+  
+  .bottom-spacer {
+    height: 10px;
   }
 }
 </style>
