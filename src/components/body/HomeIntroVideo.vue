@@ -271,6 +271,7 @@ export default {
   font-weight: 800;
   letter-spacing: -0.5px;
   background: linear-gradient(90deg, #93c5fd 0%, #60a5fa 50%, #38bdf8 100%);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: "ConsolasLocal", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -350,6 +351,7 @@ export default {
 @media (max-width: 768px) {
   .hero-inner { flex-direction: column; }
   .hero-left { flex: 1 1 auto; padding: clamp(16px, 6vw, 28px); }
+  .hero-left.in-view { margin-top: -60px; }
   .hero-right { display: none !important; }
   .video-overlay { display: none !important; }
 }

@@ -193,6 +193,10 @@ export default {
     if (this.$refs.root) {
       this._observer.observe(this.$refs.root)
     }
+    
+    // Force 'about' tab on small screens
+    this.checkMobileView()
+    window.addEventListener('resize', this.checkMobileView)
   },
   beforeUnmount() {
     if (this._observer && this.$refs.root) {
@@ -202,8 +206,18 @@ export default {
       this._observer.disconnect()
       this._observer = null
     }
+    window.removeEventListener('resize', this.checkMobileView)
   },
   methods: {
+    checkMobileView() {
+      // Check if screen is small mobile (480px or less)
+      if (window.innerWidth <= 480) {
+        // Force switch to 'about' tab if currently on hidden tabs
+        if (this.activeTab === 'friends' || this.activeTab === 'board') {
+          this.activeTab = 'about'
+        }
+      }
+    },
     formatDate(dateString) {
       const date = new Date(dateString)
       const now = new Date()
@@ -501,9 +515,10 @@ export default {
 
 /* 响应式 */
 @media (max-width: 900px) {
-  .about-inner { grid-template-columns: 1fr; align-items: start; margin-top: -8px; }
-  .about-left { display: flex; align-items: center; gap: 16px; }
-  .socials { margin-top: 0; }
+  .about-inner { grid-template-columns: 1fr; align-items: center; margin-top: 0; gap: 20px; align-content: center; grid-auto-rows: max-content; }
+  .about-left { display: flex; align-items: stretch; gap: 16px; }
+  .socials { margin-top: 0; display: flex; flex-direction: column; gap: 8px; height: 100%; justify-content: center; }
+  .tabs { display: none; }
   .card-grid { grid-template-columns: 1fr; }
   .friends-grid { grid-template-columns: 1fr; }
   /* Mobile: no internal scrolling, content expands naturally */
@@ -512,21 +527,32 @@ export default {
 }
 
 @media (max-width: 480px) {
-  .about-section { padding: 16px; }
-  .about-inner { gap: 12px; }
+  .about-section { padding: 8px 16px; }
+  .about-inner { gap: 2; align-items: center; align-content: center; }
+  .about-left { display: flex; align-items: stretch; gap: 8px; }
+  .socials { display: flex; flex-direction: column; gap: 8px; height: 100%; justify-content: center; }
   .avatar-wrap { width: clamp(120px, 30vmin, 180px); border-radius: 18px; }
-  .socials { gap: 10px; }
   .socials a { width: 36px; height: 36px; border-radius: 10px; }
 
   .title { font-size: clamp(20px, 6vw, 28px); }
   .subtitle { font-size: 12px; }
-  .intro { margin: 12px 0 10px; font-size: 14px; line-height: 1.7; }
+  .intro { margin: 8px 0 6px; font-size: 14px; line-height: 1.7; }
 
-  .chips { gap: 6px; }
+  /* Reduce spacing in tabs section */
+  .tabs { margin-bottom: 8px; }
+  .heading { margin-bottom: 6px; }
+
+  .chips { gap: 6px; display: none; }
   .chip { padding: 5px 9px; font-size: 11px; }
 
-  .card-grid { gap: 10px; }
+  .card-grid { gap: 10px; display: none; }
   .info-card { padding: 12px; border-radius: 12px; }
+
+  /* Hide friends and message board tabs on mobile */
+  .tab:nth-child(2), /* 友链 tab */
+  .tab:nth-child(3)  /* 留言板 tab */ {
+    display: none;
+  }
 }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
